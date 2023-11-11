@@ -32,6 +32,29 @@ QBCore.Functions.CreateCallback("soz-character:server:GetPlayerCloakroom", funct
     end
 end)
 
+QBCore.Functions.CreateCallback("soz-character:server:ModifyPlayerClothe", function(source, cb, clothId)
+    local Player = QBCore.Functions.GetPlayer(source)
+
+    if Player then
+        local currentClothing = Player.PlayerData.cloth_config["BaseClothSet"]
+
+        local success = exports.oxmysql:update_async("UPDATE player_cloth_set SET cloth_set = ? WHERE id = ? AND citizenid = ?",
+                                                    {json.encode(currentClothing), clothId, Player.PlayerData.citizenid})
+
+        if success then
+            if Cloakrooms[Player.PlayerData.citizenid] and Cloakrooms[Player.PlayerData.citizenid][clothId] then
+                Cloakrooms[Player.PlayerData.citizenid][clothId].cloth = currentClothing
+            end
+            cb(nil)
+        else
+            cb("Une erreur est survenue lors de la modification de la tenue.")
+        end
+    else
+        cb("Une erreur est survenue.")
+    end
+end)
+
+
 QBCore.Functions.CreateCallback("soz-character:server:SavePlayerClothe", function(source, cb, name)
     local Player = QBCore.Functions.GetPlayer(source)
 

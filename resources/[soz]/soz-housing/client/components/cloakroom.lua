@@ -42,6 +42,7 @@ RegisterNetEvent("housing:client:cloakroom", function()
                 value = nil,
                 values = {
                     {label = "Se changer", value = "apply"},
+                    {label= "Modifier", value = "modify"}
                     {label = "Renommer", value = "rename"},
                     {label = "Supprimer", value = "delete"},
                 },
@@ -74,6 +75,13 @@ RegisterNetEvent("housing:client:cloakroom", function()
                         local success = QBCore.Functions.TriggerRpc("soz-character:server:RenamePlayerClothe", clothe.id, name)
                         if success then
                             exports["soz-core"]:DrawNotification("Votre tenue a été renommée.")
+                        else
+                            exports["soz-core"]:DrawNotification("Une erreur est survenue.", "error")
+                        end
+                    elseif value == "modify" then
+                        local success = QBCore.Functions.TriggerRpc("soz-character:server:ModifyPlayerClothe", clothe.id)
+                        if success then
+                            exports["soz-core"]:DrawNotification("Votre tenue a été modifiée.")
                         else
                             exports["soz-core"]:DrawNotification("Une erreur est survenue.", "error")
                         end
