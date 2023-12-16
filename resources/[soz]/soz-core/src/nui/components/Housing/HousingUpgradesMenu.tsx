@@ -1,7 +1,7 @@
 import { fetchNui } from '@public/nui/fetch';
 import { NuiEvent } from '@public/shared/event';
 import { HousingUpgradesMenuData } from '@public/shared/housing/menu';
-import { HousingTiers } from '@public/shared/housing/upgrades';
+import { ClosetTiers, FridgesTiers, GarageTiers, MoneyTiers, StashTiers } from '@public/shared/housing/upgrades';
 import { MenuType } from '@public/shared/nui/menu';
 import { FunctionComponent, useEffect, useState } from 'react';
 
@@ -19,121 +19,138 @@ type HousingUpgradesMenuProps = {
     data?: HousingUpgradesMenuData;
 };
 
+const defaultData = {
+    hasParking: true,
+    apartmentPrice: 0,
+    enableParking: true,
+    garageCurrentTier: 0,
+    stashCurrentTier: 0,
+    fridgeCurrentTier: 0,
+    closetCurrentTier: 0,
+    moneyCurrentTier: 0,
+};
+
 export const HousingUpgradesMenu: FunctionComponent<HousingUpgradesMenuProps> = ({ data }) => {
-    if (!data) {
-        data = {
-            currentTier: 0,
-            hasParking: true,
-            apartmentPrice: 0,
-            enableParking: true,
-        };
-    }
-    if (!data.currentTier) data.currentTier = 0;
-
-    const lastTier = parseInt(Object.keys(HousingTiers)[Object.keys(HousingTiers).length - 1]);
-    const initialTier = Math.min(data.currentTier + 1, lastTier);
-
-    const [tier, setTier] = useState(0);
-    const [parking, setParking] = useState(true);
-    const [tierPrice, setTierPrice] = useState(0);
-    const [zkeaPrice, setZkeaPrice] = useState(0);
-    const [parkingPrice, setParkingPrice] = useState(0);
+    const [state, setState] = useState({ ...defaultData, ...data });
 
     const banner = 'https://nui-img/soz/menu_housing_upgrades';
 
     useEffect(() => {
-        if (data?.currentTier !== null && data?.currentTier !== undefined) {
-            setTier(data.currentTier);
-        }
-        if (data?.hasParking !== null && data?.hasParking !== undefined) {
-            setParking(data.hasParking);
-        }
+        setState({ ...state, ...data });
     }, [data]);
 
     useEffect(() => {
-        const { currentTier, apartmentPrice } = data;
-        let newPrice = 0;
+        const prices = calculatePrices();
+        setState({ ...state, ...prices });
+    }, [state.parking, state.garageTier, state.fridgeTier, state.moneyTier, state.closetTier, state.stashTier]);
+
+    const calculatePrices = () => {
+        const {
+            apartmentPrice,
+            garageCurrentTier,
+            fridgeCurrentTier,
+            moneyCurrentTier,
+            closetCurrentTier,
+            stashCurrentTier,
+        } = state;
+        let newPriceGarage = 0;
+        let newPriceFridge = 0;
+        let newPriceMoney = 0;
+        let newPriceCloset = 0;
+        let newPriceStash = 0;
         let newZkeaPrice = 0;
-        for (let i = currentTier + 1; i <= tier; i++) {
-            newPrice += (apartmentPrice * HousingTiers[i].pricePercent) / 100;
-            newZkeaPrice += HousingTiers[i].zkeaPrice;
+
+        for (let i = garageCurrentTier + 1; i <= state.garageTier; i++) {
+            newPriceGarage += (apartmentPrice * GarageTiers[i].pricePercent) / 100;
+            newZkeaPrice += GarageTiers[i].zkeaPrice;
         }
-        setTierPrice(newPrice);
-        setZkeaPrice(newZkeaPrice);
-        setParkingPrice(parking && !data.hasParking ? (apartmentPrice * 50) / 100 : 0);
-    }, [tier, parking]);
+        for (let i = fridgeCurrentTier + 1; i <= state.fridgeTier; i++) {
+            newPriceFridge += (apartmentPrice * FridgesTiers[i].pricePercent) / 100;
+            newZkeaPrice += FridgesTiers[i].zkeaPrice;
+        }
+        for (let i = moneyCurrentTier + 1; i <= state.moneyTier; i++) {
+            newPriceMoney += (apartmentPrice * MoneyTiers[i].pricePercent) / 100;
+            newZkeaPrice += MoneyTiers[i].zkeaPrice;
+        }
+        for (let i = closetCurrentTier + 1; i <= state.closetTier; i++) {
+            newPriceCloset += (apartmentPrice * ClosetTiers[i].pricePercent) / 100;
+            newZkeaPrice += ClosetTiers[i].zkeaPrice;
+        }
+        for (let i = stashCurrentTier + 1; i <= state.stashTier; i++) {
+            newPriceStash += (apartmentPrice * StashTiers[i].pricePercent) / 100;
+            newZkeaPrice += StashTiers[i].zkeaPrice;
+        }
+
+        const parkingPrice = state.parking && !state.hasParking ? (apartmentPrice * 50) / 100 : 0;
+
+        return {
+            garagePrice: newPriceGarage,
+            fridgePrice: newPriceFridge,
+            moneyPrice: newPriceMoney,
+            closetPrice: newPriceCloset,
+            stashPrice: newPriceStash,
+            zkeaPrice: newZkeaPrice,
+            parkingPrice,
+            totalPrice: newPriceGarage + parkingPrice + newPriceStash + newPriceCloset + newPriceFridge + newPriceMoney,
+        };
+    };
 
     const onConfirm = () => {
-        fetchNui(NuiEvent.HousingUpgradeApartment, {
-            tier,
-            price: tierPrice,
-            zkeaPrice,
-            enableParking: data.enableParking,
-            hasParking: parking,
-            parkingPrice,
-        });
+        console.log(state);
+        // fetchNui(NuiEvent.HousingUpgradeApartment, { ...state });
     };
 
-    const onChange = (selectedTier: number) => {
-        setTier(selectedTier);
+    const onChange = (selectedTier, target) => {
+        setState({ ...state, [target]: selectedTier });
     };
 
-    const onParkingChange = (selected: boolean) => {
-        setParking(selected);
-    };
+    // const onParkingChange = (selected: boolean) => {
+    //     setParking(selected);
+    // };
+
+    const renderMenuItemSelect = (title, icon, target, initialTier, tiers) => (
+        <MenuItemSelect
+            title={
+                <div className="flex items-center">
+                    <img alt="icon" className="ml-2 w-8 h-8" src={`/public/images/housing/${icon}.webp`} />
+                    <h3 className="ml-4">{title}</h3>
+                </div>
+            }
+            value={initialTier}
+            onChange={(_, value) => onChange(value, target)}
+            showAllOptions
+            alignRight
+        >
+            {Object.keys(tiers).map(tier => {
+                const value = parseInt(tier);
+                const label = value !== 0 ? value : 'Origine';
+                return (
+                    <MenuItemSelectOptionBox
+                        key={value}
+                        value={value}
+                        highlight={state[`${target}CurrentTier`] >= value}
+                    >
+                        {label}
+                    </MenuItemSelectOptionBox>
+                );
+            })}
+        </MenuItemSelect>
+    );
 
     return (
         <Menu type={MenuType.HousingUpgrades}>
             <MainMenu>
                 <MenuTitle banner={banner}></MenuTitle>
                 <MenuContent>
-                    <MenuItemSelect
-                        title={
-                            <div className="flex items-center">
-                                <img alt="engine" className="ml-2 w-8 h-8" src={`/public/images/housing/maison.webp`} />
-                                <h3 className="ml-4">Palier</h3>
-                            </div>
-                        }
-                        value={initialTier}
-                        onChange={(_, value) => onChange(value)}
-                        showAllOptions
-                        alignRight
-                    >
-                        {Object.keys(HousingTiers).map(tier => {
-                            const value = parseInt(tier);
-                            const label = value !== 0 ? value : 'Origine';
-                            return (
-                                <MenuItemSelectOptionBox
-                                    key={value}
-                                    value={value}
-                                    highlight={data.currentTier >= value}
-                                >
-                                    {label}
-                                </MenuItemSelectOptionBox>
-                            );
-                        })}
-                    </MenuItemSelect>
-                    <MenuItemSelect
-                        title={
-                            <div className="flex items-center">
-                                <img alt="engine" className="ml-2 w-8 h-8" src={`/public/images/housing/garage.webp`} />
-                                <h3 className="ml-4">Garage</h3>
-                            </div>
-                        }
-                        value={data.hasParking}
-                        onChange={(_, value) => onParkingChange(value)}
-                        showAllOptions
-                        alignRight
-                    >
-                        {data.enableParking && (
-                            <MenuItemSelectOptionBox value={false}>Désactivé</MenuItemSelectOptionBox>
-                        )}
-                        <MenuItemSelectOptionBox value={true}>Activé</MenuItemSelectOptionBox>
-                    </MenuItemSelect>
+                    {renderMenuItemSelect('Stockage', 'maison', 'stashTier', state.stashTier, StashTiers)}
+                    {renderMenuItemSelect('Frigo', 'maison', 'fridgeTier', state.fridgeTier, FridgesTiers)}
+                    {renderMenuItemSelect('Ceintre', 'maison', 'closetTier', state.closetTier, ClosetTiers)}
+                    {renderMenuItemSelect('Coffre fort', 'maison', 'moneyTier', state.moneyTier, MoneyTiers)}
+                    {state.hasParking && renderMenuItemSelect('Garage', 'garage', 'garageTier', state.garageTier, GarageTiers)}
                     <MenuItemButton className="border-t border-white/50" onConfirm={() => onConfirm()}>
                         <div className="flex w-full justify-between items-center">
                             <span>Confirmer</span>
-                            <span>${(tierPrice + parkingPrice).toFixed()}</span>
+                            <span>${state.totalPrice?.toFixed()}</span>
                         </div>
                     </MenuItemButton>
                 </MenuContent>
