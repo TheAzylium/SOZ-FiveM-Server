@@ -60,6 +60,7 @@ import { setService, setServiceInstance, unloadContainer } from './core/containe
 import { ProviderClientLoader } from './core/loader/provider.client.loader';
 import { ChainMiddlewareEventClientFactory } from './core/middleware/middleware.event.client';
 import { ChainMiddlewareTickClientFactory } from './core/middleware/middleware.tick.client';
+import {FireModule} from "./client/fire/fire.module";
 
 async function bootstrap() {
     setServiceInstance('Store', store);
@@ -125,6 +126,7 @@ async function bootstrap() {
         DMCModule,
         JobTemporaryModule,
         UtilsModule,
+        FireModule,
         ...PrivateModules
     );
 
