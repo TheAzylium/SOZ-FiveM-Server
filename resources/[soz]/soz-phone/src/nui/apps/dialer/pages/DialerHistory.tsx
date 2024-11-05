@@ -3,7 +3,6 @@ import {
     ChatIcon,
     PhoneIcon,
     PhoneIncomingIcon,
-    PhoneMissedCallIcon,
     PhoneOutgoingIcon,
     UserAddIcon,
 } from '@heroicons/react/solid';
@@ -85,11 +84,17 @@ export const DialerHistory: React.FC = () => {
                                             <div className="flex flex-1 min-w-0 cursor-pointer">
                                                 <div className="shrink self-center">
                                                     {!call.is_accepted ? (
-                                                        <PhoneMissedCallIcon className="h-5 w-5 text-red-500 mr-3" />
-                                                    ) : call.transmitter === myNumber ? (
-                                                        <PhoneOutgoingIcon className="h-5 w-5 text-green-500 mr-3" />
+                                                      call.transmitter === myNumber ? (
+                                                        <PhoneOutgoingIcon className="h-5 w-5 text-red-500 mr-3" />
+                                                      ) : (
+                                                        <PhoneIncomingIcon className="h-5 w-5 text-red-500 mr-3" />
+                                                      )
                                                     ) : (
+                                                      call.transmitter === myNumber ? (
+                                                        <PhoneOutgoingIcon className="h-5 w-5 text-green-700 mr-3" />
+                                                      ) : (
                                                         <PhoneIncomingIcon className="h-5 w-5 text-green-700 mr-3" />
+                                                      )
                                                     )}
                                                 </div>
                                                 <div
