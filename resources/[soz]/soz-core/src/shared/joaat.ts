@@ -1,6 +1,10 @@
 // Jenkins one at a time algorithm used by gta V to convert string to hash number
 // This converts a string to a hash number (int32)
 export const joaat = (str: string): number => {
+    if (global.GetHashKey) {
+        return global.GetHashKey(str);
+    }
+
     let hash = 0;
 
     for (let i = 0; i < str.length; ++i) {

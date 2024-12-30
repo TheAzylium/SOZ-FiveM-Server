@@ -1,8 +1,8 @@
 import { OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
-import { wait } from '../../core/utils';
 import { NuiEvent, ServerEvent } from '../../shared/event';
+import { NotEmptyStringValidator } from '../../shared/nui/input';
 import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
 import { NuiMenu } from '../nui/nui.menu';
@@ -24,23 +24,25 @@ export class AdminMenuCharacterProvider {
 
     @OnNuiEvent(NuiEvent.AdminMenuCharacterCreateNew)
     public async createNewCharacter(): Promise<void> {
-        const firstName = await this.inputService.askInput({
-            maxCharacters: 30,
-            title: 'Prénom',
-            defaultValue: '',
-        });
+        const firstName = await this.inputService.askInput(
+            {
+                maxCharacters: 30,
+                title: 'Prénom',
+            },
+            NotEmptyStringValidator
+        );
 
         if (!firstName) {
             return;
         }
 
-        await wait(100);
-
-        const lastName = await this.inputService.askInput({
-            maxCharacters: 30,
-            title: 'Nom',
-            defaultValue: '',
-        });
+        const lastName = await this.inputService.askInput(
+            {
+                maxCharacters: 30,
+                title: 'Nom',
+            },
+            NotEmptyStringValidator
+        );
 
         if (!lastName) {
             return;

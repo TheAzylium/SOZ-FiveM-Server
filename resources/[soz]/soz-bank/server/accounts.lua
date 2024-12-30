@@ -153,14 +153,29 @@ function Account.AddMoney(acc, money, money_type, allowoverflow)
     return true
 end
 
-function Account.RemoveMoney(acc, money, money_type)
+function Account.CanAddMoney(acc, money, money_type, allowoverflow)
     acc = Account(acc)
 
     if money_type == nil then
         money_type = "money"
     end
 
-    if acc[money_type] - money >= 0 then
+    local total = math.ceil(acc[money_type] + money - 0.5)
+    if not allowoverflow and (acc.type == "house_safe" or acc.type == "safestorages") and total > acc.max then
+        return false
+    end
+
+    return true
+end
+
+function Account.RemoveMoney(acc, money, money_type, allowoverflow)
+    acc = Account(acc)
+
+    if money_type == nil then
+        money_type = "money"
+    end
+
+    if allowoverflow or acc[money_type] - money >= 0 then
         acc[money_type] = math.ceil(acc[money_type] - money - 0.5)
         acc.changed = true
         return true
@@ -182,7 +197,7 @@ function Account.Clear(acc)
 end
 exports("ClearAccount", Account.Clear)
 
-function Account.TransfertMoney(accSource, accTarget, money, cb)
+function Account.TransfertMoney(accSource, accTarget, money, cb, allowOverflow)
     accSource = Account(accSource)
     accTarget = Account(accTarget)
     money = math.round(money, 0)
@@ -190,8 +205,8 @@ function Account.TransfertMoney(accSource, accTarget, money, cb)
 
     if accSource then
         if accTarget then
-            if money <= accSource.money then
-                if (accTarget.type == "house_safe" or accTarget.type == "safestorages") and accTarget.money + money > accTarget.max then
+            if allowOverflow or money <= accSource.money then
+                if not Account.CanAddMoney(accTarget, money, "money", allowOverflow) then
                     success, reason = false, "transfert_failed"
 
                     if cb then
@@ -200,7 +215,7 @@ function Account.TransfertMoney(accSource, accTarget, money, cb)
                     return
                 end
 
-                if Account.RemoveMoney(accSource, money) and Account.AddMoney(accTarget, money) then
+                if Account.RemoveMoney(accSource, money, "money", allowOverflow) and Account.AddMoney(accTarget, money, "money", allowOverflow) then
                     _G.AccountType[accSource.type]:save(accSource.id, accSource.owner, accSource.money, accSource.marked_money)
                     _G.AccountType[accTarget.type]:save(accTarget.id, accTarget.owner, accTarget.money, accTarget.marked_money)
 

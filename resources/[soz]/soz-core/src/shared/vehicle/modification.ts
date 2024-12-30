@@ -295,6 +295,7 @@ export type VehicleModification = {
     trim?: number;
     tank?: number;
     windows?: number;
+    windowsSecondary?: number;
 };
 
 export type VehicleConfiguration = {
@@ -364,9 +365,9 @@ export enum VehicleModType {
     Trim = 44,
     Tank = 45,
     Windows = 46,
-    // WindowsSecondary = 47,
+    WindowsSecondary = 47,
     Livery = 48,
-    // Lightbar = 49,
+    Lightbar = 49,
 }
 
 export type VehicleLsCustomLevel = {

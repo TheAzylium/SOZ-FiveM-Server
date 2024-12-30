@@ -106,6 +106,7 @@ export const ForceConsumeContainer = () => {
                                 display={true}
                                 banner={playerBanner}
                                 maxWeight={-1}
+                                bannerType='thick'
                             >
                                 <ContainerSlots
                                     id="player"

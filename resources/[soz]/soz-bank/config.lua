@@ -41,26 +41,6 @@ Config.FarmAccountMoney = {
     ["farm_dmc"] = {money = 300000, marked_money = 0},
 }
 
-Config.SocietyTaxes = {
-    privateSociety = {
-        ["baun"] = {"baun", "safe_baun"},
-        ["bennys"] = {"bennys", "safe_bennys"},
-        ["ffs"] = {"ffs", "safe_ffs"},
-        ["food"] = {"food", "safe_food"},
-        ["garbage"] = {"garbage", "safe_garbage"},
-        ["news"] = {"news", "safe_news"},
-        ["you-news"] = {"you-news", "safe_you-news"},
-        ["oil"] = {"oil", "safe_oil"},
-        ["pawl"] = {"pawl", "safe_pawl"},
-        ["taxi"] = {"taxi", "safe_taxi"},
-        ["upw"] = {"upw", "safe_upw"},
-        ["fdf"] = {"fdf", "safe_fdf"},
-        ["dmc"] = {"dmc", "safe_dmc"},
-    },
-
-    taxRepartition = {["lspd"] = 30, ["bcso"] = 30, ["lsmc"] = 30, ["cash-transfer"] = 2, ["mdr"] = 8},
-}
-
 Config.SafeStorages = {
     ["safe_cash-transfer"] = {
         label = "Coffre STONK Security",
@@ -211,6 +191,15 @@ Config.SafeStorages = {
         position = vector3(1076.19, -2008.55, 32.09),
         size = vec2(1.00, 2.00),
         heading = 143.57,
+    },
+    ["safe_lscs"] = {
+        label = "Coffre LSCS",
+        owner = "lscs",
+        position = vector3(450.15, -972.49, 30.44),
+        size = vec2(1.00, 1.20),
+        heading = 181.33,
+        minZ = 29.44,
+        maxZ = 31.04,
     },
 }
 

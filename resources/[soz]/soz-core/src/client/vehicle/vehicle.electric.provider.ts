@@ -5,7 +5,7 @@ import { UpwStation } from '@public/shared/fuel';
 import { JobType } from '@public/shared/job';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
-import { isVehicleModelElectric, VehicleSeat } from '@public/shared/vehicle/vehicle';
+import { isVehicleModelElectric, VehicleClassFuelStorageMultiplier, VehicleSeat } from '@public/shared/vehicle/vehicle';
 
 import { Once, OnceStep, OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
@@ -16,9 +16,11 @@ import { AnimationService } from '../animation/animation.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { Notifier } from '../notifier';
 import { NuiDispatch } from '../nui/nui.dispatch';
+import { AttachedObjectService } from '../object/attached.object.service';
 import { PlayerService } from '../player/player.service';
 import { ProgressService } from '../progress.service';
 import { UpwChargerRepository } from '../repository/upw.station.repository';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { SoundService } from '../sound.service';
 import { TargetFactory } from '../target/target.factory';
 import { VehicleService } from './vehicle.service';
@@ -66,6 +68,12 @@ export class VehicleElectricProvider {
 
     @Inject(NuiDispatch)
     private nuiDispatch: NuiDispatch;
+
+    @Inject(AttachedObjectService)
+    private attachedObjectService: AttachedObjectService;
+
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
 
     private currentStationPlug: CurrentStationPlug | null = null;
 
@@ -410,9 +418,11 @@ export class VehicleElectricProvider {
             return;
         }
 
+        const vehDef = this.vehicleRepository.getByModelHash(GetEntityModel(vehicle));
+        const storageMultiplier = VehicleClassFuelStorageMultiplier[vehDef?.requiredLicence] || 1.0;
         const condition = await this.vehicleStateService.getVehicleCondition(vehicle);
 
-        if (condition.fuelLevel > 97.0) {
+        if (condition.fuelLevel > 97.0 * storageMultiplier) {
             this.notifier.notify('Le véhicule est déjà plein.', 'error');
             await this.disableStationPlug();
 
@@ -449,8 +459,7 @@ export class VehicleElectricProvider {
 
         RopeUnloadTextures();
         DeleteRope(this.currentStationPlug.rope);
-        SetEntityAsMissionEntity(this.currentStationPlug.object, true, true);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(this.currentStationPlug.object));
+        this.attachedObjectService.detachObjectToPlayer(this.currentStationPlug.object);
         DeleteEntity(this.currentStationPlug.object);
 
         this.currentStationPlug = null;
@@ -488,38 +497,15 @@ export class VehicleElectricProvider {
 
         this.soundService.playAround('fuel/start_fuel', 5, 0.3);
 
+        const object = await this.attachedObjectService.attachObjectToPlayer({
+            bone: 26610,
+            model: 'car_charger_plug',
+            position: [0.07, 0, 0],
+            rotation: [-30.0, 0.0, 0.0],
+        });
+
         const position = GetEntityCoords(PlayerPedId(), true) as Vector3;
-        const object = CreateObject(
-            GetHashKey('car_charger_plug'),
-            position[0],
-            position[1],
-            position[2] - 1.0,
-            true,
-            true,
-            true
-        );
 
-        const netId = ObjToNet(object);
-        SetNetworkIdCanMigrate(netId, false);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-
-        AttachEntityToEntity(
-            object,
-            PlayerPedId(),
-            GetPedBoneIndex(PlayerPedId(), 26610),
-            0.07,
-            0,
-            0,
-            -30.0,
-            0.0,
-            0.0,
-            true,
-            true,
-            false,
-            true,
-            0,
-            true
-        );
         RopeLoadTextures();
 
         const [rope] = AddRope(

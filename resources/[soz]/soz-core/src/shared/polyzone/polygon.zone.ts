@@ -1,6 +1,6 @@
 import { RGBAColor, RGBColor } from '../color';
 import { AbstractZone } from './abstract.zone';
-import { Point3D, Vector2 } from './vector';
+import { Point3D, Vector2, Vector3 } from './vector';
 
 export type PolygonZoneOptions<T> = {
     minZ?: number;
@@ -15,13 +15,13 @@ export class PolygonZone<T = never> implements AbstractZone {
     public readonly maxZ?: number;
     public readonly debugPoly: boolean;
 
-    protected points: Vector2[];
+    protected points: (Vector2 | Vector3)[];
 
     public getPoints() {
         return this.points;
     }
 
-    public constructor(points: Vector2[], options?: PolygonZoneOptions<T>) {
+    public constructor(points: (Vector2 | Vector3)[], options?: PolygonZoneOptions<T>) {
         this.points = points;
         this.minZ = options?.minZ;
         this.maxZ = options?.maxZ;

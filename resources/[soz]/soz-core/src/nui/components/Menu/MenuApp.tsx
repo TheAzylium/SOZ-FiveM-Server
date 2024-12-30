@@ -33,6 +33,7 @@ import { HousingUpgradesMenu } from '../Housing/HousingUpgradesMenu';
 import { HousingVisitMenu } from '../Housing/HousingVisitMenu';
 import { JobOnDutyMenu } from '../Job/OnDutyMenu';
 import { LsmcJobMenu } from '../LSMC/LsmcJobMenu';
+import { LsmcPlasterMenu } from '../LSMC/LsmcPlasterMenu';
 import { MandatoryJobMenu } from '../Mandatory/MandatoryJobMenu';
 import { FinesMenu } from '../Police/Fines';
 import { LicencesMenu } from '../Police/Licences';
@@ -52,11 +53,13 @@ import { DmcJobMenu } from './Job/DmcJobMenu';
 import { GouvJobMenu } from './Job/GouvJobMenu';
 import { MenuBennys } from './Job/MenuBennys';
 import { MenuNews } from './Job/MenuNews';
+import { MenuOil } from './Job/MenuOil';
 import { MenuPromote } from './Job/MenuPromote';
 import { MenuUpw } from './Job/MenuUpw';
 import { MenuAlbum } from './MenuAlbum';
 import { MenuBennysUpgradeVehicle } from './MenuBennysUpgradeVehicle';
 import { MenuDemo } from './MenuDemo';
+import { MenuEditorObject } from './MenuEditorObject';
 import { MenuGarage } from './MenuGarage';
 import { MenuOilSetPrice } from './MenuOilSetPrice';
 import { UpwOrderMenu } from './MenuOrderUpw';
@@ -221,6 +224,7 @@ const MenuRouter: FunctionComponent = () => {
 
             <Route path={`/${MenuType.JobBennys}/*`} element={<MenuBennys data={menuData} />} />
             <Route path={`/${MenuType.JobUpw}/*`} element={<MenuUpw data={menuData} />} />
+            <Route path={`/${MenuType.JobOil}/*`} element={<MenuOil data={menuData} />} />
             <Route path={`/${MenuType.UpwOrderMenu}/*`} element={<UpwOrderMenu data={menuData} />} />
             <Route path={`/${MenuType.GarbageJobMenu}/*`} element={<GarbageJobMenu data={menuData} />} />
             <Route
@@ -257,6 +261,8 @@ const MenuRouter: FunctionComponent = () => {
             />
             <Route path={`/${MenuType.HousingSellMenu}/*`} element={<HousingSellMenu data={menuData} />} />
             <Route path={`/${MenuType.HousingVisitMenu}/*`} element={<HousingVisitMenu data={menuData} />} />
+            <Route path={`/${MenuType.LsmcPlaster}/*`} element={<LsmcPlasterMenu data={menuData} />} />
+            <Route path={`/${MenuType.ObjectEditor}/*`} element={<MenuEditorObject data={menuData} />} />
         </Routes>
     );
 };

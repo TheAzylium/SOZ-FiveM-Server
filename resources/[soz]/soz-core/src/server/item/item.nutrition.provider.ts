@@ -39,12 +39,6 @@ export class ItemNutritionProvider {
         item: FoodItem | DrinkItem | CocktailItem | LiquorItem,
         inventoryItem: InventoryItem
     ): Promise<void> {
-        const player = this.playerService.getPlayer(source);
-
-        if (!player) {
-            return;
-        }
-
         if (
             !this.inventoryManager.removeItemFromInventory(
                 source,
@@ -99,6 +93,12 @@ export class ItemNutritionProvider {
 
         if (completed) {
             TriggerClientEvent(ClientEvent.ITEM_USE, source, item.name, item);
+        }
+
+        const player = this.playerService.getPlayer(source);
+
+        if (!player) {
+            return;
         }
 
         let dyspepsiaLuck = 0.5;

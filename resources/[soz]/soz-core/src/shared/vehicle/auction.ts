@@ -12,6 +12,7 @@ export type AuctionVehicle = {
         name: string;
         price: number;
     } | null;
+    nextMinBid: number;
 };
 
 export type ShowVehicle = {

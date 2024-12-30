@@ -1,3 +1,5 @@
+import { VehicleSeat } from '@public/shared/vehicle/vehicle';
+
 import { OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
@@ -65,7 +67,7 @@ export class ItemCameraProvider {
 
         const rotationHeading = this.checkInputRotation(this.cam, zoomValue);
 
-        if (!IsPedSittingInAnyVehicle(ped)) {
+        if (!isPedInVehicle) {
             SetEntityHeading(ped, rotationHeading);
         }
 
@@ -212,11 +214,19 @@ export class ItemCameraProvider {
 
         const ped = PlayerPedId();
         const cam = CreateCam('DEFAULT_SCRIPTED_FLY_CAMERA', true);
-
-        if (!IsPedSittingInAnyVehicle(ped)) {
+        const veh = GetVehiclePedIsIn(ped, false);
+        if (!veh) {
             AttachCamToEntity(cam, ped, 0.05, 0.5, 0.7, true);
+        } else if (IsThisModelAHeli(GetEntityModel(veh))) {
+            if (GetPedInVehicleSeat(veh, VehicleSeat.BackLeft) == ped) {
+                AttachCamToEntity(cam, ped, -0.5, 0.0, 0.7, true);
+            } else if (GetPedInVehicleSeat(veh, VehicleSeat.BackRight) == ped) {
+                AttachCamToEntity(cam, ped, 0.5, 0.0, 0.7, true);
+            } else {
+                AttachCamToEntity(cam, ped, 0.0, 0.5, 0.7, true);
+            }
         } else {
-            AttachCamToEntity(cam, ped, 0.0, 0.0, 0.7, true);
+            AttachCamToEntity(cam, ped, 0.0, 0.5, 0.7, true);
         }
 
         SetCamRot(cam, 2.0, 1.0, GetEntityHeading(ped), 0);
@@ -251,10 +261,8 @@ export class ItemCameraProvider {
     }
 
     private handleZoom(cam: number) {
-        const ped = PlayerPedId();
-        const isInVehicle = IsPedSittingInAnyVehicle(ped);
-        const reduceFovControl = isInVehicle ? 17 : 241;
-        const increaseFovControl = isInVehicle ? 16 : 242;
+        const reduceFovControl = 241;
+        const increaseFovControl = 242;
 
         if (IsControlJustPressed(0, reduceFovControl)) {
             this.fov = Math.max(this.fov - ZOOM_SPEED, FOV_MIN);

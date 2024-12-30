@@ -40,10 +40,6 @@ export class MandatoryProvider {
     @Inject(JobService)
     private jobService: JobService;
 
-    private state = {
-        radar: false,
-    };
-
     @Once(OnceStep.PlayerLoaded)
     public setupMdrJob() {
         this.createBlips();
@@ -87,7 +83,7 @@ export class MandatoryProvider {
         }
 
         this.nuiMenu.openMenu(MenuType.MandatoryJobMenu, {
-            state: this.state,
+            displayRadar: this.vehicleRadarProvider.displayRadar,
             onDuty: this.playerService.isOnDuty(),
         });
     }
@@ -105,13 +101,6 @@ export class MandatoryProvider {
             sprite: 807,
             scale: 1.2,
         });
-    }
-
-    @OnNuiEvent(NuiEvent.ToggleRadarMendatory)
-    public toogleRadar(value: boolean): Promise<void> {
-        this.state.radar = value;
-        this.vehicleRadarProvider.toggleBlip(value);
-        return;
     }
 
     @OnNuiEvent(NuiEvent.RedCallMendatory)

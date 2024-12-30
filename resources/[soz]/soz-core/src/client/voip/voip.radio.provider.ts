@@ -1,9 +1,11 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
+
 import { Command } from '../../core/decorators/command';
 import { OnEvent, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { ClientEvent, NuiEvent } from '../../shared/event';
-import { Ear, Radio, RadioChannel, RadioChannelType, RadioType } from '../../shared/voip';
+import { Radio, RadioChannel, RadioChannelType, RadioType } from '../../shared/voip';
 import { AnimationService } from '../animation/animation.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { NuiDispatch } from '../nui/nui.dispatch';
@@ -37,7 +39,7 @@ export class VoipRadioProvider {
 
     private radioInUse = false;
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(): Promise<void> {
         const hasRadio = this.inventoryManager.hasEnoughItem('radio', 1, true);
 
@@ -51,42 +53,22 @@ export class VoipRadioProvider {
     }
 
     @StateSelector(state => state.radioShortRange.enabled)
-    public toggleRadio(enabled: boolean, wasEnabled?: boolean) {
+    public toggleRadio(enabled: boolean) {
         const radioShortRange = this.store.getState().radioShortRange;
 
-        if (wasEnabled !== undefined) {
-            this.soundService.play('radio/toggle', 0.2);
-        }
-
         if (!enabled) {
-            this.voipService.disconnectRadio(
-                RadioType.RadioShortRange,
-                RadioChannelType.Primary,
-                radioShortRange.primary.frequency
-            );
-            this.voipService.disconnectRadio(
-                RadioType.RadioShortRange,
-                RadioChannelType.Secondary,
-                radioShortRange.secondary.frequency
-            );
+            this.voipService.disconnectRadio(radioShortRange.primary.frequency);
+            this.voipService.disconnectRadio(radioShortRange.secondary.frequency);
 
             return;
         }
 
         if (radioShortRange.primary.frequency > 0) {
-            this.voipService.connectRadio(
-                RadioType.RadioShortRange,
-                RadioChannelType.Primary,
-                radioShortRange.primary.frequency
-            );
+            this.voipService.connectRadio(radioShortRange.primary.frequency);
         }
 
         if (radioShortRange.secondary.frequency > 0) {
-            this.voipService.connectRadio(
-                RadioType.RadioShortRange,
-                RadioChannelType.Secondary,
-                radioShortRange.secondary.frequency
-            );
+            this.voipService.connectRadio(radioShortRange.secondary.frequency);
         }
     }
 
@@ -99,15 +81,11 @@ export class VoipRadioProvider {
         }
 
         if (previousFrequency > 0) {
-            this.voipService.disconnectRadio(RadioType.RadioShortRange, RadioChannelType.Primary, previousFrequency);
+            this.voipService.disconnectRadio(previousFrequency);
         }
 
         if (frequency >= 0) {
-            this.voipService.connectRadio(RadioType.RadioShortRange, RadioChannelType.Primary, frequency);
-        }
-
-        if (previousFrequency > 0 || frequency > 0) {
-            this.soundService.play('click', radioShortRange.primary.volume / 100);
+            this.voipService.connectRadio(frequency);
         }
     }
 
@@ -120,61 +98,27 @@ export class VoipRadioProvider {
         }
 
         if (previousFrequency > 0) {
-            this.voipService.disconnectRadio(RadioType.RadioShortRange, RadioChannelType.Secondary, previousFrequency);
+            this.voipService.disconnectRadio(previousFrequency);
         }
 
         if (frequency >= 0) {
-            this.voipService.connectRadio(RadioType.RadioShortRange, RadioChannelType.Secondary, frequency);
-        }
-
-        if (previousFrequency > 0 || frequency > 0) {
-            this.soundService.play('click', radioShortRange.secondary.volume / 100);
-        }
-    }
-
-    @StateSelector(state => state.radioShortRange.primary.ear)
-    public updatePrimaryEar(ear: Ear, previousEar?: Ear) {
-        const radioShortRange = this.store.getState().radioShortRange;
-        this.voipService.setRadioEar(RadioType.RadioShortRange, RadioChannelType.Primary, ear);
-
-        if (previousEar !== undefined) {
-            this.soundService.play('click', radioShortRange.primary.volume / 100);
-        }
-    }
-
-    @StateSelector(state => state.radioShortRange.secondary.ear)
-    public updateSecondaryEar(ear: Ear, previousEar?: Ear) {
-        const radioShortRange = this.store.getState().radioShortRange;
-        this.voipService.setRadioEar(RadioType.RadioShortRange, RadioChannelType.Secondary, ear);
-
-        if (previousEar !== undefined) {
-            this.soundService.play('click', radioShortRange.secondary.volume / 100);
-        }
-    }
-
-    @StateSelector(state => state.radioShortRange.primary.volume)
-    public updatePrimaryVolume(volume: number, previousVolume?: number) {
-        const radioShortRange = this.store.getState().radioShortRange;
-        this.voipService.setRadioVolume(RadioType.RadioShortRange, RadioChannelType.Primary, volume);
-
-        if (previousVolume !== undefined) {
-            this.soundService.play('click', radioShortRange.primary.volume / 100);
-        }
-    }
-
-    @StateSelector(state => state.radioShortRange.secondary.volume)
-    public updateSecondaryVolume(volume: number, previousVolume?: number) {
-        const radioShortRange = this.store.getState().radioShortRange;
-        this.voipService.setRadioVolume(RadioType.RadioShortRange, RadioChannelType.Secondary, volume);
-
-        if (previousVolume !== undefined) {
-            this.soundService.play('click', radioShortRange.secondary.volume / 100);
+            this.voipService.connectRadio(frequency);
         }
     }
 
     @StateSelector(state => state.radioShortRange)
     public updateRadioShortRange(radioShortRange: Radio) {
-        this.nuiDispatch.dispatch('radio', 'Update', radioShortRange);
+        this.nuiDispatch.dispatch('radio', 'Update', {
+            ...radioShortRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 
     @OnNuiEvent(NuiEvent.VoipEnableRadio)
@@ -194,6 +138,24 @@ export class VoipRadioProvider {
         } else {
             this.store.dispatch.radioShortRange.updateSecondary(channel);
         }
+    }
+
+    @OnNuiEvent(NuiEvent.VoipUpdateRadioVolumeClick)
+    public async onUpdateRadioVolumeClick({ volume, type }: { volume: number; type: RadioChannelType }) {
+        this.voipService.setVoiceClickVolume(RadioType.RadioShortRange, type, volume);
+        this.soundService.play(RadioType.RadioShortRange + '/mic_click_on', volume / 100);
+
+        this.nuiDispatch.dispatch('radio', 'Update', {
+            ...this.store.getState().radioShortRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 
     @OnEvent(ClientEvent.VOIP_ITEM_RADIO_TOGGLE)
@@ -257,15 +219,25 @@ export class VoipRadioProvider {
             },
             props: [
                 {
-                    model: 'prop_cs_hand_radio',
+                    model: 'soz_hand_radio',
                     bone: 57005,
                     position: [0.14, 0.03, -0.04],
-                    rotation: [110.0, -15.0, 120.0],
+                    rotation: [90.0, -15.0, 120.0],
                 },
             ],
         });
 
-        this.nuiDispatch.dispatch('radio', 'Open', this.store.getState().radioShortRange);
+        this.nuiDispatch.dispatch('radio', 'Open', {
+            ...this.store.getState().radioShortRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioShortRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 
     public closeRadioInterface() {

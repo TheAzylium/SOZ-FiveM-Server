@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@core/decorators/injectable';
 import { wait, waitUntil } from '@core/utils';
 import { AnimationFactory, AnimationRunner } from '@public/client/animation/animation.factory';
+import { ServerEvent } from '@public/shared/event';
 
-import { Animation, AnimationStopReason, PlayOptions, Scenario } from '../../shared/animation';
+import { Animation, AnimationStopReason, PlayOptions, Scenario, Walking } from '../../shared/animation';
 import { BoxZone } from '../../shared/polyzone/box.zone';
 import { Vector3, Vector4 } from '../../shared/polyzone/vector';
+import { PlayerService } from '../player/player.service';
 
 interface AnimationStored {
     runner: AnimationRunner;
@@ -17,7 +19,12 @@ export class AnimationService {
     @Inject(AnimationFactory)
     private animationFactory: AnimationFactory;
 
+    @Inject(PlayerService)
+    private playerService: PlayerService;
+
     private runningAnimations: Map<string, AnimationStored> = new Map();
+    private runningWalking = '';
+    private previousWalking = '';
 
     public async walkToCoords(coords: Vector4, duration = 1000) {
         const playerPed = PlayerPedId();
@@ -64,7 +71,16 @@ export class AnimationService {
     }
     public async walkToCoordsAvoidObstacles(coords: Vector3 | Vector4, maxDuration = 5000) {
         const ped = PlayerPedId();
-        TaskGoToCoordAnyMeans(ped, coords[0], coords[1], coords[2], 1.0, 0, false, 786603, 0xbf800000);
+        await this.goToCoordsAvoidObstaclesForPed(ped, coords, maxDuration);
+    }
+
+    public async goToCoordsAvoidObstaclesForPed(
+        ped: number,
+        coords: Vector3 | Vector4,
+        maxDuration = 5000,
+        speed = 1.0
+    ) {
+        TaskGoToCoordAnyMeans(ped, coords[0], coords[1], coords[2], speed, 0, false, 786603, 0xbf800000);
         const zone: BoxZone = new BoxZone([coords[0], coords[1], coords[2]], 1.5, 1.5);
         const interval = 500;
         for (let i = 0; i < maxDuration; i += interval) {
@@ -100,6 +116,22 @@ export class AnimationService {
             runner.finally(() => {
                 this.runningAnimations.delete(id);
             });
+        }
+    }
+
+    public toggleWalking(walking: Walking) {
+        if (!this.runningWalking) {
+            this.runningWalking = this.playerService.getPlayer().metadata.walk;
+        }
+
+        if (walking.walk === this.runningWalking) {
+            TriggerServerEvent(ServerEvent.PLAYER_SET_CURRENT_WALKSTYLE, this.previousWalking);
+            this.runningWalking = this.previousWalking;
+            this.previousWalking = '';
+        } else {
+            TriggerServerEvent(ServerEvent.PLAYER_SET_CURRENT_WALKSTYLE, walking.walk);
+            this.previousWalking = this.runningWalking;
+            this.runningWalking = walking.walk;
         }
     }
 

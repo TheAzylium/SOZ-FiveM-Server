@@ -511,6 +511,13 @@ export const DmcCraftsLists: Record<string, CraftCategory> = {
                 },
                 amount: 5,
             },
+            speed_speed_sign: {
+                inputs: {
+                    steel_ingot: { count: 5 },
+                    utilitary_certificate: { count: 1 },
+                },
+                amount: 10,
+            },
             cone: {
                 inputs: {
                     aluminium_ingot: { count: 5 },

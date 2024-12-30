@@ -24,6 +24,8 @@ import { DMCModule } from './server/job/dmc/dmc.module';
 import { FDFModule } from './server/job/fdf/fdf.module';
 import { FightForStyleModule } from './server/job/ffs/ffs.module';
 import { FoodModule } from './server/job/food/food.module';
+import { GarbageModule } from './server/job/garbage/garbage.module';
+import { GouvModule } from './server/job/gouv/gouv.module';
 import { JobModule } from './server/job/job.module';
 import { LSMCModule } from './server/job/lsmc/lsmc.module';
 import { MdrModule } from './server/job/mdr/mdr.module';
@@ -58,6 +60,12 @@ async function bootstrap() {
     setServiceInstance('Store', store);
     setService('MiddlewareFactory', ChainMiddlewareEventServerFactory);
     setService('MiddlewareTickFactory', ChainMiddlewareTickServerFactory);
+
+    try {
+        setMaxEventListeners(20);
+    } catch {
+        /* empty */
+    }
 
     const app = await Application.create(
         ProviderServerLoader,
@@ -106,6 +114,8 @@ async function bootstrap() {
         DMCModule,
         HousingModule,
         UtilsModule,
+        GouvModule,
+        GarbageModule,
         ...PrivateModules
     );
 

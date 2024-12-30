@@ -1,3 +1,4 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
 import { PlayerData } from '@public/shared/player';
 
 import { Once, OnceStep, OnEvent } from '../../core/decorators/event';
@@ -79,7 +80,7 @@ export class HudMinimapProvider {
         this.updateShowRadar();
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(player: PlayerData): Promise<void> {
         this._haveGps =
             this.inventoryManager.hasEnoughItem('gps', 1, true) ||

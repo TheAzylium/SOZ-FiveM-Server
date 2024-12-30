@@ -4,6 +4,7 @@ import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
 import { JobGrade, JobPermission } from '../../shared/job';
+import { PositiveNumberValidator } from '../../shared/nui/input';
 import { JobMenuData } from '../../shared/nui/player';
 import { InputService } from '../nui/input.service';
 import { NuiMenu } from '../nui/nui.menu';
@@ -28,7 +29,6 @@ export class JobMenuProvider {
     public async onPlayerMenuJobGradeCreate() {
         const name = await this.inputService.askInput({
             title: 'Nom du grade',
-            defaultValue: '',
             maxCharacters: 32,
         });
 
@@ -44,7 +44,7 @@ export class JobMenuProvider {
     @OnNuiEvent(NuiEvent.PlayerMenuJobGradeDelete)
     public async onPlayerMenuJobGradeDelete({ grade }: { grade: JobGrade }) {
         const confirm = await this.inputService.askConfirm(
-            `Etes vous sur de vouloir supprimer le grade ${grade.name} ?`
+            `Êtes-vous sûr(e) de vouloir supprimer le grade ${grade.name} ? (OUI)`
         );
 
         if (!confirm) {
@@ -63,37 +63,44 @@ export class JobMenuProvider {
 
     @OnNuiEvent(NuiEvent.PlayerMenuJobGradeUpdateSalary)
     public async onPlayerMenuJobGradeUpdateSalary({ gradeId }: { gradeId: number }) {
-        const salary = await this.inputService.askInput({
-            title: 'Nouveau salaire :',
-            defaultValue: '',
-            maxCharacters: 32,
-        });
+        const salary = await this.inputService.askInput(
+            {
+                title: 'Nouveau salaire :',
+                maxCharacters: 32,
+            },
+            PositiveNumberValidator
+        );
 
-        if (!salary || salary.length === 0) {
-            return;
-        }
-
-        const salaryNumber = parseInt(salary, 10);
-
-        TriggerServerEvent(ServerEvent.JOB_GRADE_SET_SALARY, gradeId, salaryNumber);
+        TriggerServerEvent(ServerEvent.JOB_GRADE_SET_SALARY, gradeId, salary);
         this.nuiMenu.closeMenu();
     }
 
     @OnNuiEvent(NuiEvent.PlayerMenuJobGradeUpdateWeight)
     public async onPlayerMenuJobGradeUpdateWeight({ gradeId }: { gradeId: number }) {
-        const weight = await this.inputService.askInput({
-            title: 'Importance (le patron doit être le plus élevé) :',
-            defaultValue: '',
+        const weight = await this.inputService.askInput(
+            {
+                title: 'Importance (le patron doit être le plus élevé) :',
+                maxCharacters: 32,
+            },
+            PositiveNumberValidator
+        );
+
+        TriggerServerEvent(ServerEvent.JOB_GRADE_SET_WEIGHT, gradeId, weight);
+        this.nuiMenu.closeMenu();
+    }
+
+    @OnNuiEvent(NuiEvent.PlayerMenuJobGradeUpdateName)
+    public async onPlayerMenuJobGradeUpdateName({ gradeId }: { gradeId: number }) {
+        const newName = await this.inputService.askInput({
+            title: 'Nouveau nom :',
             maxCharacters: 32,
         });
 
-        if (!weight || weight.length === 0) {
+        if (!newName || newName.length === 0) {
             return;
         }
 
-        const weightNumber = parseInt(weight, 10);
-
-        TriggerServerEvent(ServerEvent.JOB_GRADE_SET_WEIGHT, gradeId, weightNumber);
+        TriggerServerEvent(ServerEvent.JOB_GRADE_SET_NAME, gradeId, newName);
         this.nuiMenu.closeMenu();
     }
 

@@ -8,6 +8,7 @@ import { Provider } from '../../core/decorators/provider';
 import { ClientEvent, ServerEvent } from '../../shared/event';
 import { AnimationService } from '../animation/animation.service';
 import { NuiDispatch } from '../nui/nui.dispatch';
+import { AttachedObjectService } from '../object/attached.object.service';
 import { PlayerService } from '../player/player.service';
 import { PlayerWalkstyleProvider } from '../player/player.walkstyle.provider';
 import { PlayerWardrobe } from '../player/player.wardrobe';
@@ -35,6 +36,9 @@ export class ItemProvider {
 
     @Inject(ItemService)
     private itemService: ItemService;
+
+    @Inject(AttachedObjectService)
+    private attachedObjectService: AttachedObjectService;
 
     private hasWalkStick = {
         enable: false,
@@ -107,43 +111,35 @@ export class ItemProvider {
     async onWalkStickToggle(): Promise<void> {
         this.hasWalkStick.enable = !this.hasWalkStick.enable;
 
-        if (this.hasWalkStick.object) {
-            DetachEntity(this.hasWalkStick.object, false, false);
-            TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(this.hasWalkStick.object));
-            DeleteEntity(this.hasWalkStick.object);
+        if (!this.hasWalkStick.enable && this.hasWalkStick.object) {
+            this.attachedObjectService.detachObjectToPlayer(this.hasWalkStick.object);
+            this.hasWalkStick.object = null;
         }
 
         if (this.hasWalkStick.enable) {
-            const ped = PlayerPedId();
-            const object = CreateObject(GetHashKey('prop_cs_walking_stick'), 0, 0, 0, true, true, true);
-
-            const netId = ObjToNet(object);
-            SetNetworkIdCanMigrate(netId, false);
-            TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-
-            AttachEntityToEntity(
-                object,
-                ped,
-                GetPedBoneIndex(ped, 57005),
-                0.16,
-                0.06,
-                0.0,
-                335.0,
-                300.0,
-                120.0,
-                true,
-                true,
-                false,
-                true,
-                5,
-                true
-            );
-
-            this.hasWalkStick.object = object;
+            await this.createWalkStick();
 
             await this.playerWalkstyleProvider.updateWalkStyle('item', 'move_heist_lester');
         } else {
             await this.playerWalkstyleProvider.updateWalkStyle('item', null);
+        }
+    }
+
+    private async createWalkStick() {
+        const object = await this.attachedObjectService.attachObjectToPlayer({
+            bone: 57005,
+            model: 'prop_cs_walking_stick',
+            position: [0.16, 0.06, 0.0],
+            rotation: [335.0, 300.0, 120.0],
+            rotationOrder: 5,
+        });
+
+        this.hasWalkStick.object = object;
+    }
+
+    async onWalkStickRefresh(): Promise<void> {
+        if (this.hasWalkStick.enable && !DoesEntityExist(this.hasWalkStick.object)) {
+            await this.createWalkStick();
         }
     }
 

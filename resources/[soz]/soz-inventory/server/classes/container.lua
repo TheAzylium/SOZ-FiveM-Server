@@ -5,6 +5,7 @@ function InventoryContainer:new(options)
     local inventoryOptions = {
         type = nil,
         allowedTypes = {},
+        allowedItems = {},
         inventoryPermissionCallback = nil,
         syncCallback = nil,
         inventoryGetContentCallback = nil,
@@ -15,8 +16,8 @@ function InventoryContainer:new(options)
         error("InventoryContainer:new() - type is required")
     end
 
-    if not options.allowedTypes then
-        error("InventoryContainer:new() - allowedTypes is required")
+    if not options.allowedTypes and not options.allowedItems then
+        error("InventoryContainer:new() - allowedTypes or allowedItems is required")
     end
 
     for key, value in pairs(options) do
@@ -26,6 +27,14 @@ function InventoryContainer:new(options)
                 itemsType[v] = true
             end
             value = itemsType
+        end
+
+        if key == "allowedItems" then
+            local itemsName = {}
+            for _, v in pairs(value) do
+                itemsName[v] = true
+            end
+            value = itemsName
         end
 
         inventoryOptions[key] = value
@@ -39,12 +48,18 @@ function InventoryContainer:CompactInventory(inv)
     if inv ~= nil then
         for k, v in pairs(inv) do
             if v.name and v.amount > 0 then
+                local metadata = v.metadata
+                if metadata and metadata.storageElements then
+                    metadata = table.deepclone(metadata)
+                    metadata.storageElements = InventoryContainer:CompactInventory(metadata.storageElements)
+                end
+
                 inventory[#inventory + 1] = {
                     name = v.name,
                     type = v.type,
                     slot = k,
                     amount = v.amount,
-                    metadata = next(v.metadata) and v.metadata or nil,
+                    metadata = next(metadata) and metadata or nil,
                 }
             end
         end
@@ -92,9 +107,9 @@ function InventoryContainer:SaveInventory(id, owner, inventory)
     return affectedRows >= 1
 end
 
-function InventoryContainer:SyncInventory(id, items)
+function InventoryContainer:SyncInventory(inv)
     if self.syncCallback then
-        self.syncCallback(id, items)
+        self.syncCallback(inv.id, inv.items)
     end
 end
 
@@ -103,7 +118,7 @@ function InventoryContainer:ItemIsAllowed(item)
         return true
     end
 
-    return self.allowedTypes[item.type or ""] or false
+    return self.allowedTypes[item.type or ""] or self.allowedItems[item.name or ""] or false
 end
 
 function InventoryContainer:CanPlayerUseInventory(owner, playerId)

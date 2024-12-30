@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@core/decorators/injectable';
 import { ServerStateService } from '@public/server/server.state.service';
 import { ClothConfig } from '@public/shared/cloth';
 import { DrivingSchoolLicense } from '@public/shared/driving-school';
@@ -5,7 +6,6 @@ import { Apartment, Property } from '@public/shared/housing/housing';
 import { JobType } from '@public/shared/job';
 import { SenatePartyMember } from '@public/shared/senate';
 
-import { Inject, Injectable } from '../../core/decorators/injectable';
 import { Disease } from '../../shared/disease';
 import { ClientEvent } from '../../shared/event';
 import { PlayerCharInfo, PlayerData, PlayerMetadata, Skin } from '../../shared/player';
@@ -27,6 +27,16 @@ export class PlayerService {
 
     public getPlayerByCitizenId(citizenId: string): PlayerData | null {
         const player = this.QBCore.getPlayerByCitizenId(citizenId);
+
+        if (player) {
+            return player.PlayerData;
+        }
+
+        return null;
+    }
+
+    public getPlayerByPhone(phoneNumber: string): PlayerData | null {
+        const player = this.QBCore.getPlayerByPhone(phoneNumber);
 
         if (player) {
             return player.PlayerData;

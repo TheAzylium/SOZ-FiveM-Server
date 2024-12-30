@@ -1,6 +1,9 @@
 import { Vector4 } from '@public/shared/polyzone/vector';
 
 export const EntityConfig: Record<number, Record<string, Vector4>> = {
+    [-377849416]: {
+        [0]: [0.0, 0.0, 0.5, 0],
+    },
     [444105316]: {
         [0]: [0.0, 0.0, 0.5, 0],
     },

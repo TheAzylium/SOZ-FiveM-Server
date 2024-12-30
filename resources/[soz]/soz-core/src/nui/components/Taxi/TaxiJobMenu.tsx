@@ -69,7 +69,7 @@ export const TaxiJobMenu: FunctionComponent<TaxiStateProps> = ({ data }) => {
                             Activer Horodateur
                         </MenuItemButton>
                     )}
-                    {status.missionInprogress ? (
+                    {status.taxiMissionInProgress ? (
                         <MenuItemButton
                             onConfirm={async () => {
                                 await fetchNui(NuiEvent.TaxiSetMission, false);
@@ -83,7 +83,24 @@ export const TaxiJobMenu: FunctionComponent<TaxiStateProps> = ({ data }) => {
                                 await fetchNui(NuiEvent.TaxiSetMission, true);
                             }}
                         >
-                            Prendre une mission
+                            Prendre une mission en taxi
+                        </MenuItemButton>
+                    )}
+                    {status.busMissionInProgress ? (
+                        <MenuItemButton
+                            onConfirm={async () => {
+                                await fetchNui(NuiEvent.BusSetService, false);
+                            }}
+                        >
+                            Annuler la mission
+                        </MenuItemButton>
+                    ) : (
+                        <MenuItemButton
+                            onConfirm={async () => {
+                                await fetchNui(NuiEvent.BusSetService, true);
+                            }}
+                        >
+                            Prendre une mission en bus
                         </MenuItemButton>
                     )}
                 </MenuContent>

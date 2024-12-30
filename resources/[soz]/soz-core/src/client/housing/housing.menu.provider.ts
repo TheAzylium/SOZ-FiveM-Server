@@ -5,7 +5,7 @@ import { emitQBRpc } from '../../core/rpc';
 import { PlayerCloakroomItem } from '../../shared/cloth';
 import { NuiEvent } from '../../shared/event/nui';
 import { ServerEvent } from '../../shared/event/server';
-import { Err, Ok } from '../../shared/result';
+import { NotEmptyStringValidator } from '../../shared/nui/input';
 import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
 import { NuiMenu } from '../nui/nui.menu';
@@ -103,16 +103,9 @@ export class HousingMenuProvider {
         const name = await this.inputService.askInput(
             {
                 title: 'Nommer la tenue',
-                defaultValue: '',
                 maxCharacters: 64,
             },
-            value => {
-                if (value.length < 1) {
-                    return Err('Le nom de la tenue ne peut pas être vide.');
-                }
-
-                return Ok(true);
-            }
+            NotEmptyStringValidator
         );
 
         if (name) {
@@ -147,13 +140,7 @@ export class HousingMenuProvider {
                 defaultValue: item.name,
                 maxCharacters: 64,
             },
-            value => {
-                if (value.length < 1) {
-                    return Err('Le nom de la tenue ne peut pas être vide.');
-                }
-
-                return Ok(true);
-            }
+            NotEmptyStringValidator
         );
 
         if (newName) {

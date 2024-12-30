@@ -15,6 +15,7 @@ export const vehicle = createModel<RootModel>()({
         fuelType: 'essence',
         fuelLevel: 0,
         rpm: 0,
+        vehCategory: null,
         useRpm: true,
     } as VehicleHud,
     reducers: {

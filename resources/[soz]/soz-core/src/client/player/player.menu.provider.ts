@@ -1,6 +1,8 @@
 import { emitRpc } from '@public/core/rpc';
 import { wait } from '@public/core/utils';
 import { Feature, isFeatureEnabled } from '@public/shared/features';
+import { CardType } from '@public/shared/nui/card';
+import { Vector3 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
 
 import { Command } from '../../core/decorators/command';
@@ -14,10 +16,12 @@ import { AnimationService } from '../animation/animation.service';
 import { HudMinimapProvider } from '../hud/hud.minimap.provider';
 import { HudStateProvider } from '../hud/hud.state.provider';
 import { JobMenuProvider } from '../job/job.menu.provider';
+import { Notifier } from '../notifier';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { NuiMenu } from '../nui/nui.menu';
 import { HalloweenSpiderService } from '../object/halloween.spider.service';
 import { ProgressService } from '../progress.service';
+import { VoiceProvider } from '../voip/voice/voice.provider';
 import { PlayerAnimationProvider } from './player.animation.provider';
 import { PlayerService } from './player.service';
 import { PlayerWardrobe } from './player.wardrobe';
@@ -56,6 +60,12 @@ export class PlayerMenuProvider {
 
     @Inject(HalloweenSpiderService)
     private halloweenSpiderService: HalloweenSpiderService;
+
+    @Inject(VoiceProvider)
+    private voiceProvider: VoiceProvider;
+
+    @Inject(Notifier)
+    private notifier: Notifier;
 
     @Once()
     public async init() {
@@ -104,7 +114,33 @@ export class PlayerMenuProvider {
     @OnEvent(ClientEvent.PLAYER_CARD_SHOW)
     @OnNuiEvent(NuiEvent.PlayerMenuCardShow)
     public async onPlayerMenuCardShow(type, accountId?: string) {
-        await this.playerService.showCard(type, accountId);
+        await this.showCard(type, accountId);
+    }
+
+    public async showCard(type: CardType, accountId?: string) {
+        const position = GetEntityCoords(PlayerPedId()) as Vector3;
+        const players = this.playerService.getPlayersAround(position, 3.0);
+
+        if (players.length <= 1) {
+            this.notifier.notify("Il n'y a personne à proximité", 'error');
+            return;
+        }
+
+        const player = this.playerService.getId();
+        await this.animationService.playAnimation({
+            base: {
+                dictionary: 'mp_common',
+                name: 'givetake2_a',
+                blendInSpeed: 8.0,
+                blendOutSpeed: 8.0,
+                options: {
+                    enablePlayerControl: true,
+                    onlyUpperBody: true,
+                },
+            },
+        });
+
+        TriggerServerEvent(ServerEvent.PLAYER_SHOW_IDENTITY, type, players, player, accountId);
     }
 
     @OnEvent(ClientEvent.PLAYER_CARD_SEE)
@@ -175,7 +211,7 @@ export class PlayerMenuProvider {
 
     @OnNuiEvent(NuiEvent.PlayerMenuVoipReset)
     public async resetVoip() {
-        TriggerEvent('voip:client:reset');
+        await this.voiceProvider.reconnect(true, 'Demande joueur');
     }
 
     @OnNuiEvent(NuiEvent.PlayerMenuHudSetArachnophobe)

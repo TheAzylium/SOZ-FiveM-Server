@@ -102,7 +102,7 @@ export class ExamProvider {
             return;
         }
 
-        const vehCoords = GetEntityCoords(this.examState.vehicleEntity, true) as Vector3;
+        const vehCoords = GetEntityCoords(PlayerPedId()) as Vector3;
 
         if (!this.examState.isPenaltyLoopRunning) {
             if (getDistance(this.examState.spawnPoint, vehCoords) > 2.0) {
@@ -149,6 +149,7 @@ export class ExamProvider {
         for (const penalty of this.examState.penalties) {
             if (isErr(penalty.performCheck())) {
                 await this.terminateExam(Err(false));
+                break;
             }
         }
     }

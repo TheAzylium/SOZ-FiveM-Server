@@ -3,6 +3,7 @@ import { PlayerService } from '@public/client/player/player.service';
 import { ProgressService } from '@public/client/progress.service';
 import { TargetFactory } from '@public/client/target/target.factory';
 import { VehicleLockProvider } from '@public/client/vehicle/vehicle.lock.provider';
+import { VehicleStateProvider } from '@public/client/vehicle/vehicle.state.provider';
 import { OnEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
@@ -11,9 +12,14 @@ import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
-import { VehicleType, VehicleTypeFromClass } from '@public/shared/vehicle/vehicle';
+import { VehicleType, VehicleTypeFromClass, VehicleVolatileState } from '@public/shared/vehicle/vehicle';
 
-const jobsAllowed = [JobType.LSPD, JobType.BCSO, JobType.SASP, JobType.FBI];
+const jobsAllowed = [JobType.LSPD, JobType.BCSO, JobType.SASP, JobType.FBI, JobType.LSCS];
+
+const PlateTypeOverride: Record<number, number> = {
+    [GetHashKey('rebel')]: 1,
+    [GetHashKey('streiter')]: 2,
+};
 
 @Provider()
 export class PoliceVehicleProvider {
@@ -31,6 +37,9 @@ export class PoliceVehicleProvider {
 
     @Inject(VehicleLockProvider)
     private vehicleLockProvider: VehicleLockProvider;
+
+    @Inject(VehicleStateProvider)
+    private vehicleStateProvider: VehicleStateProvider;
 
     @OnEvent(ClientEvent.JOB_DUTY_CHANGE)
     public onStart(duty: boolean) {
@@ -55,11 +64,11 @@ export class PoliceVehicleProvider {
                             return false;
                         }
                         if (VehicleTypeFromClass[GetVehicleClass(vehicle)] == VehicleType.Automobile) {
-                            // Exceptions with license plate undetected but exists
-                            if (GetHashKey('rebel') == GetEntityModel(vehicle)) {
-                                return true;
+                            let vehiclePlate = PlateTypeOverride[GetEntityModel(vehicle)];
+                            if (vehiclePlate == null) {
+                                vehiclePlate = GetVehiclePlateType(vehicle);
                             }
-                            const vehiclePlate = GetVehiclePlateType(vehicle);
+
                             if (vehiclePlate == 3) {
                                 return false;
                             }
@@ -213,6 +222,97 @@ export class PoliceVehicleProvider {
                         const networkId = NetworkGetNetworkIdFromEntity(entity);
 
                         TriggerServerEvent(ServerEvent.VEHICLE_FORCE_OPEN, networkId);
+                    },
+                },
+                {
+                    label: 'Rechercher des empreintes',
+                    job: job,
+                    item: 'fingerprint_collector',
+                    icon: 'c:police/fouiller.png',
+                    color: job,
+                    canInteract: async entity => {
+                        const vehicleNetworkId = NetworkGetNetworkIdFromEntity(entity);
+                        const vehicleState = await emitRpc<VehicleVolatileState>(
+                            RpcServerEvent.VEHICLE_GET_STATE,
+                            vehicleNetworkId
+                        );
+                        if (!vehicleState.isAnalyzed) {
+                            return false;
+                        }
+                        return this.playerService.isOnDuty();
+                    },
+                    action: async entity => {
+                        const { completed } = await this.progressService.progress(
+                            'police:vehicle:fingerprint',
+                            "Recherche d'empreintes en cours...",
+                            8000,
+                            {
+                                task: 'CODE_HUMAN_MEDIC_KNEEL',
+                            },
+                            {
+                                useWhileDead: false,
+                                canCancel: true,
+                                disableMovement: true,
+                                disableCarMovement: true,
+                                disableMouse: false,
+                                disableCombat: true,
+                            }
+                        );
+                        if (!completed) {
+                            return;
+                        }
+                        const model = GetEntityModel(entity);
+                        const name = GetDisplayNameFromVehicleModel(model);
+                        const coords = GetEntityCoords(PlayerPedId());
+                        const zoneID = GetNameOfZone(coords[0], coords[1], coords[2]);
+                        const zone = GetLabelText(zoneID);
+                        const networkId = NetworkGetNetworkIdFromEntity(entity);
+                        TriggerServerEvent(ServerEvent.VEHICLE_COLLECT_FINGERPRINT, networkId, zone, name);
+                    },
+                },
+                {
+                    label: 'Rechercher des traces de drogue',
+                    job: job,
+                    icon: 'c:police/fouiller.png',
+                    color: job,
+                    canInteract: async entity => {
+                        const vehicleNetworkId = NetworkGetNetworkIdFromEntity(entity);
+                        const vehicleState = await emitRpc<VehicleVolatileState>(
+                            RpcServerEvent.VEHICLE_GET_STATE,
+                            vehicleNetworkId
+                        );
+                        if (!vehicleState.isAnalyzed) {
+                            return false;
+                        }
+                        return this.playerService.isOnDuty();
+                    },
+                    action: async entity => {
+                        const { completed } = await this.progressService.progress(
+                            'police:vehicle:drug',
+                            'Recherche de traces de drogue en cours...',
+                            8000,
+                            {
+                                task: 'CODE_HUMAN_MEDIC_KNEEL',
+                            },
+                            {
+                                useWhileDead: false,
+                                canCancel: true,
+                                disableMovement: true,
+                                disableCarMovement: true,
+                                disableMouse: false,
+                                disableCombat: true,
+                            }
+                        );
+                        if (!completed) {
+                            return;
+                        }
+                        const model = GetEntityModel(entity);
+                        const name = GetDisplayNameFromVehicleModel(model);
+                        const coords = GetEntityCoords(PlayerPedId());
+                        const zoneID = GetNameOfZone(coords[0], coords[1], coords[2]);
+                        const zone = GetLabelText(zoneID);
+                        const networkId = NetworkGetNetworkIdFromEntity(entity);
+                        TriggerServerEvent(ServerEvent.VEHICLE_COLLECT_DRUG, networkId, zone, name);
                     },
                 },
             ],

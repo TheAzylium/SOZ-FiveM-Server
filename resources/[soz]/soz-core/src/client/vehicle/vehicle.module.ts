@@ -18,6 +18,7 @@ import { VehicleSeatbeltProvider } from './vehicle.seatbelt.provider';
 import { VehicleSpawnProvider } from './vehicle.spawn.provider';
 import { VehicleStateProvider } from './vehicle.state.provider';
 import { VehicleTowProvider } from './vehicle.tow.provider';
+import { VehicleOffroadProvider } from './vehicule.offroad.provider';
 
 @Module({
     providers: [
@@ -40,6 +41,7 @@ import { VehicleTowProvider } from './vehicle.tow.provider';
         VehiclePoliceLocator,
         VehiclePitStopProvider,
         VehicleTowProvider,
+        VehicleOffroadProvider,
     ],
 })
 export class VehicleModule {}

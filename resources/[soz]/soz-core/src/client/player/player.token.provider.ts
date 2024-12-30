@@ -1,4 +1,7 @@
-import { Once, OnceStep } from '../../core/decorators/event';
+import { ApiConfig } from '@public/shared/api';
+import { NuiEvent } from '@public/shared/event';
+
+import { Once, OnceStep, OnNuiEvent } from '../../core/decorators/event';
 import { Exportable } from '../../core/decorators/exports';
 import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
@@ -16,5 +19,18 @@ export class PlayerTokenProvider {
     @Exportable('GetJwtToken')
     public getJwtToken(): string {
         return this.token;
+    }
+
+    @OnNuiEvent(NuiEvent.GetJWTToken)
+    public async onGetJwtToken(): Promise<string> {
+        return this.token;
+    }
+
+    @OnNuiEvent(NuiEvent.GetAPIConfig)
+    public async onGetApiConfig(): Promise<ApiConfig> {
+        return {
+            apiEndpoint: `${GetConvar('soz_public_api_endpoint', 'https://api.soz.zerator.com')}/graphql`,
+            publicEndpoint: GetConvar('soz_public_endpoint', 'https://soz.zerator.com'),
+        };
     }
 }

@@ -1400,5 +1400,11 @@
       <ModelName>lr_prop_supermod_door_01</ModelName>
       <TuningName>SupermodGarage</TuningName>
     </Item>
+
+  <!--  Drift Zone  -->
+    <Item>
+      <ModelName>soz_prop_gar_door_04</ModelName>
+      <TuningName>SupermodGarage</TuningName>
+    </Item>
   </ModelToTuneMapping>
 </CDoorTuningFile>

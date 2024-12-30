@@ -1,3 +1,5 @@
+import { ClientEvent } from '@public/shared/event/client';
+
 import { GarageList } from '../../config/garage';
 import { Inject, Injectable } from '../../core/decorators/injectable';
 import { BoxZone } from '../../shared/polyzone/box.zone';
@@ -36,33 +38,49 @@ export class GarageRepository extends RepositoryLegacy<Record<string, Garage>> {
         });
 
         for (const houseProperty of houseProperties) {
-            const entryZone = JSON.parse(houseProperty.entry_zone) as DatabaseZone;
-            const garageZone = JSON.parse(houseProperty.garage_zone) as DatabaseZone;
-
-            garageList[houseProperty.identifier] = {
-                id: `property_${houseProperty.identifier}`,
-                name: 'Garage personnel',
-                type: GarageType.House,
-                category: GarageCategory.All,
-                zone: new BoxZone([entryZone.x, entryZone.y, entryZone.z], 8.0, 6.0, {
-                    heading: entryZone.heading,
-                    minZ: entryZone.minZ,
-                    maxZ: entryZone.maxZ,
-                }),
-                parkingPlaces: [
-                    new BoxZone([garageZone.x, garageZone.y, garageZone.z], 8.0, 6.0, {
-                        heading: garageZone.heading,
-                        minZ: garageZone.minZ,
-                        maxZ: garageZone.maxZ,
-                        data: {
-                            capacity: [PlaceCapacity.Large, PlaceCapacity.Medium, PlaceCapacity.Small],
-                        },
-                    }),
-                ],
-                isTrailerGarage: houseProperty.identifier.includes('trailer'),
-            };
+            garageList[houseProperty.identifier] = this.garageFromDB(
+                houseProperty.identifier,
+                houseProperty.garage_zone,
+                houseProperty.entry_zone
+            );
         }
 
         return garageList;
+    }
+
+    private garageFromDB(identifier: string, garage_zone: string, entry_zone: string): Garage {
+        const entryZone = JSON.parse(entry_zone) as DatabaseZone;
+        const garageZone = JSON.parse(garage_zone) as DatabaseZone;
+
+        return {
+            id: `property_${identifier}`,
+            name: 'Garage personnel',
+            type: GarageType.House,
+            category: GarageCategory.All,
+            zone: new BoxZone([entryZone.x, entryZone.y, entryZone.z], 8.0, 6.0, {
+                heading: entryZone.heading,
+                minZ: entryZone.minZ,
+                maxZ: entryZone.maxZ,
+            }),
+            parkingPlaces: [
+                new BoxZone([garageZone.x, garageZone.y, garageZone.z], 8.0, 6.0, {
+                    heading: garageZone.heading,
+                    minZ: garageZone.minZ,
+                    maxZ: garageZone.maxZ,
+                    data: {
+                        capacity: [PlaceCapacity.Large, PlaceCapacity.Medium, PlaceCapacity.Small],
+                    },
+                }),
+            ],
+            isTrailerGarage: identifier.includes('trailer'),
+        };
+    }
+
+    public async updateAddGarage(identifier: string, garage_zone: string, entry_zone: string) {
+        const garageList = await this.get();
+
+        garageList[identifier] = this.garageFromDB(identifier, garage_zone, entry_zone);
+
+        TriggerLatentClientEvent(ClientEvent.VEHICLE_GARAGE_UPDATE, -1, 16 * 1024, identifier, garageList[identifier]);
     }
 }

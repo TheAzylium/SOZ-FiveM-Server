@@ -10,8 +10,9 @@ Config.StorageCapacity = {
     ["boss_storage"] = {slot = 100, weight = 10000000},
     ["fridge"] = {slot = 100, weight = 10000000},
     ["organ"] = {slot = 100, weight = 10000000},
-    ["seizure"] = {slot = 100, weight = 10000000},
+    ["seizure"] = {slot = 100, weight = 1000000},
     ["storage"] = {slot = 100, weight = 10000000},
+    ["evidence_storage"] = {slot = 100, weight = 10000000},
     ["storage_tank"] = {slot = 10, weight = 10000000},
     ["cloakroom"] = {slot = 10, weight = 1000000},
     --- houses
@@ -61,6 +62,8 @@ Config.ErrorMessage = {
     ["get_not_allowed"] = "Ce stockage ne peut pas vous donner cet objet !",
     ["put_not_allowed"] = "Ce stockage ne peut pas accepter votre objet !",
     ["invalid_alreadyhaveone"] = "Vous avez déjà un tel object sur vous !",
+    ["remove_failed"] = "L'objet n'a pas été trouvé !",
+    ["invalid_weight"] = "Vos poches sont pleines...",
 }
 
 Config.crateMaxWeight = 12000

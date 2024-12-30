@@ -5,6 +5,8 @@ import { MenuType } from '@public/shared/nui/menu';
 import { JewelryShopItem, ShopJewelryContent } from '@public/shared/shop';
 import { FunctionComponent } from 'react';
 
+import { TaxType } from '../../../shared/bank';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -25,6 +27,7 @@ type MenuJewelryShopStateProps = {
 
 export const JewelryShopMenu: FunctionComponent<MenuJewelryShopStateProps> = ({ catalog }) => {
     const banner = 'https://nui-img/soz/menu_shop_jewelry';
+    const getPrice = useGetPrice();
 
     useNuiEvent('menu', 'Backspace', () => {
         fetchNui(NuiEvent.JewelryShopBackspace);
@@ -82,7 +85,7 @@ export const JewelryShopMenu: FunctionComponent<MenuJewelryShopStateProps> = ({ 
                                             componentId: cat.componentId,
                                         });
                                     }}
-                                    description={`💸 Prix : $${cat.price}`}
+                                    description={`💸 Prix : $${getPrice(cat.price, TaxType.SUPPLY)}`}
                                     onConfirm={async (_, value) => {
                                         fetchNui(NuiEvent.JewelryShopBuy, {
                                             label: next[value].Localized,

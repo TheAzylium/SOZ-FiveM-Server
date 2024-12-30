@@ -18,7 +18,7 @@ export class ClothingService {
     }
 
     public displayHairWithMask(maskDrawable: number): boolean {
-        return maskDrawable < 103 || KeepHairWithMask[maskDrawable];
+        return KeepHairWithMask[maskDrawable];
     }
 
     public applyProp(prop: Prop, outfitItem: OutfitItem) {
@@ -101,5 +101,66 @@ export class ClothingService {
         }
 
         return maxOptions;
+    }
+
+    public checkWearingGloves(): boolean {
+        const ped = PlayerPedId();
+        const armIndex = GetPedDrawableVariation(ped, 3);
+        const model = GetEntityModel(ped);
+        if (model == GetHashKey('mp_m_freemode_01')) {
+            if (
+                armIndex < 16 ||
+                armIndex == 18 ||
+                (armIndex >= 52 && armIndex <= 62) ||
+                armIndex == 97 ||
+                armIndex == 98 ||
+                armIndex == 112 ||
+                armIndex == 113 ||
+                armIndex == 114 ||
+                armIndex == 118 ||
+                armIndex == 125 ||
+                armIndex == 132 ||
+                armIndex == 164 ||
+                armIndex == 169 ||
+                armIndex == 184 ||
+                armIndex == 188 ||
+                armIndex == 196 ||
+                armIndex == 197 ||
+                armIndex == 198 ||
+                armIndex == 202
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (
+                armIndex < 16 ||
+                armIndex == 19 ||
+                (armIndex >= 59 && armIndex <= 71) ||
+                armIndex == 112 ||
+                armIndex == 113 ||
+                armIndex == 129 ||
+                armIndex == 130 ||
+                armIndex == 131 ||
+                armIndex == 135 ||
+                armIndex == 142 ||
+                armIndex == 149 ||
+                armIndex == 153 ||
+                armIndex == 157 ||
+                armIndex == 161 ||
+                armIndex == 165 ||
+                armIndex == 205 ||
+                armIndex == 210 ||
+                armIndex == 229 ||
+                armIndex == 233 ||
+                armIndex == 241 ||
+                armIndex == 242
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }

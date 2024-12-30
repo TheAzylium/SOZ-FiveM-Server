@@ -1,13 +1,15 @@
+import { ServerEvent } from '@public/shared/event';
+
 import { Once, OnceStep } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
-import { JobPermission } from '../../shared/job';
-import { ShopProduct } from '../../shared/shop';
+import { JobPermission, JobType } from '../../shared/job';
+import { ShopConfig, ShopProduct } from '../../shared/shop';
 import { BossShop } from '../../shared/shop/boss';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { ItemService } from '../item/item.service';
 import { JobService } from '../job/job.service';
-import { TargetFactory } from '../target/target.factory';
+import { TargetFactory, TargetOptions } from '../target/target.factory';
 
 @Provider()
 export class BossShopProvider {
@@ -32,6 +34,30 @@ export class BossShopProvider {
         return hydratedProducts;
     }
 
+    private getOrders(shop: ShopConfig & { job: JobType }): TargetOptions[] {
+        const ret: TargetOptions[] = [];
+        if (!shop.orders) {
+            return ret;
+        }
+
+        for (const order of shop.orders.products) {
+            const item = this.itemService.getItem(order.id);
+            ret.push({
+                label: 'Commander un ' + item.label + ' (' + order.price + '$)',
+                icon: 'c:shop/' + order.id + '.png',
+                job: shop.job,
+                blackoutGlobal: true,
+                canInteract: () => {
+                    return this.jobService.hasPermission(shop.job, JobPermission.SocietyShop);
+                },
+                action: () => {
+                    TriggerServerEvent(ServerEvent.SHOP_BOSS_ORDER, order.id, order.price, shop.orders.targetInv);
+                },
+            });
+        }
+        return ret;
+    }
+
     @Once(OnceStep.PlayerLoaded)
     setupBossShop() {
         BossShop.forEach(shop => {
@@ -54,6 +80,7 @@ export class BossShopProvider {
                             );
                         },
                     },
+                    ...this.getOrders(shop),
                 ],
                 2.5
             );

@@ -1,9 +1,11 @@
 import { FunctionComponent, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import { GarageMenuData, GarageType, GarageVehicle, getTransferPrice } from '../../../shared/vehicle/garage';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -32,6 +34,7 @@ const BannerMap: Record<GarageType, string> = {
 
 export const MenuGarage: FunctionComponent<MenuGarageProps> = ({ data }) => {
     const [currentVehicle, setCurrentVehicle] = useState<GarageVehicle | null>(null);
+    const getPrice = useGetPrice();
 
     if (!data) {
         return null;
@@ -139,7 +142,7 @@ export const MenuGarage: FunctionComponent<MenuGarageProps> = ({ data }) => {
                             >
                                 <div className="flex justify-between align-items-center">
                                     <span>{garage.garage.name}</span>
-                                    <span>{transferPrice}$</span>
+                                    <span>{getPrice(transferPrice, TaxType.TRAVEL)}$</span>
                                 </div>
                             </MenuItemButton>
                         );
@@ -157,6 +160,7 @@ type VehicleListProps = {
 
 export const VehicleList: FunctionComponent<VehicleListProps> = ({ data, setCurrentVehicle }) => {
     const navigateToTransfer = useMenuNavigate('transfer');
+    const getPrice = useGetPrice();
 
     if (!data) {
         return null;
@@ -245,7 +249,7 @@ export const VehicleList: FunctionComponent<VehicleListProps> = ({ data, setCurr
                                         <br />
                                         {garageVehicle.price > 0 && (
                                             <span>
-                                                Prix de sortie: ${garageVehicle.price}
+                                                Prix de sortie: ${getPrice(garageVehicle.price, TaxType.VEHICLE)}
                                                 <br />
                                             </span>
                                         )}
@@ -253,7 +257,10 @@ export const VehicleList: FunctionComponent<VehicleListProps> = ({ data, setCurr
                                 }
                             >
                                 <MenuItemSelectOption value="take_out">
-                                    Sortir {garageVehicle.price > 0 && <span>(${garageVehicle.price})</span>}
+                                    Sortir{' '}
+                                    {garageVehicle.price > 0 && (
+                                        <span>(${getPrice(garageVehicle.price, TaxType.VEHICLE)})</span>
+                                    )}
                                 </MenuItemSelectOption>
                                 {garageVehicle.price > 0 &&
                                     data.has_fake_ticket &&

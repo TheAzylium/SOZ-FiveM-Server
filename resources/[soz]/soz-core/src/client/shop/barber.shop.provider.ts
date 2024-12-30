@@ -7,6 +7,7 @@ import { NuiEvent, ServerEvent } from '@public/shared/event';
 import { MenuType } from '@public/shared/nui/menu';
 import { PlayerPedHash, Skin } from '@public/shared/player';
 import { Vector3 } from '@public/shared/polyzone/vector';
+import { Ok } from '@public/shared/result';
 import { BarberConfiguration, BarberShopColors, BarberShopItem, BarberShopLabels } from '@public/shared/shop';
 
 import { AnimationService } from '../animation/animation.service';
@@ -75,12 +76,14 @@ export class BarberShopProvider {
         this.barberShopContent[PlayerPedHash.Male][2].items = this.barberShopLabels.Makeup;
         this.barberShopContent[PlayerPedHash.Male][3].items = this.barberShopLabels.Eye;
         this.barberShopContent[PlayerPedHash.Male][4].items = this.barberShopLabels.Eyebrow;
+        this.barberShopContent[PlayerPedHash.Male][5].items = this.barberShopLabels.ChestHair;
         this.barberShopContent[PlayerPedHash.Female][0].items = this.barberShopLabels.HairFemale;
         this.barberShopContent[PlayerPedHash.Female][1].items = this.barberShopLabels.Blush;
         this.barberShopContent[PlayerPedHash.Female][2].items = this.barberShopLabels.Lipstick;
         this.barberShopContent[PlayerPedHash.Female][3].items = this.barberShopLabels.Makeup;
         this.barberShopContent[PlayerPedHash.Female][4].items = this.barberShopLabels.Eye;
         this.barberShopContent[PlayerPedHash.Female][5].items = this.barberShopLabels.Eyebrow;
+        this.barberShopContent[PlayerPedHash.Female][6].items = this.barberShopLabels.ChestHair;
     }
 
     public async openShop() {
@@ -138,18 +141,20 @@ export class BarberShopProvider {
 
         // Setup cam
         const [x, y, z] = GetEntityCoords(ped);
-        await this.cameraService.setupCamera(
+        this.cameraService.setupCamera(
             [
-                x + PositionInBarberShop.CAMERA_OFFSET_X,
-                y + PositionInBarberShop.CAMERA_OFFSET_Y,
-                z + PositionInBarberShop.CAMERA_OFFSET_Z,
+                x + PositionInBarberShop.Other.CAMERA_OFFSET_X,
+                y + PositionInBarberShop.Other.CAMERA_OFFSET_Y,
+                z + PositionInBarberShop.Other.CAMERA_OFFSET_Z,
             ] as Vector3,
-            [x, y, z + PositionInBarberShop.CAMERA_TARGET_Z] as Vector3
+            [x, y, z + PositionInBarberShop.Other.CAMERA_TARGET_Z] as Vector3
         );
 
         // Play idle animation
         const animDict = 'anim@heists@heist_corona@team_idles@male_c';
         this.resourceLoader.loadAnimationDictionary(animDict);
+
+        TriggerEvent('soz-character:Client:SetTemporaryNaked', true);
 
         ClearPedTasksImmediately(ped);
         TaskPlayAnim(ped, animDict, 'idle', 1.0, 1.0, -1, 1, 1, false, false, false);
@@ -160,9 +165,26 @@ export class BarberShopProvider {
         if (menuType !== MenuType.BarberShop) {
             return;
         }
+        TriggerEvent('soz-character:Client:ApplyCurrentClothConfig');
         TriggerEvent('soz-character:Client:ApplyCurrentSkin');
         await this.cameraService.deleteCamera();
         await this.animationService.clearShopAnimations(PlayerPedId());
         FreezeEntityPosition(PlayerPedId(), false);
+    }
+
+    @OnNuiEvent(NuiEvent.BarberShopThroughCategory)
+    public async onSelectCategory(category: string) {
+        const ped = PlayerPedId();
+
+        const [x, y, z] = GetEntityCoords(ped);
+        this.cameraService.setupCamera(
+            [
+                x + PositionInBarberShop[category].CAMERA_OFFSET_X,
+                y + PositionInBarberShop[category].CAMERA_OFFSET_Y,
+                z + PositionInBarberShop[category].CAMERA_OFFSET_Z,
+            ] as Vector3,
+            [x, y, z + PositionInBarberShop[category].CAMERA_TARGET_Z] as Vector3
+        );
+        return Ok(true);
     }
 }

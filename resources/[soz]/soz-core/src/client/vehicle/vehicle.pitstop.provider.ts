@@ -5,7 +5,7 @@ import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
 import { NuiEvent, ServerEvent } from '../../shared/event';
-import { Err, Ok } from '../../shared/result';
+import { PositiveNumberValidator } from '../../shared/nui/input';
 import { RpcServerEvent } from '../../shared/rpc';
 import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
@@ -72,22 +72,9 @@ export class VehiclePitStopProvider {
                 maxCharacters: 10,
                 defaultValue: price.toString(),
             },
-            value => {
-                if (!value) {
-                    return Ok(true);
-                }
-                const int = parseInt(value);
-                if (isNaN(int) || int < 0) {
-                    return Err('Valeur incorrecte');
-                }
-                return Ok(true);
-            }
+            PositiveNumberValidator
         );
 
-        return emitRpc<Record<string, number>>(
-            RpcServerEvent.VEHICLE_PITSTOP_PRICES_UPDATE,
-            category,
-            parseInt(newPrice)
-        );
+        return emitRpc<Record<string, number>>(RpcServerEvent.VEHICLE_PITSTOP_PRICES_UPDATE, category, newPrice);
     }
 }

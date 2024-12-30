@@ -7,7 +7,6 @@ import { toVector3Object, Vector3 } from '../../../shared/polyzone/vector';
 import { InventoryManager } from '../../inventory/inventory.manager';
 import { Monitor } from '../../monitor/monitor';
 import { Notifier } from '../../notifier';
-import { PlayerService } from '../../player/player.service';
 import { ProgressService } from '../../player/progress.service';
 
 @Provider()
@@ -17,9 +16,6 @@ export class BaunResellProvider {
 
     @Inject(Notifier)
     private notifier: Notifier;
-
-    @Inject(PlayerService)
-    private playerService: PlayerService;
 
     @Inject(ProgressService)
     private progressService: ProgressService;

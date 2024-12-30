@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CVehicleModelInfoVariation>
+    <variationData>
+        <Item>
+            <modelName>bcso10</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        0
+                        0
+                        55
+                        23
+                    </indices>
+                    <liveries>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>0_default_modkit</Item>
+                <Item>1010_dodge_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="1"/>
+            <sirenSettings value="5011"/>
+        </Item>
+        <Item>
+            <modelName>bcso11</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        0
+                        0
+                        55
+                        23
+                    </indices>
+                    <liveries/>
+                </Item>
+            </colors>
+            <kits>
+                <Item>1018_bcso11_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>Police guv plate</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="26"/>
+            <sirenSettings value="5012"/>
+        </Item>
+        <Item>
+            <modelName>bcso12</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        0
+                        0
+                        55
+                        23
+                    </indices>
+                    <liveries/>
+                </Item>
+            </colors>
+            <kits>
+                <Item>1019_bcso12_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>Police guv plate</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="164"/>
+            <sirenSettings value="5012"/>
+        </Item>
+        <Item>
+            <modelName>bcso20</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        0
+                        0
+                        55
+                        23
+                    </indices>
+                    <liveries>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>1011_bcso20_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="1"/>
+            <sirenSettings value="5012"/>
+        </Item>
+        <Item>
+            <modelName>bcso21</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        0
+                        0
+                        55
+                        23
+                    </indices>
+                    <liveries>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>1022_bcso21_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="23"/>
+            <sirenSettings value="5012"/>
+        </Item>
+        <Item>
+            <modelName>bcso40</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        111
+                        0
+                        1
+                        156
+                        0
+                        0
+                    </indices>
+                    <liveries>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                        <Item value="false"/>
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>946_bcso40_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges/>
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100"/>
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="261569894523"/>
+            <sirenSettings value="5012"/>
+        </Item>
+        <Item>
+            <modelName>SHERIFF</modelName>
+            <colors itemType="CVehicleModelColorIndices">
+                <Item>
+                    <indices>111 111 0 156 0 0</indices>
+                    <liveries>
+                        0 0 0 0 0 0 0 0 0 0
+                        0 0 0 0 0 0 0 0 0 0
+                        0 0 0 0 0 0 0 0 0 0
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>hash_0D21AC6D</Item>
+            </kits>
+            <windowsWithExposedEdges />
+            <plateProbabilities>
+                <Probabilities itemType="LicensePlateProbabilityNamed">
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100" />
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="0" />
+            <sirenSettings value="5012" />
+        </Item>
+        <Item>
+            <modelName>bcso41</modelName>
+            <colors>
+                <Item>
+                    <indices content="char_array">
+                        111
+                        0
+                        1
+                        156
+                        0
+                        0
+                    </indices>
+                    <liveries>
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                        <Item value="false" />
+                    </liveries>
+                </Item>
+            </colors>
+            <kits>
+                <Item>1024_bcso41_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges />
+            <plateProbabilities>
+                <Probabilities>
+                    <Item>
+                        <Name>hash_69E137FC</Name>
+                        <Value value="100" />
+                    </Item>
+                </Probabilities>
+            </plateProbabilities>
+            <lightSettings value="126" />
+            <sirenSettings value="5012" />
+        </Item>
+    </variationData>
+</CVehicleModelInfoVariation>

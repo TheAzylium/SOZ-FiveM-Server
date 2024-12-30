@@ -93,6 +93,13 @@ QBCore.Functions.CreateCallback("banking:server:getBankMoney", function(source, 
     cb(account.money)
 end)
 
+function GetAccountMoney(accountName, type)
+    local account = GetOrCreateAccount(accountName)
+
+    return Account.GetMoney(account, type or "money")
+end
+exports("GetAccountMoney", GetAccountMoney)
+
 QBCore.Functions.CreateCallback("banking:server:hasEnoughLiquidity", function(source, cb, accountId, amount)
     local account = Account(accountId)
     if account == nil then

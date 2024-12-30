@@ -3,8 +3,8 @@ import { OnEvent, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Logger } from '../../core/logger';
-import { AnimationConfigItem, MoodConfigItem, WalkConfigItem } from '../../shared/animation';
-import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
+import { AnimationConfigItem, MoodConfigItem, WalkConfigBase, WalkConfigItem, Walking } from '../../shared/animation';
+import { ClientEvent, NuiEvent } from '../../shared/event';
 import { Shortcut } from '../../shared/nui/player';
 import { getRandomItem } from '../../shared/random';
 import { Err, Ok } from '../../shared/result';
@@ -217,8 +217,18 @@ export class PlayerAnimationProvider {
         if (walkItem.type === 'category') {
             return;
         }
+        if (walkItem.type === 'event') {
+            TriggerEvent(walkItem.event);
+        }
 
-        TriggerServerEvent(ServerEvent.PLAYER_SET_CURRENT_WALKSTYLE, walkItem.walk);
+        const player = this.playerService.getPlayer();
+        const walkingBase = walkItem as WalkConfigBase;
+        const walking: Walking = {
+            walk: walkingBase.walk,
+            previous: player.metadata.walk,
+        };
+
+        this.animationService.toggleWalking(walking);
     }
 
     @OnNuiEvent(NuiEvent.PlayerMenuAnimationSetMood)
@@ -228,10 +238,9 @@ export class PlayerAnimationProvider {
 
     @OnNuiEvent(NuiEvent.PlayerMenuAnimationFavorite)
     public async favoriteAnimation({ animationItem }: { animationItem: AnimationConfigItem }) {
-        const input = await this.inputService.askInput(
+        const number = await this.inputService.askInput<number>(
             {
                 title: 'Entrer le numéro du raccourci voulu (entre 1 et 10), laissez vide pour annuler',
-                defaultValue: '',
                 maxCharacters: 2,
             },
             value => {
@@ -245,11 +254,6 @@ export class PlayerAnimationProvider {
             }
         );
 
-        if (!input) {
-            return;
-        }
-
-        const number = parseInt(input, 10);
         const key = `animation_shortcut_${number.toLocaleString('en-US', {
             minimumIntegerDigits: 2,
             useGrouping: false,
@@ -342,6 +346,18 @@ export class PlayerAnimationProvider {
 
         if (animationItem.type === 'event') {
             TriggerEvent(animationItem.event);
+
+            return true;
+        }
+
+        if (animationItem.type === 'walk') {
+            const walkItem: WalkConfigItem = {
+                walk: animationItem.walk,
+                icon: animationItem.icon,
+                name: animationItem.name,
+                type: animationItem.type,
+            };
+            this.setWalkAnimation({ walkItem });
 
             return true;
         }

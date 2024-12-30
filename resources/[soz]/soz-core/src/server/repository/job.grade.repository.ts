@@ -102,6 +102,19 @@ export class JobGradeRepository extends Repository<RepositoryType.JobGrade> {
         this.data[gradeId].weight = weight;
     }
 
+    public async setGradeName(gradeId: number, name: string) {
+        await this.prismaService.job_grades.update({
+            where: {
+                id: gradeId,
+            },
+            data: {
+                name,
+            },
+        });
+
+        this.data[gradeId].name = name;
+    }
+
     public async setGradeSalary(gradeId: number, salary: number) {
         await this.prismaService.job_grades.update({
             where: {

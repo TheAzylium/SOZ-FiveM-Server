@@ -36,12 +36,21 @@ const DutyZoneConfig: Zone<JobType>[] = [
     },
     {
         data: JobType.Bennys,
-        center: [1908.09, 3090.02, 46.93],
-        length: 2.8,
-        width: 0.8,
-        heading: 330.0,
-        minZ: 45.93,
-        maxZ: 46.932,
+        center: [1907.77, 3089.4, 46.13],
+        length: 0.6,
+        width: 1.2,
+        heading: 58.27,
+        minZ: 46.73,
+        maxZ: 47.13,
+    },
+    {
+        data: JobType.Bennys,
+        center: [-203.34, -1337.55, 34.89],
+        length: 0.6,
+        width: 0.35,
+        heading: -3.1,
+        minZ: 34.49,
+        maxZ: 35.29,
     },
     {
         data: JobType.Gouv,
@@ -60,6 +69,15 @@ const DutyZoneConfig: Zone<JobType>[] = [
         minZ: 32.36,
         maxZ: 32.56,
         heading: 95.11,
+    },
+    {
+        data: JobType.LSMC,
+        center: [1826.49, 3671.89, 34.28],
+        length: 0.4,
+        width: 0.6,
+        minZ: 34.08,
+        maxZ: 34.48,
+        heading: 143.52,
     },
     {
         data: JobType.MDR,
@@ -204,11 +222,18 @@ const DutyZoneConfig: Zone<JobType>[] = [
         maxZ: 76.77,
         heading: 340,
     },
+    {
+        data: JobType.LSCS,
+        center: [441.04, -980.12, 30.79],
+        length: 0.35,
+        width: 0.6,
+        minZ: 30.59,
+        maxZ: 30.99,
+        heading: 159.31,
+    },
 ];
 
-const DutyPedConfig: Partial<Record<JobType, number>> = {
-    [JobType.Bennys]: -1830645735,
-};
+const DutyPedConfig: Partial<Record<JobType, number>> = {};
 
 @Provider()
 export class JobDutyProvider {

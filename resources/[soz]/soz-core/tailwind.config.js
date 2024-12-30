@@ -23,6 +23,7 @@ module.exports = {
             prompt: ['Prompt', 'sans-serif'],
             kreditback: ['"Kredit Back"', 'sans-serif'],
             'delight-sunset': ['Delight-Sunset', 'sans-serif'],
+            digital7: ['Digital-7', 'sans-serif'],
         },
         extend: {
             colors: {

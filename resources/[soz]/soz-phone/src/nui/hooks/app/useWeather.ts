@@ -5,7 +5,7 @@ import { RootState } from '../../store';
 
 export const useWeather = () => {
     const forecasts = useSelector((state: RootState) => state.appWeather.forecasts);
-    const stormAlert: Date = useSelector((state: RootState) => state.appWeather.alert);
+    const stormAlert = useSelector((state: RootState) => state.appWeather.alert);
 
     const getForecasts = useCallback(() => {
         return forecasts;

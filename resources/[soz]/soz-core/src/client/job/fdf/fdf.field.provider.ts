@@ -29,6 +29,7 @@ import { getDistance, Vector2, Vector3, Vector4 } from '@public/shared/polyzone/
 import { getRandomItems } from '@public/shared/random';
 import { RpcClientEvent, RpcServerEvent } from '@public/shared/rpc';
 
+import { VehicleClass } from '../../../shared/vehicle/vehicle';
 import { TargetFactory, TargetOptions } from '../../target/target.factory';
 
 const RAKE_TRAILER = GetHashKey('raketrailer');
@@ -318,7 +319,7 @@ export class FDFFieldProvider {
         for (let k = 0; k < 100; k++) {
             await wait(100);
             const veh = GetVehiclePedIsIn(ped, false);
-            if (veh && GetEntityModel(GRAIN_TRAILER)) {
+            if (veh && GetEntityModel(veh) == TRACTOR2) {
                 break;
             }
         }
@@ -374,7 +375,7 @@ export class FDFFieldProvider {
                 const distance = crop.type === FDFCropType.corn ? 5 : 2;
                 if (getDistance(crop.coords, coords) < distance && canCropBeHarvest(crop)) {
                     const vehicleModel = GetEntityModel(trailer);
-                    const vehicleClass = GetVehicleClass(trailer);
+                    const vehicleClass = GetVehicleClass(trailer) as VehicleClass;
                     const trunkType = VEHICLE_TRUNK_TYPES[vehicleModel] || 'trunk';
                     const vehicleNetworkId = NetworkGetNetworkIdFromEntity(trailer);
 
@@ -421,7 +422,7 @@ export class FDFFieldProvider {
         for (let k = 0; k < 100; k++) {
             await wait(100);
             const veh = GetVehiclePedIsIn(ped, false);
-            if (veh && GetEntityModel(RAKE_TRAILER)) {
+            if (veh && GetEntityModel(veh) == TRACTOR2) {
                 break;
             }
         }

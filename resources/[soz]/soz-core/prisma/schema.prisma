@@ -66,6 +66,11 @@ model concess_entreprise {
   liverytype Int
 }
 
+model configuration {
+  name  String @id
+  value Json
+}
+
 model fuel_storage {
   id       Int     @id @default(autoincrement())
   station  String  @db.VarChar(15)
@@ -177,11 +182,12 @@ model persistent_prop {
 }
 
 model collection_prop {
-  id      BigInt        @id @default(autoincrement())
-  name    String        @unique @db.VarChar(50)
-  creator String        @db.VarChar(50)
-  date    DateTime      @default(now()) @db.Timestamp(0)
-  props   placed_prop[]
+  id          BigInt          @id @default(autoincrement())
+  name        String          @unique @db.VarChar(50)
+  creator     String          @db.VarChar(50)
+  date        DateTime        @default(now()) @db.Timestamp(0)
+  props       placed_prop[]
+  persistant  Boolean         @default(false)
 }
 
 model placed_prop {
@@ -331,9 +337,11 @@ model player {
   records_history_author  player_records_history[] @relation("records_history_author")
   records_history_deletor player_records_history[] @relation("records_history_deletor")
   fishes                  player_fish[]            @relation("fishes")
+  damages                 player_damage[]          @relation("damages")
   sozedex_rewards         player_sozedex_rewards[] @relation("sozedex_rewards")
   race_scores             race_score[]             @relation("race_scores")
   criminal_actions        criminal_action[]        @relation("criminal_actions")
+  radar_speed_records     radar[]                  @relation("radar_speed_record")
   SenatePartyMember       SenatePartyMember?
 
   @@index([id], map: "id")
@@ -496,6 +504,7 @@ model investigation_revision {
   citizenid       String         @db.VarChar(255)
   content         String         @db.LongText
   note            String         @default("") @db.LongText
+  prosecutor_note  String        @default("") @db.LongText
   created_at      DateTime?      @default(now()) @db.Timestamp(0)
   investigation   investigation? @relation(fields: [investigationId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_investigation")
 
@@ -567,15 +576,31 @@ model shop_content {
   @@index([shop_id], map: "shop_id")
 }
 
+model snake_score {
+  id         Int    @id @default(autoincrement())
+  identifier String @db.VarChar(50)
+  score      Int
+}
+
 enum bank_accounts_account_type {
   player
   business
   safestorages
   offshore
   bank_atm     @map("bank-atm")
+  gang
 }
 
 model halloween_pumpkin_hunt {
+  id        Int      @id @default(autoincrement())
+  citizenid String   @db.VarChar(50)
+  coords    String   @db.VarChar(45)
+  hunted_at DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([citizenid], map: "citizenid")
+}
+
+model easter_hunt {
   id        Int      @id @default(autoincrement())
   citizenid String   @db.VarChar(50)
   coords    String   @db.VarChar(45)
@@ -588,6 +613,7 @@ enum report_type {
   investigation
   report
   complaint
+  appeal
 }
 
 model drugs_seedling {
@@ -671,9 +697,16 @@ model race_score {
 }
 
 model radar {
-  id               Int    @id
-  speed_record     Int
-  citizedid_record String @db.VarChar(50)
+  id           Int     @id @default(autoincrement())
+  speed        Int
+  position     Json
+  enabled      Boolean
+  destroyed    Boolean
+  speed_record Int
+  player       player? @relation(fields: [citizenid], references: [citizenid], onDelete: SetNull, map: "FK_radar_speed_record_player", name: "radar_speed_record")
+  citizenid    String? @db.VarChar(50)
+
+  @@map("radar")
 }
 
 model tetris_score {
@@ -709,17 +742,27 @@ model vandalism_props {
   @@id([id, kind])
 }
 
-enum ZoneType {
-  NoStress
-}
-
 model Zone {
   id   Int      @id @default(autoincrement())
-  type ZoneType @default(NoStress)
+  type String   @db.VarChar(50)
   zone String   @db.LongText
   name String   @db.VarChar(50)
 
   @@map("zone")
+}
+
+model player_damage {
+  id         Int      @default(autoincrement())
+  player     player   @relation(fields: [citizenid], references: [citizenid], onDelete: Cascade, map: "FK_damages_player", name: "damages")
+  citizenid  String   @db.VarChar(50)
+  attackerId String   @db.VarChar(50)
+  bone       Int
+  damageType Int
+  weapon     String   @db.VarChar(50)
+  damageQty  Int
+  isFatal    Boolean
+  date       DateTime?  @default(now()) @db.Timestamp(0)
+  @@id([id, citizenid])
 }
 
 model fdf_crops {
@@ -784,4 +827,9 @@ model hub_entry {
   date           DateTime
   lanternCoords  String     @db.VarChar(100)
   exitCoords     String     @db.VarChar(100)
+}
+
+model tax {
+  id          String   @id
+  value       Int      @db.Int
 }

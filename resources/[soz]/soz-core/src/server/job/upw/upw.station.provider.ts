@@ -188,7 +188,7 @@ export class UpwStationProvider {
     public async onSetChargerPrice(source: number, price: number) {
         const player = this.playerService.getPlayer(source);
 
-        if (!player) {
+        if (!player || price == null) {
             return;
         }
 

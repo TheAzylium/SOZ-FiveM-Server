@@ -1,5 +1,5 @@
 .Wrapper {
-    min-width: 24rem;
+    min-width: 36vh;
     transition: transform 0.3s, opacity 0.3s;
 }
 
@@ -10,7 +10,6 @@
     align-items: flex-end;
     border-top-left-radius: .5rem;
     border-top-right-radius: .5rem;
-    height: calc(200px * 0.3);
     user-select: none;
 }
 

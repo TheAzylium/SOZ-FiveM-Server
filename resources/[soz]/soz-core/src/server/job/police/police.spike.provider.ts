@@ -7,7 +7,7 @@ import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { Vector4 } from '@public/shared/polyzone/vector';
 
-const allowedJobInteraction = [JobType.BCSO, JobType.FBI, JobType.SASP, JobType.LSPD];
+const allowedJobInteraction = [JobType.BCSO, JobType.FBI, JobType.SASP, JobType.LSPD, JobType.LSCS];
 const spike_prop = GetHashKey('p_ld_stinger_s');
 
 @Provider()

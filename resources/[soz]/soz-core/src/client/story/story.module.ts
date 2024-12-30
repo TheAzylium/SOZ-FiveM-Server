@@ -1,6 +1,7 @@
 import { Module } from '../../core/decorators/module';
 import { BlipStoryProvider } from './blip.story.provider';
 import { DevilBaitShopProvider } from './devil.bait.shop.provider';
+import { EasterHuntProvider } from './easter.hunt.provider';
 import { HuntProvider } from './halloween-2022/hunt.provider';
 import { Halloween2022Scenario1Provider } from './halloween-2022/scenario1.provider';
 import { Halloween2022Scenario2Provider } from './halloween-2022/scenario2.provider';
@@ -28,6 +29,7 @@ import { ZombieProvider } from './zombie.provider';
         Halloween2023Scenario2Provider,
         Halloween2023Scenario3Provider,
         Halloween2023Scenario4Provider,
+        EasterHuntProvider,
     ],
 })
 export class StoryModule {}

@@ -1,4 +1,4 @@
-import { RadarAllowedVehicle, RadarInformedVehicle, RadarList } from '../../config/radar';
+import { RadarAllowedVehicle, RadarInformedVehicle } from '../../config/radar';
 import { OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
@@ -10,6 +10,7 @@ import { BankService } from '../bank/bank.service';
 import { PrismaService } from '../database/prisma.service';
 import { Notifier } from '../notifier';
 import { PlayerService } from '../player/player.service';
+import { RadarRepository } from '../repository/radar.repository';
 import { VehicleRepository } from '../repository/vehicle.repository';
 import { VehicleStateService } from './vehicle.state.service';
 
@@ -36,6 +37,9 @@ export class VehicleRadarProvider {
     @Inject(PlayerService)
     private playerService: PlayerService;
 
+    @Inject(RadarRepository)
+    private radarRepository: RadarRepository;
+
     @Inject(VehicleStateService)
     vehicleStateService: VehicleStateService;
 
@@ -48,7 +52,7 @@ export class VehicleRadarProvider {
         streetName: string
     ) {
         const player = this.playerService.getPlayer(source);
-        const radar = RadarList[radarID];
+        const radar = await this.radarRepository.find(radarID);
         const vehicle = NetworkGetEntityFromNetworkId(vehicleID);
         const vehicleSpeed = Math.round(GetEntitySpeed(vehicle) * 3.6);
         const state = this.vehicleStateService.getVehicleState(vehicleID);
@@ -57,6 +61,10 @@ export class VehicleRadarProvider {
         const fine = Math.round((vehicleSpeed - radar.speed) * 6);
         const vehicleType = GetVehicleType(vehicle);
         const vehiclePosition = GetEntityCoords(vehicle);
+
+        if (!player || !radar) {
+            return;
+        }
 
         if (radar.destroyed) {
             return;
@@ -80,40 +88,34 @@ export class VehicleRadarProvider {
                 return;
             }
 
-            const dbInfo = await this.prismaService.radar.findUnique({
+            const dbRadar = await this.prismaService.radar.findUnique({
                 where: {
                     id: radarID,
                 },
             });
 
-            let record = 0;
-            if (dbInfo) {
-                record = dbInfo.speed_record;
+            if (vehicleSpeed > dbRadar.speed_record) {
                 radarMessage =
                     radarMessage +
-                    `Record: ~b~${await this.playerService.getNameFromCitizenId(dbInfo.citizedid_record)}~s~ ~o~${
-                        dbInfo.speed_record
-                    }km/h~s~~n~`;
-            } else {
-                await this.prismaService.radar.create({
-                    data: {
-                        id: radarID,
-                        citizedid_record: player.citizenid,
-                        speed_record: vehicleSpeed,
-                    },
-                });
-            }
+                    `Nouveau Record: ~b~${await this.playerService.getNameFromCitizenId(
+                        player.citizenid
+                    )}~s~ ~o~${vehicleSpeed}km/h~s~~n~`;
 
-            if (vehicleSpeed > record) {
                 await this.prismaService.radar.update({
                     where: {
                         id: radarID,
                     },
                     data: {
-                        citizedid_record: player.citizenid,
+                        citizenid: player.citizenid,
                         speed_record: vehicleSpeed,
                     },
                 });
+            } else if (dbRadar.citizenid) {
+                radarMessage =
+                    radarMessage +
+                    `Record: ~b~${await this.playerService.getNameFromCitizenId(dbRadar.citizenid)}~s~ ~o~${
+                        dbRadar.speed_record
+                    }km/h~s~~n~`;
             }
 
             radarMessage = radarMessage + `Amende: ~r~${fine}$~s~~n~`;
@@ -175,8 +177,7 @@ export class VehicleRadarProvider {
                 }
             );
 
-            this.bankService.transferBankMoney(player.charinfo.account, JobType.LSPD, Math.round(fine / 2));
-            this.bankService.transferBankMoney(player.charinfo.account, JobType.BCSO, fine - Math.round(fine / 2));
+            this.bankService.transferBankMoney(player.charinfo.account, JobType.Gouv, fine, true);
 
             this.notifier.advancedNotify(
                 source,

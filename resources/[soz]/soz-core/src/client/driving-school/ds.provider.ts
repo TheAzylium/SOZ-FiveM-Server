@@ -5,6 +5,7 @@ import { RpcServerEvent } from '@public/shared/rpc';
 import { Once, OnceStep, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
+import { TaxType } from '../../shared/bank';
 import { DrivingSchoolConfig, DrivingSchoolLicense, DrivingSchoolLicenseType } from '../../shared/driving-school';
 import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
 import { MenuType } from '../../shared/nui/menu';
@@ -13,6 +14,7 @@ import { BlipFactory } from '../blip';
 import { Notifier } from '../notifier';
 import { NuiMenu } from '../nui/nui.menu';
 import { PlayerService } from '../player/player.service';
+import { TaxRepository } from '../repository/tax.repository';
 import { TargetFactory, TargetOptions } from '../target/target.factory';
 
 @Provider()
@@ -26,13 +28,16 @@ export class DrivingSchoolProvider {
     @Inject(TargetFactory)
     private targetFactory: TargetFactory;
 
+    @Inject(TaxRepository)
+    private taxRepository: TaxRepository;
+
     @Inject(NuiMenu)
     private nuiMenu: NuiMenu;
 
     @Inject(Notifier)
     private notifier: Notifier;
 
-    @Once(OnceStep.Start)
+    @Once(OnceStep.RepositoriesLoaded)
     public setupDrivingSchool() {
         const secretaryPedConfig = DrivingSchoolConfig.peds.secretary;
         this.targetFactory.createForPed({
@@ -99,8 +104,10 @@ export class DrivingSchoolProvider {
                 return;
             }
 
+            const price = this.taxRepository.getPriceWithTax(license.price, TaxType.VEHICLE);
+
             targetOptions.push({
-                label: `${license.label} ($${license.price})`,
+                label: `${license.label} ($${price})`,
                 icon: license.icon,
                 event: ClientEvent.DRIVING_SCHOOL_START_EXAM,
                 blackoutGlobal: true,

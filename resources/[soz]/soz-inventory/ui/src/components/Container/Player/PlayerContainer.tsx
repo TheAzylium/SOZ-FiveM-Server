@@ -93,7 +93,6 @@ export const PlayerContainer = () => {
         if (!event.active.data.current) return;
         const keyEvent = event?.activatorEvent as KeyboardEvent
 
-
         if (event.over !== null) { // Do a sort in inventory
 
             if (event.active.id == 'player_drag_keychain_' || 
@@ -105,31 +104,47 @@ export const PlayerContainer = () => {
                 ) {
                 return;
             }
-
-            fetch(`https://soz-inventory/sortItem`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json; charset=UTF-8",
-                },
-                body: JSON.stringify({
-                    item: event.active.data.current.item,
-                    slot: event.over.data.current.slot,
-                    inventory: playerInventory?.id,
-                    keyModifier: getKeyModifier(keyEvent)
-                }),
-            })
-                .then(res => res.json())
-                .then((transfer) => {
-                    if (typeof transfer.sourceInventory === "object") {
-                        transfer.sourceInventory.items = Object.values(transfer.sourceInventory.items);
+            if (playerInventory) {
+                const overSlot = event.over.data.current.slot
+                const overItem = playerInventory.items.find((item) => item.slot === overSlot)
+                if (overItem && overItem.name === 'detective_board' && event.active.data.current.item.name == 'scientist_photo') {
+                    fetch(`https://soz-inventory/player/addPhotoDetectiveBoard`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify({
+                            photo: event.active.data.current.item,
+                            detectiveBoard: overItem,
+                        }),
+                    })
+                } else {
+                    fetch(`https://soz-inventory/sortItem`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify({
+                            item: event.active.data.current.item,
+                            slot: event.over.data.current.slot,
+                            inventory: playerInventory?.id,
+                            keyModifier: getKeyModifier(keyEvent)
+                        }),
+                    })
+                        .then(res => res.json())
+                        .then((transfer) => {
+                            if (typeof transfer.sourceInventory === "object") {
+                                transfer.sourceInventory.items = Object.values(transfer.sourceInventory.items);
+                            }
+        
+                            transfer.sourceInventory.items = transfer.sourceInventory.items.filter((i: InventoryItem) => i !== null)
+                            setPlayerInventory(transfer.sourceInventory);
+                        })
+                        .catch((e) => {
+                            console.error("Failed to sort item", e);
+                        });
                     }
-
-                    transfer.sourceInventory.items = transfer.sourceInventory.items.filter((i: InventoryItem) => i !== null)
-                    setPlayerInventory(transfer.sourceInventory);
-                })
-                .catch((e) => {
-                    console.error("Failed to sort item", e);
-                });
+            } 
         } else if (event.active.id == 'player_drag_money_') {
             fetch(`https://soz-inventory/player/giveMoneyToTarget`, {
                 method: "POST",
@@ -138,6 +153,7 @@ export const PlayerContainer = () => {
                 },
             }).then(() => closeNUI(() => closeMenu()));
         } else {
+            
             fetch(`https://soz-inventory/player/giveItemToTarget`, {
                 method: "POST",
                 headers: {
@@ -200,6 +216,7 @@ export const PlayerContainer = () => {
                 <ContainerWrapper
                     display={true}
                     banner={inventoryBanner}
+                    bannerType='thick'
                     weight={playerInventory.weight}
                     maxWeight={playerInventory.maxWeight}
                     sortCallback={() => handleSortInventory(playerInventory.id, setPlayerInventory)}

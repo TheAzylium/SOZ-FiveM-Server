@@ -11,10 +11,10 @@ import { NuiEvent, ServerEvent } from '@public/shared/event';
 import { JobPermission, JobType } from '@public/shared/job';
 import { UpwConfig, UpwOrder } from '@public/shared/job/upw';
 import { MenuType } from '@public/shared/nui/menu';
-import { Err, Ok } from '@public/shared/result';
 import { RpcServerEvent } from '@public/shared/rpc';
 import { Vehicle } from '@public/shared/vehicle/vehicle';
 
+import { PositiveNumberValidator } from '../../../shared/nui/input';
 import { JobService } from '../job.service';
 
 @Provider()
@@ -39,16 +39,10 @@ export class UpwOrderProvider {
 
     @OnNuiEvent(NuiEvent.UpwCancelOrder)
     public async onCancelOrder(uuid: string) {
-        const value = await this.inputService.askInput(
-            {
-                title: 'Voulez-vous vraiment annuler cette commande ? (Tapez "oui" pour confirmer)',
-                defaultValue: '',
-                maxCharacters: 3,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const value = await this.inputService.askInput({
+            title: 'Voulez-vous vraiment annuler cette commande ? (Tapez "oui" pour confirmer)',
+            maxCharacters: 3,
+        });
 
         if (value && value.toLowerCase() === 'oui') {
             await emitRpc<string>(RpcServerEvent.UPW_CANCEL_ORDER, uuid);
@@ -120,28 +114,18 @@ export class UpwOrderProvider {
     }
 
     public async setChargerPrice() {
-        const priceStr = await this.inputService.askInput(
+        const newPrice = await this.inputService.askInput(
             {
                 title: 'Nouveau prix :',
                 maxCharacters: 5,
                 defaultValue: '1.00',
             },
-            (input: string) => {
-                const value = parseFloat(input);
-
-                if (isNaN(value) || value < 0) {
-                    return Err('Veuillez entrer un nombre positif');
-                }
-
-                return Ok(true);
-            }
+            PositiveNumberValidator
         );
 
-        if (!priceStr) {
+        if (newPrice == null) {
             return;
         }
-
-        const newPrice = parseFloat(priceStr);
 
         TriggerServerEvent(ServerEvent.UPW_SET_CHARGER_PRICE, newPrice);
 

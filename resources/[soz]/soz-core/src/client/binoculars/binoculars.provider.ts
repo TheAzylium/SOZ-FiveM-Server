@@ -83,7 +83,7 @@ export class BinocularsProvider {
         }
 
         const cam = CreateCam('DEFAULT_SCRIPTED_FLY_CAMERA', true);
-        AttachCamToEntity(cam, player, 0.05, 0.5, 0.7, true);
+        AttachCamToPedBone(cam, player, 31086, 0.05, 0.5, 0, true);
         SetCamRot(cam, 2.0, 1.0, GetEntityHeading(player), 2);
         SetCamFov(cam, this.binocularsConfig.fov);
         RenderScriptCams(true, false, 0, true, false);

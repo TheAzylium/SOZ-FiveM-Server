@@ -1,7 +1,7 @@
 import { Once, OnEvent } from '../../core/decorators/event';
 import { Provider } from '../../core/decorators/provider';
 import { ClientEvent } from '../../shared/event';
-import { Time } from '../../shared/weather';
+import { DayDurationInMinutes, IRLDayDurationInMinutes, Time } from '../../shared/weather';
 
 @Provider()
 export class TimeProvider {
@@ -12,6 +12,6 @@ export class TimeProvider {
 
     @Once()
     onStart(): void {
-        SetMillisecondsPerGameMinute(2000);
+        SetMillisecondsPerGameMinute((DayDurationInMinutes * 60_000) / IRLDayDurationInMinutes);
     }
 }

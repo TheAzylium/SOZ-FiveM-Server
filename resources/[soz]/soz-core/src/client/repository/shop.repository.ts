@@ -14,7 +14,7 @@ export class ClothingShopRepository {
         shop: string
     ): Promise<{ shop: ClothingShop; content: Record<number, ClothingShopCategory> }> {
         return await emitRpcTimeout<{ shop: ClothingShop; content: Record<number, ClothingShopCategory> }>(
-            RpcServerEvent.REPOSITORY_CLOTHING_GET_SHOP,
+            RpcServerEvent.CLOTHING_GET_SHOP,
             10000,
             this.playerService.getPlayer().skin.Model.Hash,
             shop

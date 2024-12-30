@@ -31,6 +31,7 @@ import {
     Halloween2023Scenario3TPWhiteBox,
 } from '@public/shared/story/halloween-2023/scenario3';
 
+import { TaxType } from '../../../shared/bank';
 import { StoryProvider } from '../story.provider';
 
 @Provider()
@@ -214,7 +215,7 @@ export class Halloween2023Scenario3Provider {
                                 },
                             ];
 
-                            this.inventoryManager.openShopInventory(products, 'menu_shop_supermarket');
+                            this.inventoryManager.openShopInventory(products, 'menu_shop_supermarket', TaxType.FOOD);
                         },
                     },
                 ],

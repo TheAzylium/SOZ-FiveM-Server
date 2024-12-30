@@ -73,7 +73,7 @@ export const FFSCraftsLists: Record<string, CraftCategory> = {
                 },
             },
             [FabricMaterial.LEATHER]: {
-                amount: 8,
+                amount: 24,
                 inputs: {
                     [SewingRawMaterial.SKIN]: { count: 1 },
                 },
@@ -485,25 +485,25 @@ const getRewardFromDeliveredGarment = (garment: Garment | LuxuryGarment): number
         case Garment.PANT:
         case Garment.BAG:
         case Garment.MASK:
-            return 50;
+            return 100;
         case Garment.UNDERWEAR_TOP:
-            return 30;
+            return 60;
         case Garment.UNDERWEAR:
-            return 20;
+            return 40;
         case Garment.SHOES:
         case Garment.GLOVES:
-            return 40;
+            return 80;
         case LuxuryGarment.TOP:
         case LuxuryGarment.PANT:
         case LuxuryGarment.BAG:
-            return 100;
+            return 200;
         case LuxuryGarment.UNDERWEAR_TOP:
-            return 60;
+            return 120;
         case LuxuryGarment.UNDERWEAR:
-            return 40;
+            return 80;
         case LuxuryGarment.SHOES:
         case LuxuryGarment.GLOVES:
-            return 80;
+            return 160;
     }
 };
 
@@ -522,11 +522,23 @@ export const FfsCloakroom: WardrobeConfig = {
                 [4]: { Drawable: 53, Texture: 0, Palette: 0 },
                 [5]: { Drawable: 41, Texture: 0, Palette: 0 },
                 [6]: { Drawable: 20, Texture: 0, Palette: 0 },
-                [7]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [8]: { Drawable: 31, Texture: 0, Palette: 0 },
                 [9]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [10]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [11]: { Drawable: 103, Texture: 0, Palette: 0 },
+            },
+            Props: {},
+        },
+        ["Tenue d'hiver"]: {
+            Components: {
+                [3]: { Drawable: 22, Texture: 0, Palette: 0 },
+                [4]: { Drawable: 24, Texture: 0, Palette: 0 },
+                [5]: { Drawable: 85, Texture: 18, Palette: 0 },
+                [6]: { Drawable: 103, Texture: 0, Palette: 0 },
+                [8]: { Drawable: 75, Texture: 3, Palette: 0 },
+                [9]: { Drawable: 0, Texture: 0, Palette: 0 },
+                [10]: { Drawable: 0, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 191, Texture: 11, Palette: 0 },
             },
             Props: {},
         },
@@ -536,7 +548,6 @@ export const FfsCloakroom: WardrobeConfig = {
                 [4]: { Drawable: 98, Texture: 0, Palette: 0 },
                 [5]: { Drawable: 86, Texture: 21, Palette: 0 },
                 [6]: { Drawable: 71, Texture: 0, Palette: 0 },
-                [7]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [8]: { Drawable: 105, Texture: 0, Palette: 0 },
                 [9]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [10]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -552,7 +563,6 @@ export const FfsCloakroom: WardrobeConfig = {
                 [4]: { Drawable: 55, Texture: 0, Palette: 0 },
                 [5]: { Drawable: 41, Texture: 0, Palette: 0 },
                 [6]: { Drawable: 29, Texture: 2, Palette: 0 },
-                [7]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [8]: { Drawable: 38, Texture: 0, Palette: 0 },
                 [9]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [10]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -566,11 +576,23 @@ export const FfsCloakroom: WardrobeConfig = {
                 [4]: { Drawable: 55, Texture: 0, Palette: 0 },
                 [5]: { Drawable: 41, Texture: 0, Palette: 0 },
                 [6]: { Drawable: 6, Texture: 0, Palette: 0 },
-                [7]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [8]: { Drawable: 38, Texture: 0, Palette: 0 },
                 [9]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [10]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [11]: { Drawable: 94, Texture: 0, Palette: 0 },
+            },
+            Props: {},
+        },
+        ["Tenue d'hiver"]: {
+            Components: {
+                [3]: { Drawable: 23, Texture: 0, Palette: 0 },
+                [4]: { Drawable: 34, Texture: 0, Palette: 0 },
+                [5]: { Drawable: 85, Texture: 18, Palette: 0 },
+                [6]: { Drawable: 107, Texture: 0, Palette: 0 },
+                [8]: { Drawable: 67, Texture: 3, Palette: 0 },
+                [9]: { Drawable: 0, Texture: 0, Palette: 0 },
+                [10]: { Drawable: 0, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 193, Texture: 11, Palette: 0 },
             },
             Props: {},
         },
@@ -580,7 +602,6 @@ export const FfsCloakroom: WardrobeConfig = {
                 [4]: { Drawable: 101, Texture: 0, Palette: 0 },
                 [5]: { Drawable: 86, Texture: 21, Palette: 0 },
                 [6]: { Drawable: 74, Texture: 0, Palette: 0 },
-                [7]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [8]: { Drawable: 142, Texture: 0, Palette: 0 },
                 [9]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [10]: { Drawable: 0, Texture: 0, Palette: 0 },

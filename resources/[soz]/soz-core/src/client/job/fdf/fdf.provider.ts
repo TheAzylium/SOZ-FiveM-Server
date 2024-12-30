@@ -24,8 +24,6 @@ import { RpcServerEvent } from '@public/shared/rpc';
 import { BlipFactory } from '../../blip';
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
-import { TargetFactory } from '../../target/target.factory';
-import { JobService } from '../job.service';
 
 @Provider()
 export class FDFProvider {
@@ -37,12 +35,6 @@ export class FDFProvider {
 
     @Inject(BlipFactory)
     private blipFactory: BlipFactory;
-
-    @Inject(TargetFactory)
-    private targetFactory: TargetFactory;
-
-    @Inject(JobService)
-    private jobService: JobService;
 
     @Inject(PlayerInOutService)
     private playerInOutService: PlayerInOutService;

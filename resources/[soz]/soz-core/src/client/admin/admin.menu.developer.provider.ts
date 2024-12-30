@@ -7,7 +7,6 @@ import { Provider } from '../../core/decorators/provider';
 import { Tick } from '../../core/decorators/tick';
 import { NuiEvent, ServerEvent } from '../../shared/event';
 import { Font } from '../../shared/hud';
-import { Ok } from '../../shared/result';
 import { ClipboardService } from '../clipboard.service';
 import { DrawService } from '../draw.service';
 import { GetObjectList, GetPedList, GetPickupList, GetVehicleList } from '../enumerate';
@@ -17,6 +16,7 @@ import { NuiZoneProvider } from '../nui/nui.zone.provider';
 import { ObjectProvider } from '../object/object.provider';
 import { NoClipProvider } from '../utils/noclip.provider';
 import { VehicleConditionProvider } from '../vehicle/vehicle.condition.provider';
+import { VehicleOffroadProvider } from '../vehicle/vehicule.offroad.provider';
 
 @Provider()
 export class AdminMenuDeveloperProvider {
@@ -44,6 +44,9 @@ export class AdminMenuDeveloperProvider {
     @Inject(NoClipProvider)
     private noClipProvider: NoClipProvider;
 
+    @Inject(VehicleOffroadProvider)
+    public vehicleOffroadProvider: VehicleOffroadProvider;
+
     public showCoordinates = false;
 
     public showMileage = false;
@@ -65,7 +68,10 @@ export class AdminMenuDeveloperProvider {
 
     @OnNuiEvent(NuiEvent.AdminToggleNoClip)
     public async toggleNoClip(): Promise<void> {
-        this.noClipProvider.ToggleNoClipMode();
+        await this.noClipProvider.ToggleNoClipMode();
+        if (this.noClipProvider.IsNoClipMode()) {
+            this.vehicleOffroadProvider.hasBeenThroughNoClip = true;
+        }
     }
 
     public isIsNoClipMode(): boolean {
@@ -166,16 +172,10 @@ export class AdminMenuDeveloperProvider {
 
     @OnNuiEvent(NuiEvent.AdminChangePlayer)
     public async changePlayer(): Promise<void> {
-        const citizenId = await this.input.askInput(
-            {
-                title: 'Citizen ID',
-                defaultValue: '',
-                maxCharacters: 32,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const citizenId = await this.input.askInput({
+            title: 'Citizen ID',
+            maxCharacters: 32,
+        });
 
         if (citizenId) {
             TriggerServerEvent(ServerEvent.ADMIN_SWITCH_CHARACTER, citizenId);
@@ -184,16 +184,11 @@ export class AdminMenuDeveloperProvider {
 
     @OnNuiEvent(NuiEvent.AdminTriggerNotification)
     public async triggerNotification(type: 'basic' | 'advanced' | 'police') {
-        const notificationStyle = await this.input.askInput(
-            {
-                title: 'Notification style',
-                defaultValue: 'info',
-                maxCharacters: 32,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const notificationStyle = await this.input.askInput({
+            title: 'Notification style',
+            defaultValue: 'info',
+            maxCharacters: 32,
+        });
 
         if (notificationStyle) {
             // this.notifier.notify('Message de notification' + style, notificationStyle as NotificationType);

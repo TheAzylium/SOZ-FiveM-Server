@@ -3,16 +3,24 @@ import { BarberShopContent } from '@public/shared/shop';
 
 export const PositionInBarberShop = {
     PLAYER_HEADING: 199.156,
-    CAMERA_OFFSET_X: 0.0,
-    CAMERA_OFFSET_Y: -0.5,
-    CAMERA_OFFSET_Z: 0.7,
-    CAMERA_TARGET_Z: 0.7,
+    Other: {
+        CAMERA_OFFSET_X: 0.0,
+        CAMERA_OFFSET_Y: -0.5,
+        CAMERA_OFFSET_Z: 0.7,
+        CAMERA_TARGET_Z: 0.7,
+    },
+    ChestHair: {
+        CAMERA_OFFSET_X: 0.0,
+        CAMERA_OFFSET_Y: -0.7,
+        CAMERA_OFFSET_Z: 0.2,
+        CAMERA_TARGET_Z: 0.2,
+    },
 };
 
 export const BarberShopItems: BarberShopContent = {
     [PlayerPedHash.Male]: [
         {
-            price: 30,
+            price: 27,
             category: 'Hair',
             label: 'Cheveux',
             overlay: 'Hair',
@@ -20,7 +28,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'Beard',
             label: 'Barbe',
             overlay: 'Hair',
@@ -28,7 +36,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 20,
+            price: 18,
             category: 'Makeup',
             label: 'Maquillage',
             overlay: 'Makeup',
@@ -42,7 +50,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'FaceTraits',
             label: 'Lentilles',
             overlay: 'FaceTraits',
@@ -50,17 +58,25 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'Eyebrow',
             label: 'Sourcils',
             overlay: 'Hair',
             components: { ['EyebrowType']: true, ['EyebrowColor']: true, ['EyebrowOpacity']: true },
             items: undefined,
         },
+        {
+            price: 13,
+            category: 'ChestHair',
+            label: 'Torse',
+            overlay: 'Hair',
+            components: { ['ChestHairType']: true, ['ChestHairOpacity']: true, ['ChestHairColor']: true },
+            items: undefined,
+        },
     ],
     [PlayerPedHash.Female]: [
         {
-            price: 30,
+            price: 27,
             category: 'Hair',
             label: 'Cheveux',
             overlay: 'Hair',
@@ -68,7 +84,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'Blush',
             label: 'Blush',
             overlay: 'Makeup',
@@ -76,7 +92,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'Lipstick',
             label: 'Rouge à lèvre',
             overlay: 'Makeup',
@@ -84,7 +100,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 20,
+            price: 18,
             category: 'Makeup',
             label: 'Maquillage',
             overlay: 'Makeup',
@@ -98,7 +114,7 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'FaceTraits',
             label: 'Lentilles',
             overlay: 'FaceTraits',
@@ -106,11 +122,19 @@ export const BarberShopItems: BarberShopContent = {
             items: undefined,
         },
         {
-            price: 15,
+            price: 13,
             category: 'Eyebrow',
             label: 'Sourcils',
             overlay: 'Hair',
             components: { ['EyebrowType']: true, ['EyebrowColor']: true, ['EyebrowOpacity']: true },
+            items: undefined,
+        },
+        {
+            price: 13,
+            category: 'ChestHair',
+            label: 'Torse',
+            overlay: 'Hair',
+            components: { ['ChestHairType']: true, ['ChestHairOpacity']: true, ['ChestHairColor']: true },
             items: undefined,
         },
     ],

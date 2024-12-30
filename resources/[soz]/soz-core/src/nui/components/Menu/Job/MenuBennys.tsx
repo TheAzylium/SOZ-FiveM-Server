@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
 
-import { NuiEvent, ServerEvent } from '../../../../shared/event';
+import { NuiEvent } from '../../../../shared/event';
 import { MenuType } from '../../../../shared/nui/menu';
-import { fetchNui, triggerServerEvent } from '../../../fetch';
+import { fetchNui } from '../../../fetch';
 import { usePlayer } from '../../../hook/data';
 import {
     MainMenu,
@@ -41,24 +41,20 @@ export const MenuBennys: FunctionComponent<MenuBennysProps> = ({ data }) => {
         );
     }
 
-    const onConfirm = (item, props) => {
-        triggerServerEvent(ServerEvent.JOBS_PLACE_PROPS, item, props);
-    };
-
-    const onUpgradeVehicle = () => {
-        fetchNui(NuiEvent.BennysUpgradeVehicle);
-    };
-
     return (
         <Menu type={MenuType.JobBennys}>
             <MainMenu>
                 <MenuTitle banner="https://nui-img/soz/menu_job_bennys">Services Bennys</MenuTitle>
                 <MenuContent>
                     {data.insideUpgradeZone && (
-                        <MenuItemButton onConfirm={onUpgradeVehicle}>🔧 Améliorer le véhicule</MenuItemButton>
+                        <MenuItemButton onConfirm={() => fetchNui(NuiEvent.BennysUpgradeVehicle)}>
+                            🔧 Améliorer le véhicule
+                        </MenuItemButton>
                     )}
                     <MenuItemSelect
-                        onConfirm={(index, value) => onConfirm(value.item, value.props)}
+                        onConfirm={(index, value) => {
+                            fetchNui(NuiEvent.ObjectPlace, value);
+                        }}
                         title="🚧 Poser un objet"
                     >
                         <MenuItemSelectOption

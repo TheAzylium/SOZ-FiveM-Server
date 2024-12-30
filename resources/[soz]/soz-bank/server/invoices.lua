@@ -293,20 +293,22 @@ end
 
 --- Events
 MySQL.ready(function()
-    MySQL.query("SELECT * FROM invoices WHERE payed = false AND refused = false", {}, function(result)
-        if result then
-            for _, invoice in pairs(result) do
-                if invoice.targetAccount == nil then
-                    goto skip
+    MySQL.query(
+        "SELECT id, citizenid, emitter, emitterName, emitterSafe, targetAccount, label, amount, kind, unix_timestamp(created_at)*1000 as created_at, unix_timestamp(updated_at)*1000 as updated_at FROM invoices WHERE payed = false AND refused = false",
+        {}, function(result)
+            if result then
+                for _, invoice in pairs(result) do
+                    if invoice.targetAccount == nil then
+                        goto skip
+                    end
+
+                    Invoices[invoice.targetAccount] = Invoices[invoice.targetAccount] or {}
+                    Invoices[invoice.targetAccount][invoice.id] = invoice
+
+                    ::skip::
                 end
-
-                Invoices[invoice.targetAccount] = Invoices[invoice.targetAccount] or {}
-                Invoices[invoice.targetAccount][invoice.id] = invoice
-
-                ::skip::
             end
-        end
-    end)
+        end)
 end)
 
 exports("GetAllInvoicesForPlayer", function(source)

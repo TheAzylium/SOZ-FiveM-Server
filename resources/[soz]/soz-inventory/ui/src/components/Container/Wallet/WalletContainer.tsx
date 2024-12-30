@@ -108,6 +108,7 @@ export const WalletContainer = () => {
                         <ContainerWrapper
                             display={true}
                             banner={walletBanner}
+                            bannerType='thick'
                             maxWeight={-1}
                         >
                             <ContainerSlots

@@ -1,3 +1,5 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
+
 import { OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
@@ -42,7 +44,7 @@ export class PlayerEffectProvider {
         await this.onPlayerUpdate(player);
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(player: PlayerData): Promise<void> {
         if ((this.forceDrugEffect || player.metadata.drug > 0) && !AnimpostfxIsRunning('DrugsMichaelAliensFight')) {
             AnimpostfxPlay('DrugsMichaelAliensFightIn', 0, false);

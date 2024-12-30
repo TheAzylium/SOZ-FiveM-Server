@@ -46,6 +46,7 @@ export class StonkDeliveryProvider {
                 options: [
                     {
                         label: 'Récupérer un conteneur sécurisé',
+                        icon: 'c:/stonk/secure_container.png',
                         job: JobType.CashTransfer,
                         color: JobType.CashTransfer,
                         blackoutGlobal: true,

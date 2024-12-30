@@ -5,12 +5,16 @@ import { Apartment, Property } from '../../shared/housing/housing';
 import { createZoneFromLegacyData, Zone, zoneToLegacyData } from '../../shared/polyzone/box.zone';
 import { RepositoryType } from '../../shared/repository';
 import { PrismaService } from '../database/prisma.service';
+import { GarageRepository } from './garage.repository';
 import { Repository } from './repository';
 
 @Injectable(HousingRepository, Repository)
 export class HousingRepository extends Repository<RepositoryType.Housing> {
     @Inject(PrismaService)
     private prismaService: PrismaService;
+
+    @Inject(GarageRepository)
+    private garageRepository: GarageRepository;
 
     public type = RepositoryType.Housing;
 
@@ -328,7 +332,7 @@ export class HousingRepository extends Repository<RepositoryType.Housing> {
     public async updatePropertyZone(propertyId: number, zone: Zone, type: 'entry' | 'garage') {
         const zoneData = JSON.stringify(zoneToLegacyData(zone));
 
-        await this.prismaService.housing_property.update({
+        const dbZone = await this.prismaService.housing_property.update({
             where: {
                 id: propertyId,
             },
@@ -338,6 +342,10 @@ export class HousingRepository extends Repository<RepositoryType.Housing> {
         });
 
         this.data[propertyId][`${type}Zone`] = zone;
+
+        if (dbZone.garage_zone && dbZone.entry_zone) {
+            this.garageRepository.updateAddGarage(dbZone.identifier, dbZone.garage_zone, dbZone.entry_zone);
+        }
     }
 
     public async removeProperty(propertyId: number): Promise<void> {

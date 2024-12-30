@@ -92,6 +92,19 @@ export class JobGradeProvider {
         this.notifier.notify(source, `Le poids a bien été défini !`);
     }
 
+    @OnEvent(ServerEvent.JOB_GRADE_SET_NAME)
+    public async setGradeName(source: number, gradeId: number, name: string) {
+        const grade = await this.jobGradeRepository.find(gradeId);
+
+        if (!grade) {
+            return;
+        }
+
+        await this.jobGradeRepository.setGradeName(gradeId, name);
+
+        this.notifier.notify(source, `Le nom a bien été défini !`);
+    }
+
     @OnEvent(ServerEvent.JOB_GRADE_SET_SALARY)
     public async setGradeSalary(source: number, gradeId: number, salary: number) {
         const grade = await this.jobGradeRepository.find(gradeId);

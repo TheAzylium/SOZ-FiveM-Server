@@ -10,6 +10,7 @@ import { getChunkId } from '@public/shared/grid';
 import { MenuType } from '@public/shared/nui/menu';
 import { PLACEMENT_PROP_LIST, PlacementProp } from '@public/shared/nui/prop_placement';
 import {
+    CollectionRadius,
     DebugProp,
     PropCollection,
     PropCollectionData,
@@ -26,10 +27,10 @@ import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { NuiMenu } from '../nui/nui.menu';
+import { PlayerPositionProvider } from '../player/player.position.provider';
 import { PlayerService } from '../player/player.service';
 import { ProgressService } from '../progress.service';
 import { ResourceLoader } from '../repository/resource.loader';
-import { StateSelector } from '../store/store';
 import { CircularCameraProvider } from './circular.camera.provider';
 import { ObjectProvider } from './object.provider';
 import { PropHighlightProvider } from './prop.highlight.provider';
@@ -67,6 +68,9 @@ export class PropPlacementProvider {
 
     @Inject(PlayerService)
     private playerService: PlayerService;
+
+    @Inject(PlayerPositionProvider)
+    private playerPositionProvider: PlayerPositionProvider;
 
     private debugProp: DebugProp | null;
     private isEditorModeOn: boolean;
@@ -122,12 +126,21 @@ export class PropPlacementProvider {
         await this.doCloseEditor();
     }
 
-    @StateSelector(state => state.grid)
+    @Tick(TickInterval.EVERY_SECOND)
     public async onGridChange() {
-        if (this.menu.getOpened() === MenuType.PropPlacementMenu) {
-            this.notifier.notify('Changement de zone, fermeture du menu...', 'warning');
-            await this.doCloseEditor();
-            this.menu.closeMenu();
+        if (this.menu.getOpened() === MenuType.PropPlacementMenu && this.currentCollection) {
+            const playerData = this.playerService.getPlayer();
+            if (!['admin', 'staff'].includes(playerData.role)) {
+                const [firstProp] = Object.values(this.currentCollection.props);
+                if (
+                    firstProp &&
+                    getDistance(firstProp.object.position, GetEntityCoords(PlayerPedId()) as Vector3) > CollectionRadius
+                ) {
+                    this.notifier.notify('Trop loin, fermeture du menu...', 'warning');
+                    await this.doCloseEditor();
+                    this.menu.closeMenu();
+                }
+            }
         }
     }
 
@@ -150,7 +163,6 @@ export class PropPlacementProvider {
     public async onRequestCreatePropCollection() {
         const name = await this.inputService.askInput({
             title: 'Nom de la collection',
-            defaultValue: '',
             maxCharacters: 50,
         });
         if (!name) {
@@ -194,6 +206,29 @@ export class PropPlacementProvider {
         this.despawnDebugPropsOfCollection(this.currentCollection);
         this.currentCollection = null;
         await this.refreshPropPlacementMenuData(newCollections);
+    }
+
+    @OnNuiEvent(NuiEvent.RequestPersistPropCollection)
+    public async onRequestPersistCollection({ name, persist }: { name: string; persist: boolean }) {
+        const newCollections = await emitRpc<PropCollectionData[]>(
+            RpcServerEvent.PROP_REQUEST_PERSIST_COLLECTION,
+            name,
+            persist
+        );
+        if (!newCollections) {
+            return;
+        }
+        await this.refreshPropPlacementMenuData(newCollections);
+    }
+
+    @OnNuiEvent(NuiEvent.PlacementCollectionTeleport)
+    public async onRequestTpCollection(name: string) {
+        const collectionToOpen = await emitRpc<PropCollection>(RpcServerEvent.PROP_GET_PROP_COLLECTION, name);
+        const [firstProp] = Object.values(collectionToOpen.props);
+
+        if (firstProp) {
+            this.playerPositionProvider.teleportAdminToPosition(firstProp.object.position);
+        }
     }
 
     public async refreshPropPlacementMenuData(
@@ -266,7 +301,7 @@ export class PropPlacementProvider {
             const [firstProp] = Object.values(collectionToOpen.props);
             if (
                 firstProp &&
-                getDistance(firstProp.object.position, GetEntityCoords(PlayerPedId()) as Vector3) > 100.0
+                getDistance(firstProp.object.position, GetEntityCoords(PlayerPedId()) as Vector3) > CollectionRadius
             ) {
                 this.notifier.notify('Tu es trop loin de la collection', 'error');
                 return null;
@@ -341,7 +376,6 @@ export class PropPlacementProvider {
         if (!selectedProp) {
             const propModel = await this.inputService.askInput({
                 title: 'Modèle du prop',
-                defaultValue: '',
             });
             if (!propModel || !IsModelValid(propModel)) {
                 this.notifier.notify('Modèle invalide', 'error');

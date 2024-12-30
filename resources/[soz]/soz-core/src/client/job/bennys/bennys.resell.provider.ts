@@ -69,15 +69,14 @@ export class BennysResellProvider {
                     const value = await this.inputService.askInput(
                         {
                             title: 'Veuillez confirmer le modèle suivant: ' + label,
-                            defaultValue: '',
                             maxCharacters: label.length,
                         },
                         value => {
                             if (!value) {
-                                return Ok(true);
+                                return Ok(value);
                             }
                             if (value.toLowerCase() === label) {
-                                return Ok(true);
+                                return Ok(value);
                             }
                             return Err(`La valeur saisie ne correspond pas au modèle du véhicule.`);
                         }

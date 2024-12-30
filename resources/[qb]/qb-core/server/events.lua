@@ -1,10 +1,10 @@
 -- Event Handler
 
-AddEventHandler('playerDropped', function()
+AddEventHandler('playerDropped', function(reason)
     local src = source
     if QBCore.Players[src] then
         local Player = QBCore.Players[src]
-        exports['soz-core']:Event('player_disconnect', { player_source = src }, {})
+        exports['soz-core']:Event('player_disconnect', { player_source = src }, {reason = reason, source = src})
         Player.Functions.Save()
         _G.Player_Buckets[Player.PlayerData.license] = nil
         TriggerEvent('inventory:DropPlayerInventory', src)

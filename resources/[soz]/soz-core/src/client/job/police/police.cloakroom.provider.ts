@@ -88,15 +88,19 @@ export class PoliceCloakRoomProvider {
         const player = this.playerService.getPlayer();
         const model = GetEntityModel(PlayerPedId());
         const configs = POLICE_CLOAKROOM[player.job.id];
-        configs[model][DUTY_OUTFIT_NAME].Components[Component.Decals] = { Drawable: 0, Texture: 0, Palette: 0 };
-        if (RankOutfit[player.job.id][player.job.grade]) {
-            configs[model][DUTY_OUTFIT_NAME].Components[Component.Decals] = {
-                Drawable:
-                    VanillaComponentDrawableIndexMaxValue[model][Component.Decals] +
-                    RankOutfit[player.job.id][player.job.grade][0],
-                Texture: RankOutfit[player.job.id][player.job.grade][1],
-                Palette: 0,
-            };
+        if (RankOutfit[player.job.id]) {
+            for (const outfitName of Object.keys(RankOutfit[player.job.id])) {
+                configs[model][outfitName].Components[Component.Decals] = { Drawable: 0, Texture: 0, Palette: 0 };
+                if (RankOutfit[player.job.id][outfitName][player.job.grade]) {
+                    configs[model][outfitName].Components[Component.Decals] = {
+                        Drawable:
+                            VanillaComponentDrawableIndexMaxValue[model][Component.Decals] +
+                            RankOutfit[player.job.id][outfitName][player.job.grade][0],
+                        Texture: RankOutfit[player.job.id][outfitName][player.job.grade][1],
+                        Palette: 0,
+                    };
+                }
+            }
         }
 
         await this.jobCloakroomProvider.openCloakroom(storageIdToSave, configs, 'Tenue Personnalisée');
@@ -109,12 +113,16 @@ export class PoliceCloakRoomProvider {
 
         const outfit = ObjectOutFits[job][model][itemname];
         outfit.Components[Component.Decals] = { Drawable: 0, Texture: 0, Palette: 0 };
-        if (job == player.job.id && RankOutfit[player.job.id][player.job.grade] && itemname == 'outfit') {
+        if (
+            job == player.job.id &&
+            RankOutfit[player.job.id][DUTY_OUTFIT_NAME][player.job.grade] &&
+            itemname == 'outfit'
+        ) {
             outfit.Components[Component.Decals] = {
                 Drawable:
                     VanillaComponentDrawableIndexMaxValue[model][Component.Decals] +
-                    RankOutfit[player.job.id][player.job.grade][0],
-                Texture: RankOutfit[player.job.id][player.job.grade][1],
+                    RankOutfit[player.job.id][DUTY_OUTFIT_NAME][player.job.grade][0],
+                Texture: RankOutfit[player.job.id][DUTY_OUTFIT_NAME][player.job.grade][1],
                 Palette: 0,
             };
         }

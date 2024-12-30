@@ -4,6 +4,8 @@ import { NuiEvent } from '@public/shared/event';
 import { MenuType } from '@public/shared/nui/menu';
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -19,6 +21,8 @@ type DrivingSchoolMenuProps = {
 };
 
 export const DrivingSchoolMenu: FunctionComponent<DrivingSchoolMenuProps> = ({ data }) => {
+    const getPrice = useGetPrice();
+
     if (!data) {
         data = {
             currentVehicleLimit: 1,
@@ -92,7 +96,7 @@ export const DrivingSchoolMenu: FunctionComponent<DrivingSchoolMenuProps> = ({ d
                     <MenuItemButton className="border-t border-white/50" onConfirm={() => onConfirm()}>
                         <div className="flex w-full justify-between items-center">
                             <span>Confirmer</span>
-                            <span>${price.toFixed()}</span>
+                            <span>${getPrice(price, TaxType.VEHICLE).toFixed()}</span>
                         </div>
                     </MenuItemButton>
                 </MenuContent>

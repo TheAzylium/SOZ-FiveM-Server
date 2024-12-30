@@ -1,7 +1,8 @@
 import { DrugContractInfo } from '@private/shared/drugs';
 import { MissiveType } from '@private/shared/missive';
 
-import { FakeId } from './player';
+import { DamageServerData } from './job/lsmc';
+import { FakeId, PlayerCharInfo, PlayerJob, PlayerMetadata } from './player';
 import { WeaponComponentType } from './weapons/attachment';
 import { WeaponMk2TintColor, WeaponTintColor } from './weapons/tint';
 
@@ -196,10 +197,32 @@ export type MealMetadata = {
     label: string;
 };
 
+export type EvidenceMetadata = {
+    type: string;
+    generalInfo: string;
+    quantity?: number;
+    zone?: string;
+    support?: string;
+    isAnalyzed?: boolean;
+    dateAnalyzed?: string;
+};
+
+export type MedicalMetadata = {
+    damages: DamageServerData[];
+    patient: {
+        charinfo: PlayerCharInfo;
+        job: PlayerJob;
+        metadata: PlayerMetadata;
+        hash: number;
+    };
+    date: number;
+};
+
 export type InventoryItemMetadata = {
     label?: string;
     type?: string;
     expiration?: string;
+    creation?: string;
     player?: number;
     // Weapom
     serial?: string;
@@ -226,6 +249,25 @@ export type InventoryItemMetadata = {
     fakeIdData?: FakeId;
     // Weapon certificate (DMC)
     craftCertificate?: string;
+    serializedDetectiveBoard?: any;
+    originalDetectiveBoard?: boolean;
+    photosInDetectiveBoard?: string[];
+    photoUrl?: string;
+    evidenceInfos?: EvidenceMetadata;
+};
+
+export type Inventory = {
+    id: string;
+    label: string;
+    type: string;
+    slots: number;
+    weight: number;
+    maxWeight: number;
+    owner: number;
+    items: InventoryItem[];
+    changed: boolean;
+    users: number[];
+    time: number;
 };
 
 export type InventoryItem = {

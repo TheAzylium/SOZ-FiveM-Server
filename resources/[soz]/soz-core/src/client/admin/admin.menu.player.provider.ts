@@ -4,6 +4,7 @@ import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
 import { AdminPlayer, HEALTH_OPTIONS, MOVEMENT_OPTIONS, VOCAL_OPTIONS } from '../../shared/admin/admin';
 import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
+import { PositiveNumberValidator } from '../../shared/nui/input';
 import { Err, Ok } from '../../shared/result';
 import { RpcServerEvent } from '../../shared/rpc';
 import { Notifier } from '../notifier';
@@ -41,15 +42,14 @@ export class AdminMenuPlayerProvider {
     @OnNuiEvent(NuiEvent.AdminMenuPlayerHandleSearchPlayer)
     public async handleSearchPlayer(): Promise<void> {
         const players = await this.getPlayers();
-        const player = await this.inputService.askInput(
+        const player = await this.inputService.askInput<string>(
             {
                 title: 'Rechercher un joueur',
                 maxCharacters: 50,
-                defaultValue: '',
             },
             value => {
                 if (!value || value === '') {
-                    return Ok(true);
+                    return Ok(value);
                 }
                 const player = players.find(p => {
                     return (
@@ -60,7 +60,7 @@ export class AdminMenuPlayerProvider {
                 if (!player) {
                     return Err('Aucun joueur trouvé.');
                 }
-                return Ok(true);
+                return Ok(value);
             }
         );
         this.nuiDispatch.dispatch('admin_player_submenu', 'SetSearchFilter', player || '');
@@ -111,11 +111,21 @@ export class AdminMenuPlayerProvider {
                 this.notifier.notify(`Le joueur ~g~n'est pas muté.`, 'info');
             }
         } else if (action === 'mute') {
-            TriggerServerEvent(ServerEvent.VOIP_MUTE, true, player.id);
-            this.notifier.notify(`Le joueur ~g~${player.name}~s~ est maintenant ~r~muté.`, 'info');
+            const hasBeenMuted = await emitRpc<boolean>(RpcServerEvent.VOIP_SET_MUTE, player.id, true);
+
+            if (hasBeenMuted) {
+                this.notifier.notify(`Le joueur ~g~${player.name}~s~ est maintenant ~r~muté.`, 'info');
+            } else {
+                this.notifier.notify(`Le joueur ~g~${player.name}~s~ n'a pas pu être ~r~muté.`, 'error');
+            }
         } else {
-            TriggerServerEvent(ServerEvent.VOIP_MUTE, false, player.id);
-            this.notifier.notify(`Le joueur ~g~${player.name}~s~ n'est plus ~r~muté.`, 'info');
+            const hasBeenUnmuted = await emitRpc<boolean>(RpcServerEvent.VOIP_SET_MUTE, player.id, false);
+
+            if (hasBeenUnmuted) {
+                this.notifier.notify(`Le joueur ~g~${player.name}~s~ est maintenant ~g~démuté.`, 'info');
+            } else {
+                this.notifier.notify(`Le joueur ~g~${player.name}~s~ n'a pas pu être ~g~démuté.`, 'error');
+            }
         }
     }
 
@@ -224,19 +234,9 @@ export class AdminMenuPlayerProvider {
         const value = await this.inputService.askInput(
             {
                 title: `Changer la Réputation (actuelle ${current})`,
-                defaultValue: '',
                 maxCharacters: 7,
             },
-            value => {
-                if (!value) {
-                    return Ok(true);
-                }
-                const int = parseInt(value);
-                if (isNaN(int) || int < 0) {
-                    return Err('Valeur incorrecte');
-                }
-                return Ok(true);
-            }
+            PositiveNumberValidator
         );
 
         if (!value) {
@@ -248,16 +248,10 @@ export class AdminMenuPlayerProvider {
 
     @OnNuiEvent(NuiEvent.AdminMenuPlayerHandleResetCrimi)
     public async handleResetCrimi(player: AdminPlayer): Promise<void> {
-        const value = await this.inputService.askInput(
-            {
-                title: `Entrer 'OUI' pour confirmer le Reset Criminalité de ce personnage`,
-                defaultValue: '',
-                maxCharacters: 7,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const value = await this.inputService.askInput({
+            title: `Entrer 'OUI' pour confirmer le Reset Criminalité de ce personnage`,
+            maxCharacters: 7,
+        });
 
         if (value === 'OUI') {
             TriggerServerEvent(ServerEvent.ADMIN_RESET_CRIMI, player.id);
@@ -289,5 +283,10 @@ export class AdminMenuPlayerProvider {
     @OnNuiEvent(NuiEvent.AdminMenuPlayerSetZombie)
     public async handlePlayerSetZombie({ player, value }: { player: AdminPlayer; value: boolean }): Promise<void> {
         TriggerServerEvent(ServerEvent.ADMIN_PLAYER_SET_ZOMBIE, player.id, value);
+    }
+
+    @OnNuiEvent(NuiEvent.AdminMenuPlayerSetVoipDebug)
+    public async setPlayerDebug({ player, value }: { player: AdminPlayer; value: boolean }): Promise<void> {
+        TriggerServerEvent(ServerEvent.ADMIN_PLAYER_SET_VOIP_DEBUG, player.id, value);
     }
 }

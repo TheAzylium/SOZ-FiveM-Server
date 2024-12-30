@@ -45,7 +45,7 @@ export class PlayerInjuryProvider {
         const player = this.playerService.getPlayer();
         const ped = PlayerPedId();
 
-        if (player === null || player.metadata.godmode || player.metadata.isdead) {
+        if (!player || player.metadata?.godmode || player.metadata?.isdead) {
             return;
         }
 

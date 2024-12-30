@@ -49,7 +49,7 @@ export class AdminSpectateProvider {
 
             this.spectatingPlayer = null;
             this.previousPosition = null;
-            this.voipService.mutePlayer(false);
+            await this.voipService.mutePlayer(false);
 
             return;
         }
@@ -59,7 +59,7 @@ export class AdminSpectateProvider {
             SetEntityInvincible(ped, true);
             SetEntityCollision(ped, false, false);
             this.previousPosition = GetEntityCoords(ped, false) as Vector3;
-            this.voipService.mutePlayer(true);
+            await this.voipService.mutePlayer(true);
         }
 
         SetEntityCoords(ped, position[0], position[1], position[2], false, false, false, false);

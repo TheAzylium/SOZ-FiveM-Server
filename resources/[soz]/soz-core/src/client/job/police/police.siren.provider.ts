@@ -11,7 +11,9 @@ import { VehicleStateService } from '../../vehicle/vehicle.state.service';
 export const VehicleWithSirens = {
     // LSMC
     [GetHashKey('ambulance')]: true,
+    [GetHashKey('ambulance2')]: true,
     [GetHashKey('ambcar')]: true,
+    [GetHashKey('lguard')]: true,
     [GetHashKey('firetruk')]: true,
     // LSPD
     [GetHashKey('police')]: true,
@@ -19,22 +21,32 @@ export const VehicleWithSirens = {
     [GetHashKey('police3')]: true,
     [GetHashKey('police4')]: true,
     [GetHashKey('police5')]: true,
-    [GetHashKey('police6')]: true,
-    [GetHashKey('policeb2')]: true,
-    [GetHashKey('lspdbana1')]: true,
-    [GetHashKey('lspdbana2')]: true,
-    [GetHashKey('lspdgallardo')]: true,
+    [GetHashKey('lspd10')]: true,
+    [GetHashKey('lspd11')]: true,
+    [GetHashKey('lspd12')]: true,
+    [GetHashKey('lspd20')]: true,
+    [GetHashKey('lspd21')]: true,
+    [GetHashKey('lspd30')]: true,
+    [GetHashKey('lspd40')]: true,
+    [GetHashKey('lspd41')]: true,
+    [GetHashKey('lspd50')]: true,
+    [GetHashKey('lspd51')]: true,
     // BCSO
     [GetHashKey('sheriff')]: true,
     [GetHashKey('sheriff2')]: true,
     [GetHashKey('sheriff3')]: true,
     [GetHashKey('sheriff4')]: true,
     [GetHashKey('sheriffb')]: true,
-    [GetHashKey('sheriffdodge')]: true,
-    [GetHashKey('sheriffcara')]: true,
-    [GetHashKey('bcsobana1')]: true,
-    [GetHashKey('bcsobana2')]: true,
-    [GetHashKey('bcsoc7')]: true,
+    [GetHashKey('bcso10')]: true,
+    [GetHashKey('bcso11')]: true,
+    [GetHashKey('bcso12')]: true,
+    [GetHashKey('bcso20')]: true,
+    [GetHashKey('bcso21')]: true,
+    [GetHashKey('bcso30')]: true,
+    [GetHashKey('bcso40')]: true,
+    [GetHashKey('bcso41')]: true,
+    [GetHashKey('bcso50')]: true,
+    [GetHashKey('bcso51')]: true,
     // LSPD + BCSO
     [GetHashKey('pbus')]: true,
     //SASP
@@ -45,6 +57,7 @@ export const VehicleWithSirens = {
     [GetHashKey('cogfbi')]: true,
     [GetHashKey('paragonfbi')]: true,
     [GetHashKey('dodgebana')]: true,
+    [GetHashKey('polgauntlet')]: true,
 };
 
 @Provider()

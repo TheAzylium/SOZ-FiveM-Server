@@ -188,7 +188,7 @@ CreateThread(function()
 		end
 
 		GlobalCheck = function()
-			if PlayerData.metadata["isdead"] or PlayerData.metadata["inlaststand"] or PlayerData.metadata["ishandcuffed"] then
+			if PlayerData.metadata["isdead"] or PlayerData.metadata["inlaststand"] or PlayerData.metadata["ishandcuffed"]  or exports["soz-core"]:IsPlayerProne() then
 				return false
 			end
 
@@ -252,11 +252,12 @@ CreateThread(function()
 end)
 
 function CheckOptions(data, entity, distance)
+	local ped = PlayerPedId()
 	if not GlobalCheck() then return false end
-	if exports["soz-core"]:GetPlayerState().isEscorted then return false end
+	if IsEntityAttached(ped) then return false end
 	if distance and data.distance and distance > data.distance then return false end
 	if data.job and not JobCheck(data.job) then return false end
-	if not data.allowVehicle and IsPedInAnyVehicle(PlayerPedId(), false) then return false end
+	if not data.allowVehicle and IsPedInAnyVehicle(ped, false) then return false end
 	if data.menu and SousMenu(data.menu) then return false end
 	if data.gang and not GangCheck(data.gang) then return false end
 	if data.item and ItemCount(data.item) < 1 then return false end

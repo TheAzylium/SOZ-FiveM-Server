@@ -5,6 +5,8 @@ import { UpwConfig, UpwOrder, UpwOrderMenuData } from '@public/shared/job/upw';
 import { MenuType } from '@public/shared/nui/menu';
 import { FunctionComponent, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -22,6 +24,7 @@ type UpwOrderMenuProps = {
 export const UpwOrderMenu: FunctionComponent<UpwOrderMenuProps> = ({ data }) => {
     const banner = 'https://nui-img/soz/menu_job_upw';
     const [orders, setOrders] = useState<UpwOrder[]>([]);
+    const getPrice = useGetPrice();
 
     useNuiEvent('upw_order_menu', 'SetOrders', (orders: UpwOrder[]) => {
         setOrders(orders);
@@ -81,7 +84,7 @@ export const UpwOrderMenu: FunctionComponent<UpwOrderMenuProps> = ({ data }) => 
                         >
                             <div className="pr-2 flex items-center justify-between">
                                 <span> {vehicle.name} </span>
-                                <span>💸 ${vehicle.price * 0.01} </span>
+                                <span>💸 ${getPrice(vehicle.price * 0.01)} </span>
                             </div>
                         </MenuItemButton>
                     ))}

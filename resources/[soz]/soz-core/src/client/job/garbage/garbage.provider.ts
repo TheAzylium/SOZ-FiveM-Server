@@ -1,9 +1,16 @@
-import { OnEvent, OnNuiEvent } from '../../../core/decorators/event';
+import { PlayerUpdate } from '@public/core/decorators/player';
+
+import { Once, OnceStep, OnEvent, OnNuiEvent } from '../../../core/decorators/event';
 import { Inject } from '../../../core/decorators/injectable';
 import { Provider } from '../../../core/decorators/provider';
+import { Tick } from '../../../core/decorators/tick';
+import { AnimationStopReason } from '../../../shared/animation';
 import { ClientEvent, NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
+import { AnimationRunner } from '../../animation/animation.factory';
+import { AnimationService } from '../../animation/animation.service';
 import { BlipFactory } from '../../blip';
+import { InventoryManager } from '../../inventory/inventory.manager';
 import { NuiMenu } from '../../nui/nui.menu';
 import { ObjectProvider } from '../../object/object.provider';
 import { PlayerService } from '../../player/player.service';
@@ -19,10 +26,30 @@ export class GarbageProvider {
     @Inject(ObjectProvider)
     private objectProvider: ObjectProvider;
 
+    @Inject(InventoryManager)
+    private inventoryManager: InventoryManager;
+
     @Inject(PlayerService)
     private playerService: PlayerService;
 
+    @Inject(AnimationService)
+    private animationService: AnimationService;
+
     private displayBinBlip = false;
+
+    private hasGarbageBag = false;
+
+    private garbageAnimationProgress: AnimationRunner | null = null;
+
+    @Once(OnceStep.PlayerLoaded)
+    public async onPlayerLoaded() {
+        this.blipFactory.create('jobs:garbage:truck', {
+            name: 'BlueBird',
+            position: [-621.98, -1640.79, 25.97],
+            sprite: 318,
+            scale: 0.9,
+        });
+    }
 
     @OnNuiEvent(NuiEvent.GarbageDisplayBlip)
     public async onDisplayBlip({ value }: { value: boolean }) {
@@ -56,6 +83,46 @@ export class GarbageProvider {
             } else {
                 this.blipFactory.remove(bin.id);
             }
+        }
+    }
+
+    @Tick()
+    public async checkGarbageBag() {
+        if (!this.hasGarbageBag) {
+            return;
+        }
+
+        this.garbageAnimationProgress = this.animationService.playAnimation({
+            base: {
+                dictionary: 'missfbi4prepp1',
+                name: '_idle_garbage_man',
+                options: {
+                    onlyUpperBody: true,
+                    enablePlayerControl: true,
+                    repeat: true,
+                },
+            },
+            props: [
+                {
+                    model: 'prop_cs_rub_binbag_01',
+                    bone: 57005,
+                    position: [0.12, 0.0, -0.05],
+                    rotation: [220.0, 120.0, 0.0],
+                },
+            ],
+        });
+
+        await this.garbageAnimationProgress;
+
+        this.garbageAnimationProgress = null;
+    }
+
+    @PlayerUpdate()
+    public onPlayerUpdate() {
+        this.hasGarbageBag = this.inventoryManager.hasEnoughItem('garbagebag', 1);
+
+        if (!this.hasGarbageBag && this.garbageAnimationProgress) {
+            this.garbageAnimationProgress.cancel(AnimationStopReason.Finished);
         }
     }
 

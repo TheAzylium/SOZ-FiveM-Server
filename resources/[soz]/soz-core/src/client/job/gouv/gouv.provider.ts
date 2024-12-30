@@ -6,9 +6,14 @@ import { uuidv4 } from '@public/core/utils';
 import { ClientEvent, NuiEvent, ServerEvent } from '@public/shared/event';
 import { MenuType } from '@public/shared/nui/menu';
 
+import { TaxType } from '../../../shared/bank';
+import { JobTaxTier } from '../../../shared/configuration';
+import { Err, Ok } from '../../../shared/result';
 import { BlipFactory } from '../../blip';
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
+import { ConfigurationRepository } from '../../repository/configuration.repository';
+import { VehicleRadarProvider } from '../../vehicle/vehicle.radar.provider';
 
 @Provider()
 export class GouvProvider {
@@ -24,6 +29,12 @@ export class GouvProvider {
     @Inject(InputService)
     private inputService: InputService;
 
+    @Inject(ConfigurationRepository)
+    private configurationRepository: ConfigurationRepository;
+
+    @Inject(VehicleRadarProvider)
+    private vehicleRadarProvider: VehicleRadarProvider;
+
     @Once(OnceStep.PlayerLoaded)
     public setupMdrJob() {
         this.createBlips();
@@ -37,6 +48,7 @@ export class GouvProvider {
         }
 
         this.nuiMenu.openMenu(MenuType.GouvJobMenu, {
+            displayRadar: this.vehicleRadarProvider.displayRadar,
             onDuty: this.playerService.isOnDuty(),
         });
     }
@@ -48,6 +60,94 @@ export class GouvProvider {
             sprite: 76,
             scale: 1.1,
         });
+    }
+
+    @OnNuiEvent(NuiEvent.GouvSetJobTaxTier)
+    public async setJobTaxTier({ tier }: { tier: keyof JobTaxTier }) {
+        const configuration = this.configurationRepository.getValue('JobTaxTier');
+
+        const value = await this.inputService.askInput(
+            {
+                title: 'Nouveau seuil des impôts',
+                maxCharacters: 20,
+                defaultValue: configuration[tier].toString(),
+            },
+            input => {
+                const inputNumber = Number(input);
+
+                if (isNaN(inputNumber) || inputNumber < 0) {
+                    return Err('Veuillez entrer un nombre positif');
+                }
+
+                return Ok(inputNumber);
+            }
+        );
+
+        if (!value) {
+            return;
+        }
+
+        const valueNumber = Number(value);
+
+        TriggerServerEvent(ServerEvent.GOUV_UPDATE_JOB_TIER_TAX, tier, valueNumber);
+    }
+
+    @OnNuiEvent(NuiEvent.GouvSetJobTaxTierPercentage)
+    public async setJobTaxTierPercentage({ tier }: { tier: keyof JobTaxTier }) {
+        const configuration = this.configurationRepository.getValue('JobTaxTier');
+
+        const value = await this.inputService.askInput(
+            {
+                title: 'Nouveau pourcentage des impôts',
+                maxCharacters: 20,
+                defaultValue: configuration[tier].toString(),
+            },
+            input => {
+                const inputNumber = Number(input);
+
+                if (isNaN(inputNumber) || inputNumber < 0 || inputNumber > 100) {
+                    return Err('Veuillez entrer un nombre positif et inférieur à 100');
+                }
+
+                return Ok(inputNumber);
+            }
+        );
+
+        if (!value) {
+            return;
+        }
+
+        const valueNumber = Number(value);
+
+        TriggerServerEvent(ServerEvent.GOUV_UPDATE_JOB_TIER_TAX_PERCENTAGE, tier, valueNumber);
+    }
+
+    @OnNuiEvent(NuiEvent.GouvSetTax)
+    public async setTax({ type }: { type: TaxType }) {
+        const value = await this.inputService.askInput(
+            {
+                title: 'Pourcentage de taxe',
+                maxCharacters: 3,
+                defaultValue: '',
+            },
+            input => {
+                const inputNumber = Number(input);
+
+                if (isNaN(inputNumber) || inputNumber < 0 || inputNumber > 40) {
+                    return Err('Veuillez entrer un nombre entre 0 et 40');
+                }
+
+                return Ok(inputNumber);
+            }
+        );
+
+        if (value === null) {
+            return;
+        }
+
+        const valueNumber = Number(value);
+
+        TriggerServerEvent(ServerEvent.GOUV_UPDATE_TAX, type, valueNumber);
     }
 
     @OnNuiEvent(NuiEvent.GouvAnnoncement)

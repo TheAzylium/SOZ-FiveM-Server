@@ -1,29 +1,37 @@
+import { On, Once, OnceStep, OnEvent } from '@public/core/decorators/event';
+import { Logger } from '@public/core/logger';
+import { ServerEvent } from '@public/shared/event';
+import { PlayerData } from '@public/shared/player';
 import { formatDuration } from '@public/shared/utils/timeformat';
-import { add } from 'date-fns';
+import { add, addSeconds } from 'date-fns';
 
 import { AuctionZones, DealershipConfigItem, DealershipType } from '../../config/dealership';
 import { GarageList } from '../../config/garage';
-import { Once, OnceStep } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
-import { ClientEvent } from '../../shared/event';
+import { TaxType } from '../../shared/bank';
 import { JobType } from '../../shared/job';
 import { Zone } from '../../shared/polyzone/box.zone';
 import { Vector4 } from '../../shared/polyzone/vector';
 import { getRandomItems } from '../../shared/random';
 import { RpcServerEvent } from '../../shared/rpc';
 import { AuctionVehicle } from '../../shared/vehicle/auction';
-import { DealershipId } from '../../shared/vehicle/dealership';
 import { getDefaultVehicleConfiguration, VehicleConfiguration } from '../../shared/vehicle/modification';
 import { PlayerVehicleState } from '../../shared/vehicle/player.vehicle';
-import { getDefaultVehicleCondition, Vehicle } from '../../shared/vehicle/vehicle';
+import {
+    getDefaultVehicleCondition,
+    isVehicleModelElectric,
+    Vehicle,
+    VehicleClassFuelStorageMultiplier,
+} from '../../shared/vehicle/vehicle';
 import { PrismaService } from '../database/prisma.service';
 import { LockService } from '../lock.service';
 import { Monitor } from '../monitor/monitor';
 import { Notifier } from '../notifier';
 import { PlayerMoneyService } from '../player/player.money.service';
 import { PlayerService } from '../player/player.service';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { VehicleService } from './vehicle.service';
 import { VehicleSpawner } from './vehicle.spawner';
 
@@ -47,13 +55,24 @@ export class VehicleDealershipProvider {
     @Inject(VehicleSpawner)
     private vehicleSpawner: VehicleSpawner;
 
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
+
     @Inject(LockService)
     private lockService: LockService;
 
     @Inject(Monitor)
     private monitor: Monitor;
 
+    @Inject(Logger)
+    private logger: Logger;
+
     private auctions: Record<string, AuctionVehicle> = {};
+
+    private auctionTimeStart: Date;
+    private auctionTimeStop: Date;
+
+    private activeGuard: Record<number, number> = {};
 
     @Once(OnceStep.DatabaseConnected)
     public async initAuction() {
@@ -68,6 +87,8 @@ export class VehicleDealershipProvider {
                 dealershipId: DealershipType.Luxury,
             },
         });
+
+        this.logger.info(vehicles.map(veh => veh?.model).join(','));
 
         const selectedVehicles = getRandomItems(vehicles, 2);
 
@@ -98,6 +119,7 @@ export class VehicleDealershipProvider {
                 position: auctionZone.position as Vector4,
                 windows: auctionZone.window,
                 bestBid: null,
+                nextMinBid: this.nextMinBid(vehicle.price, null),
             };
 
             const configuration = getDefaultVehicleConfiguration();
@@ -112,6 +134,10 @@ export class VehicleDealershipProvider {
                 turbo: true,
             };
 
+            const condition = getDefaultVehicleCondition();
+            condition.fuelLevel =
+                condition.fuelLevel * (VehicleClassFuelStorageMultiplier[vehicle?.requiredLicence] || 1.0);
+
             await this.prismaService.playerVehicle.upsert({
                 create: {
                     plate,
@@ -125,7 +151,7 @@ export class VehicleDealershipProvider {
                     engine: 1000,
                     body: 1000,
                     mods: JSON.stringify(configuration),
-                    condition: JSON.stringify(getDefaultVehicleCondition()),
+                    condition: JSON.stringify(condition),
                     label: null,
                 },
                 update: {
@@ -143,12 +169,37 @@ export class VehicleDealershipProvider {
             });
         }
 
-        TriggerClientEvent(ClientEvent.VEHICLE_DEALERSHIP_AUCTION_UPDATE, -1, this.auctions);
+        const auctionTimeStop = new Date();
+        auctionTimeStop.setHours(22, 0, 0, 0);
+        this.auctionTimeStop = addSeconds(auctionTimeStop, Math.round(Math.random() * 7200));
+
+        const auctionTimeStart = new Date();
+        auctionTimeStart.setHours(12, 0, 0, 0);
+        this.auctionTimeStart = auctionTimeStart;
+    }
+
+    @OnEvent(ServerEvent.LUXURY_DELETE_GUARD)
+    public async onLuxuryDeleteGuard(source: number, guardNetId: number) {
+        const ped = NetworkGetEntityFromNetworkId(guardNetId);
+        DeleteEntity(ped);
+        delete this.activeGuard[source];
+    }
+
+    @OnEvent(ServerEvent.LUXURY_CREATED_GUARD)
+    public async onLuxuryCreatedGuard(source: number, guardNetId: number) {
+        this.activeGuard[source] = guardNetId;
+    }
+
+    @On('playerDropped')
+    public onDropped(source: number) {
+        if (this.activeGuard[source]) {
+            this.onLuxuryDeleteGuard(source, this.activeGuard[source]);
+        }
     }
 
     @Rpc(RpcServerEvent.VEHICLE_DEALERSHIP_GET_AUCTIONS)
-    public getAuctions(): Record<string, AuctionVehicle> {
-        return this.auctions;
+    public getAuctions(): [Record<string, AuctionVehicle>, boolean] {
+        return [this.auctions, this.IsAuctionDisable()];
     }
 
     @Rpc(RpcServerEvent.VEHICLE_DEALERSHIP_AUCTION_BID)
@@ -159,6 +210,12 @@ export class VehicleDealershipProvider {
             return false;
         }
 
+        if (this.IsAuctionDisable()) {
+            this.notifier.notify(source, 'Les enchères sont déjà terminées.', 'error');
+
+            return;
+        }
+
         const auction = this.auctions[name];
 
         if (!auction) {
@@ -167,17 +224,25 @@ export class VehicleDealershipProvider {
             return;
         }
 
+        if (!(await this.vehicleCountCheck(player))) {
+            return false;
+        }
+
+        if (
+            auction.vehicle.requiredLicence &&
+            (!player.metadata.licences[auction.vehicle.requiredLicence] ||
+                player.metadata.licences[auction.vehicle.requiredLicence] <= 0)
+        ) {
+            this.notifier.notify(source, "Vous n'avez pas le permis nécessaire !", 'error');
+
+            return false;
+        }
+
         return await this.lockService.lock(
             `auction_${name}`,
             async () => {
-                if (auction.bestBid && auction.bestBid.price >= price) {
-                    this.notifier.notify(source, 'Votre enchère est inférieure à la meilleure enchère.', 'error');
-
-                    return false;
-                }
-
-                if (!auction.bestBid && auction.vehicle.price > price) {
-                    this.notifier.notify(source, 'Votre enchère est inférieure au prix de départ.', 'error');
+                if (auction.nextMinBid > price) {
+                    this.notifier.notify(source, "Votre enchère est inférieure à l'enchère minimum.", 'error');
 
                     return false;
                 }
@@ -209,8 +274,9 @@ export class VehicleDealershipProvider {
                     price,
                     name: player.charinfo.firstname + ' ' + player.charinfo.lastname,
                 };
+                this.auctions[name].nextMinBid = this.nextMinBid(this.auctions[name].vehicle.price, price);
 
-                this.notifier.notify(source, `Vous avez fait une enchère à hauteur de $${price}.`, 'error');
+                this.notifier.notify(source, `Vous avez émis une enchère d'une valeur de $${price}.`, 'success');
 
                 if (previousCitizenId) {
                     const player = this.playerService.getPlayerByCitizenId(previousCitizenId);
@@ -219,7 +285,6 @@ export class VehicleDealershipProvider {
                         this.notifier.notify(player.source, `Votre enchère a été dépassée.`, 'error');
                     }
                 }
-                TriggerClientEvent(ClientEvent.VEHICLE_DEALERSHIP_AUCTION_UPDATE, -1, this.auctions);
 
                 return true;
             },
@@ -246,6 +311,11 @@ export class VehicleDealershipProvider {
             const plate = await this.vehicleService.generatePlate();
             const nowInSeconds = Math.round(Date.now() / 1000);
 
+            const condition = getDefaultVehicleCondition();
+            const vehicle = await this.vehicleRepository.findByModel(auction.vehicle.model);
+            condition.fuelLevel =
+                condition.fuelLevel * (VehicleClassFuelStorageMultiplier[vehicle?.requiredLicence] || 1.0);
+
             await this.prismaService.playerVehicle.create({
                 data: {
                     license: player.license,
@@ -253,7 +323,7 @@ export class VehicleDealershipProvider {
                     vehicle: auction.vehicle.model,
                     hash: auction.vehicle.hash.toString(),
                     mods: JSON.stringify(getDefaultVehicleConfiguration()),
-                    condition: JSON.stringify(getDefaultVehicleCondition()),
+                    condition: JSON.stringify(condition),
                     garage: 'airport_public',
                     plate,
                     category: auction.vehicle.category,
@@ -325,6 +395,37 @@ export class VehicleDealershipProvider {
         });
     }
 
+    private async vehicleCountCheck(player: PlayerData) {
+        const playerVehicles = await this.prismaService.playerVehicle.findMany({
+            where: {
+                citizenid: player.citizenid,
+                job: null,
+                state: {
+                    not: PlayerVehicleState.Destroyed,
+                },
+            },
+        });
+
+        let playerVehicleCount = 0;
+        for (const veh of playerVehicles) {
+            const vehDef = await this.vehicleRepository.findByModel(veh.vehicle);
+            if (vehDef.dealershipId && vehDef.dealershipId !== DealershipType.Cycle) {
+                playerVehicleCount++;
+            }
+        }
+
+        if (playerVehicleCount >= player.metadata.vehiclelimit) {
+            let errorMsg = `Limite de véhicule atteinte (${playerVehicleCount}/${player.metadata.vehiclelimit})`;
+            if (player.metadata.vehiclelimit < 10) errorMsg += ". Améliorez votre carte grise à l'auto-école.";
+
+            this.notifier.notify(player.source, errorMsg, 'error');
+
+            return false;
+        }
+
+        return true;
+    }
+
     @Rpc(RpcServerEvent.VEHICLE_DEALERSHIP_BUY)
     public async buyVehicle(
         source: number,
@@ -339,44 +440,9 @@ export class VehicleDealershipProvider {
             return false;
         }
 
-        if (dealershipId !== DealershipType.Job) {
-            const vehicleModels = (
-                await this.prismaService.vehicle.findMany({
-                    select: {
-                        model: true,
-                    },
-                    where: {
-                        dealershipId: {
-                            not: null,
-                        },
-                        AND: {
-                            dealershipId: {
-                                not: 'cycle',
-                            },
-                        },
-                    },
-                })
-            ).map(v => v.model);
-            const playerVehicleCount = await this.prismaService.playerVehicle.count({
-                where: {
-                    citizenid: player.citizenid,
-                    job: null,
-                    state: {
-                        not: PlayerVehicleState.Destroyed,
-                    },
-                    vehicle: {
-                        in: vehicleModels,
-                    },
-                },
-            });
-
-            if (vehicle.dealershipId !== DealershipId.Cycle && playerVehicleCount >= player.metadata.vehiclelimit) {
-                let errorMsg = `Limite de véhicule atteinte (${playerVehicleCount}/${player.metadata.vehiclelimit})`;
-                if (player.metadata.vehiclelimit < 10) errorMsg += ". Améliorez votre carte grise à l'auto-école.";
-
-                this.notifier.notify(source, errorMsg, 'error');
-
-                return false;
+        if (dealershipId !== DealershipType.Job && dealershipId !== DealershipType.Cycle) {
+            if (!(await this.vehicleCountCheck(player))) {
+                return;
             }
         }
 
@@ -437,7 +503,9 @@ export class VehicleDealershipProvider {
                     }
                 }
 
-                if (!this.playerMoneyService.remove(source, vehicle.price)) {
+                const taxType = isVehicleModelElectric(vehicle.hash) ? TaxType.GREEN : TaxType.VEHICLE;
+
+                if (!(await this.playerMoneyService.buy(source, vehicle.price, taxType))) {
                     this.notifier.notify(source, `Tu n'as pas assez d'argent.`, 'error');
 
                     return false;
@@ -479,6 +547,10 @@ export class VehicleDealershipProvider {
                     configuration.color = null;
                 }
 
+                const condition = getDefaultVehicleCondition();
+                condition.fuelLevel =
+                    condition.fuelLevel * (VehicleClassFuelStorageMultiplier[vehicle?.requiredLicence] || 1.0);
+
                 const playerVehicle = await this.prismaService.playerVehicle.create({
                     data: {
                         license: player.license,
@@ -486,7 +558,7 @@ export class VehicleDealershipProvider {
                         vehicle: vehicle.model,
                         hash: vehicle.hash.toString(),
                         mods: JSON.stringify(configuration),
-                        condition: JSON.stringify(getDefaultVehicleCondition()),
+                        condition: JSON.stringify(condition),
                         garage: garage,
                         plate,
                         category: vehicle.category,
@@ -556,5 +628,19 @@ export class VehicleDealershipProvider {
             },
             5000
         );
+    }
+
+    public IsAuctionDisable(): boolean {
+        const now = new Date();
+        return (
+            !this.auctionTimeStop ||
+            !this.auctionTimeStart ||
+            now >= this.auctionTimeStop ||
+            now <= this.auctionTimeStart
+        );
+    }
+
+    nextMinBid(vehiclePrice: number, bestBid?: number) {
+        return bestBid ? Math.round(bestBid + Math.max(10_000, Math.min(50_000, bestBid * 0.05))) : vehiclePrice;
     }
 }

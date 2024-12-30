@@ -29,10 +29,22 @@ export enum JobType {
     FDF = 'fdf',
     SASP = 'sasp',
     DMC = 'dmc',
+    LSCS = 'lscs',
 }
 
 export const BASE_FDO = [JobType.LSPD, JobType.BCSO];
-export const FDO = [JobType.FBI, JobType.LSPD, JobType.BCSO, JobType.SASP];
+export const FDO = [JobType.FBI, JobType.LSPD, JobType.BCSO, JobType.SASP, JobType.LSCS];
+export const PUBLIC_SERVICES = [
+    JobType.FBI,
+    JobType.LSPD,
+    JobType.BCSO,
+    JobType.SASP,
+    JobType.LSCS,
+    JobType.LSMC,
+    JobType.MDR,
+    JobType.CashTransfer,
+    JobType.Gouv,
+];
 export const FDO_NO_FBI = [JobType.LSPD, JobType.BCSO, JobType.SASP];
 
 export enum JobPermission {
@@ -56,17 +68,24 @@ export enum JobPermission {
     CashTransfer_CollectSecure = 'collect-secure',
     CashTransfer_ResaleBags = 'resale-bags',
     CashTransfer_FillIn = 'fill-in',
-    Food_Harvest = 'harvest',
-    Food_Craft = 'craft',
+    FoodHarvest = 'harvest',
+    FoodCraft = 'craft',
     FuelerChangePrice = 'fueler-change-price',
     CriminalRecord = 'criminal-record',
     VehicleRegistrar = 'vehicle-registrar',
     Investigation = 'investigation',
     ManageInvestigation = 'investigation-manage',
     InvestigationLawyer = 'investigation-lawyer',
+    InvestigationProsecutor = 'investigation-prosecutor',
     ManageCertification = 'certification-manage',
     AssignCertification = 'certification-agent',
     ManageRoster = 'roster-manage',
+    MedicalPatientAccess = 'medical-patient-access',
+    MedicalPatientEdit = 'medical-patient-edit',
+    MedicalPatientDelete = 'medical-patient-delete',
+    MedicalPatientHistoryEdit = 'medical-patient-history-edit',
+    MedicalPatientHistoryDelete = 'medical-patient-history-delete',
+    MedicalPatientHistoryAccess = 'medical-patient-history-access',
     BaunHarvest = 'harvest',
     BaunRestock = 'restock',
     BaunCraft = 'craft',
@@ -84,6 +103,9 @@ export enum JobPermission {
     FDOFedPound = 'fdo-fed-pound',
     OnDutyView = 'view-employe-on-duty',
     BennysPitStopPrice = 'pitstop-price',
+    GouvUpdateTax = 'update-tax',
+    GouvManageRadar = 'manage-radar',
+    GouvManageFine = 'manage-fine',
 }
 
 export const JobLabel: Record<JobType, string> = {
@@ -113,6 +135,7 @@ export const JobLabel: Record<JobType, string> = {
     [JobType.FDF]: 'Ferme de Fou',
     [JobType.SASP]: 'San Andreas State Police',
     [JobType.DMC]: 'DeMetal Company',
+    [JobType.LSCS]: 'Los Santos County Sheriff',
 };
 
 export type JobPermissionData = {
@@ -131,6 +154,7 @@ export type Job = {
     resell?: any;
     phone?: string;
     canReceiveSocietyInvoice: boolean;
+    taxCollectAccounts?: string[];
 };
 
 export type JobGrade = {

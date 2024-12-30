@@ -182,14 +182,14 @@ const TemporaryJobs: Partial<Record<JobType, TemporaryJob>> = {
             },
             [GetHashKey('mp_f_freemode_01')]: {
                 Components: {
-                    '3': { Drawable: 14, Texture: 0, Palette: 0 },
+                    '3': { Drawable: 15, Texture: 0, Palette: 0 },
                     '4': { Drawable: 11, Texture: 4, Palette: 0 },
                     '6': { Drawable: 25, Texture: 0, Palette: 0 },
                     '7': { Drawable: 0, Texture: 0, Palette: 0 },
                     '8': { Drawable: 36, Texture: 0, Palette: 0 },
                     '9': { Drawable: 0, Texture: 0, Palette: 0 },
                     '10': { Drawable: 0, Texture: 0, Palette: 0 },
-                    '11': { Drawable: 14, Texture: 0, Palette: 0 },
+                    '11': { Drawable: 0, Texture: 0, Palette: 0 },
                 },
                 Props: {},
             },

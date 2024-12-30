@@ -20,12 +20,14 @@ export abstract class Repository<
 
     public isInitialized = false;
 
-    async init(): Promise<void> {
+    async init(): Promise<Record<K, V>> {
         this.data = (await emitRpc(RpcServerEvent.REPOSITORY_GET_DATA_2, this.type)) as Record<K, V>;
         this.isInitialized = true;
+
+        return this.data;
     }
 
-    public patch(patch: Operation[]): void {
+    public patch(patch: Operation[]): Record<K, V> {
         const changedValues: Record<K, V> = {} as Record<K, V>;
 
         for (const operation of patch) {
@@ -55,6 +57,8 @@ export abstract class Repository<
                 this.repositoryLoader.trigger(this.type, 'update', newValue);
             }
         }
+
+        return this.data;
     }
 
     public find(id: K): V | null {

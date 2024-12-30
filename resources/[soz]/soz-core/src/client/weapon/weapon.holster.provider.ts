@@ -5,15 +5,19 @@ import { wait } from '@core/utils';
 import { Tick } from '@public/core/decorators/tick';
 import { Component } from '@public/shared/cloth';
 import { JobType } from '@public/shared/job';
-import { Vector3 } from '@public/shared/polyzone/vector';
 
+import { AnimationService } from '../animation/animation.service';
 import { PlayerService } from '../player/player.service';
-import { ResourceLoader } from '../repository/resource.loader';
 
 const holsterableWeaponGroups = [GetHashKey('GROUP_PISTOL'), GetHashKey('GROUP_STUNGUN')];
-const excludeWeapon = [0, GetHashKey('WEAPON_BRIEFCASE'), 966099553 /*WEAPON_OBJECT*/];
+const excludeWeapon = [
+    0,
+    GetHashKey('WEAPON_BRIEFCASE'),
+    GetHashKey('WEAPON_UVFLASHLIGHT'),
+    966099553 /*WEAPON_OBJECT*/,
+];
 
-const AllowedJob = [JobType.FBI, JobType.BCSO, JobType.LSPD, JobType.SASP];
+const AllowedJob = [JobType.FBI, JobType.BCSO, JobType.LSPD, JobType.SASP, JobType.LSCS];
 
 const hosterDrawable = {
     [GetHashKey('mp_m_freemode_01')]: 130,
@@ -22,8 +26,8 @@ const hosterDrawable = {
 
 @Provider()
 export class WeaponHolsterProvider {
-    @Inject(ResourceLoader)
-    private resourceLoader: ResourceLoader;
+    @Inject(AnimationService)
+    private animationService: AnimationService;
 
     @Inject(PlayerService)
     private playerService: PlayerService;
@@ -45,7 +49,7 @@ export class WeaponHolsterProvider {
         if (
             DoesEntityExist(ped) &&
             player &&
-            !player.metadata.isdead &&
+            !player.metadata?.isdead &&
             !IsPedInParachuteFreeFall(ped) &&
             !IsPedFalling(ped) &&
             (GetPedParachuteState(ped) == -1 || GetPedParachuteState(ped) == 0)
@@ -59,23 +63,15 @@ export class WeaponHolsterProvider {
                 this.inAnimation = true;
                 SetCurrentPedWeapon(ped, this.currWeapon, true);
 
-                const pos = GetEntityCoords(ped, true) as Vector3;
-                const rot = GetEntityHeading(ped);
-
-                await this.resourceLoader.loadAnimationDictionary('reaction@intimidation@1h');
-                await this.resourceLoader.loadAnimationDictionary('reaction@intimidation@cop@unarmed');
-                await this.resourceLoader.loadAnimationDictionary('rcmjosh4');
-                await this.resourceLoader.loadAnimationDictionary('weapons@pistol@');
-
                 if (this.currWeapon != GetHashKey('WEAPON_UNARMED')) {
                     if (
                         this.isWeaponHolsterable(this.currWeapon) &&
                         ((AllowedJob.includes(player.job.id) && player.cloth_config.JobClothSet) ||
                             hosterDrawable[GetEntityModel(ped)] == GetPedDrawableVariation(ped, Component.Undershirt))
                     ) {
-                        await this.putWeaponInHolster(ped, pos, rot);
+                        await this.putWeaponInHolster();
                     } else {
-                        await this.putWeaponBehind(ped, pos, rot);
+                        await this.putWeaponBehind();
                     }
                     SetCurrentPedWeapon(ped, GetHashKey('WEAPON_UNARMED'), true);
                 }
@@ -86,9 +82,9 @@ export class WeaponHolsterProvider {
                         ((AllowedJob.includes(player.job.id) && player.cloth_config.JobClothSet) ||
                             hosterDrawable[GetEntityModel(ped)] == GetPedDrawableVariation(ped, Component.Undershirt))
                     ) {
-                        await this.drawWeaponFromHolster(ped, pos, rot, newWeap);
+                        await this.drawWeaponFromHolster(ped, newWeap);
                     } else {
-                        await this.drawWeaponFromBehind(ped, pos, rot, newWeap);
+                        await this.drawWeaponFromBehind(ped, newWeap);
                     }
                 }
 
@@ -101,7 +97,7 @@ export class WeaponHolsterProvider {
         }
     }
 
-    @Tick(3)
+    @Tick(0)
     public async blockFireLoop() {
         if (this.inAnimation) {
             DisableControlAction(0, 25, true);
@@ -111,7 +107,7 @@ export class WeaponHolsterProvider {
         }
     }
 
-    @Tick(3)
+    @Tick(0)
     public async holsterToAim() {
         const player = PlayerPedId();
         if (IsControlPressed(0, 25) && IsEntityPlayingAnim(player, 'move_m@intimidation@cop@unarmed', 'idle', 3)) {
@@ -124,95 +120,75 @@ export class WeaponHolsterProvider {
         return holsterableWeaponGroups.some(elem => elem == weaponGroup);
     }
 
-    private async drawWeaponFromHolster(ped: number, pos: Vector3, rot: number, newWeap: number) {
-        TaskPlayAnimAdvanced(
-            ped,
-            'rcmjosh4',
-            'josh_leadout_cop2',
-            pos[0],
-            pos[1],
-            pos[2],
-            0,
-            0,
-            rot,
-            3.0,
-            3.0,
-            -1,
-            50,
-            0,
-            0,
-            0
-        );
+    private async drawWeaponFromHolster(ped: number, newWeap: number) {
+        this.animationService.playAnimation({
+            base: {
+                dictionary: 'rcmjosh4',
+                name: 'josh_leadout_cop2',
+                blendInSpeed: 3.0,
+                blendOutSpeed: 3.0,
+                options: {
+                    onlyUpperBody: true,
+                    freezeLastFrame: true,
+                    enablePlayerControl: true,
+                },
+            },
+        });
         await wait(300);
         SetCurrentPedWeapon(ped, newWeap, true);
         await wait(500);
     }
 
-    private async drawWeaponFromBehind(ped: number, pos: Vector3, rot: number, newWeap: number) {
-        TaskPlayAnimAdvanced(
-            ped,
-            'reaction@intimidation@1h',
-            'intro',
-            pos[0],
-            pos[1],
-            pos[2],
-            0,
-            0,
-            rot,
-            8.0,
-            3.0,
-            -1,
-            50,
-            0,
-            0,
-            0
-        );
+    private async drawWeaponFromBehind(ped: number, newWeap: number) {
+        this.animationService.playAnimation({
+            base: {
+                dictionary: 'reaction@intimidation@1h',
+                name: 'intro',
+                blendInSpeed: 8.0,
+                blendOutSpeed: 3.0,
+                options: {
+                    onlyUpperBody: true,
+                    freezeLastFrame: true,
+                    enablePlayerControl: true,
+                },
+            },
+        });
         await wait(1000);
         SetCurrentPedWeapon(ped, newWeap, true);
         await wait(1400);
     }
 
-    private async putWeaponInHolster(ped: number, pos: Vector3, rot: number) {
-        TaskPlayAnimAdvanced(
-            ped,
-            'reaction@intimidation@cop@unarmed',
-            'intro',
-            pos[0],
-            pos[1],
-            pos[2],
-            0,
-            0,
-            rot,
-            3.0,
-            3.0,
-            -1,
-            50,
-            0,
-            0,
-            0
-        );
+    private async putWeaponInHolster() {
+        this.animationService.playAnimation({
+            base: {
+                dictionary: 'reaction@intimidation@cop@unarmed',
+                name: 'intro',
+                blendInSpeed: 3.0,
+                blendOutSpeed: 3.0,
+                options: {
+                    onlyUpperBody: true,
+                    freezeLastFrame: true,
+                    enablePlayerControl: true,
+                },
+            },
+        });
         await wait(500);
     }
 
-    private async putWeaponBehind(ped: number, pos: Vector3, rot: number) {
-        TaskPlayAnimAdvanced(
-            ped,
-            'reaction@intimidation@1h',
-            'outro',
-            pos[0],
-            pos[1],
-            pos[2],
-            0,
-            0,
-            rot,
-            8.0,
-            3.0,
-            -1,
-            50,
-            0,
-            0,
-            0
-        );
+    private async putWeaponBehind() {
+        this.animationService.playAnimation({
+            base: {
+                dictionary: 'reaction@intimidation@1h',
+                name: 'outro',
+                blendInSpeed: 8.0,
+                blendOutSpeed: 3.0,
+                options: {
+                    onlyUpperBody: true,
+                    freezeLastFrame: true,
+                    enablePlayerControl: true,
+                },
+            },
+        });
         await wait(1400);
     }
 

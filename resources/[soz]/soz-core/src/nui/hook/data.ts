@@ -1,6 +1,7 @@
 import { DrugNuiZone } from '@private/shared/drugs';
 import { HudState } from '@public/shared/hud';
 import { Item } from '@public/shared/item';
+import { Vector3 } from '@public/shared/polyzone/vector';
 import { VehicleHud, VehicleHudSpeed } from '@public/shared/vehicle/vehicle';
 import { useSelector } from 'react-redux';
 
@@ -9,6 +10,10 @@ import { RootState } from '../store';
 
 export const usePlayer = (): PlayerData | null => {
     return useSelector((state: RootState) => state.player);
+};
+
+export const usePlayerPosition = (): Vector3 => {
+    return useSelector((state: RootState) => state.playerPosition);
 };
 
 export const usePlayerStats = (): [number, number] => {

@@ -125,11 +125,10 @@ export class VehicleMenuProvider {
         }
         // -2 is for custom speed
         else if (speedLimit === -2) {
-            const customSpeedLimit = await this.inputService.askInput(
+            speedLimit = await this.inputService.askInput(
                 {
                     title: 'Limiter la vitesse à :',
                     maxCharacters: 4,
-                    defaultValue: '',
                 },
                 (input: string) => {
                     const value = parseInt(input);
@@ -138,15 +137,13 @@ export class VehicleMenuProvider {
                         return Err('Veuillez entrer un nombre supérieur à 0');
                     }
 
-                    return Ok(true);
+                    return Ok(value);
                 }
             );
 
-            if (!customSpeedLimit) {
+            if (!speedLimit) {
                 return false;
             }
-
-            speedLimit = parseInt(customSpeedLimit);
         }
 
         this.vehicleStateService.updateVehicleState(vehicle, { speedLimit }, false);
@@ -279,7 +276,7 @@ export class VehicleMenuProvider {
         const ped = PlayerPedId();
         const vehicle = GetVehiclePedIsIn(ped, false);
 
-        if (!vehicle) {
+        if (!vehicle || player.metadata.isdead) {
             return;
         }
 

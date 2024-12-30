@@ -100,6 +100,33 @@ export class AdminMenuInteractiveProvider {
                     this.drawService.drawText3d([pedCoords[0], pedCoords[1], pedCoords[2] + 1], ownerInfo);
                 }
             }
+
+            const objects: number[] = GetGamePool('CObject');
+            for (const object of objects) {
+                if (!NetworkGetEntityIsNetworked(object)) {
+                    continue;
+                }
+                const objectCoords = GetEntityCoords(object, false);
+                const dist = GetDistanceBetweenCoords(
+                    objectCoords[0],
+                    objectCoords[1],
+                    objectCoords[2],
+                    playerCoords[0],
+                    playerCoords[1],
+                    playerCoords[2],
+                    false
+                );
+                if (dist < 50) {
+                    let text = ' | OwnerNet: ';
+                    if (GetPlayerServerId(NetworkGetEntityOwner(object)) === GetPlayerServerId(PlayerId())) {
+                        text = ` | ~g~OwnerNet: `;
+                    }
+                    const ownerInfo =
+                        `ObjNet: ${NetworkGetNetworkIdFromEntity(object)} ` +
+                        `${text} ${GetPlayerServerId(NetworkGetEntityOwner(object))}`;
+                    this.drawService.drawText3d([objectCoords[0], objectCoords[1], objectCoords[2] + 1], ownerInfo);
+                }
+            }
         }, 1);
     }
 

@@ -71,7 +71,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
                 {!isImage(message.message) && !isPosition(message.message) && (
                     <Menu.Button className="left-0 h-full w-full text-left">
                         <p
-                            className={cn('break-words text-ellipsis w-full select-text', {
+                            className={cn('break-words text-ellipsis w-full select-text whitespace-pre-wrap', {
                                 'text-base': config.textZoom.value === 1.0,
                                 'text-lg': config.textZoom.value === 1.2,
                                 'text-xl': config.textZoom.value === 1.4,

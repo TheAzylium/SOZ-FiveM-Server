@@ -1,14 +1,17 @@
 import { VehicleCategory } from '@public/shared/vehicle/vehicle';
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import { MainMenu, Menu, MenuContent, MenuItemButton, MenuTitle } from '../Styleguide/Menu';
 
 export const PitStopPriceMenu: FunctionComponent = () => {
     const banner = 'https://nui-img/soz/menu_job_bennys';
     const [prices, setPrices] = useState<Record<string, number>>(null);
+    const getPrice = useGetPrice();
 
     const onConfirm = async (category: VehicleCategory, price: number) => {
         const newPrices = await fetchNui<any, Record<VehicleCategory, number>>(NuiEvent.VehiclePitStopSetPrice, {
@@ -41,7 +44,7 @@ export const PitStopPriceMenu: FunctionComponent = () => {
                                 >
                                     <div className="pr-2 flex items-center justify-between">
                                         <span>{VehicleCategory[category]}</span>
-                                        <span>💸 ${price}</span>
+                                        <span>💸 ${getPrice(price, TaxType.SERVICE)}</span>
                                     </div>
                                 </MenuItemButton>
                             );

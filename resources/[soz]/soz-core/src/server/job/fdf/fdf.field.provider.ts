@@ -32,6 +32,8 @@ import { getDistance, toVector3Object, Vector3 } from '@public/shared/polyzone/v
 import { RpcClientEvent, RpcServerEvent } from '@public/shared/rpc';
 import { formatDuration } from '@public/shared/utils/timeformat';
 
+import { VehicleClass } from '../../../shared/vehicle/vehicle';
+
 @Provider()
 export class FDFFieldProvider {
     @Inject(InventoryManager)
@@ -345,7 +347,7 @@ export class FDFFieldProvider {
         source: number,
         id: string,
         trailerPlate: string,
-        context: { model: string; class: string; entity: number },
+        context: { model: string; class: VehicleClass; entity: number },
         trunkType: string
     ) {
         const crop = this.crops.get(id);

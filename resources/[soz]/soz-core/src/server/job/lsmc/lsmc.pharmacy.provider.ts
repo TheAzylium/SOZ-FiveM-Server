@@ -10,6 +10,9 @@ import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { PHARMACY_PRICES } from '@public/shared/job/lsmc';
 
+import { TaxType } from '../../../shared/bank';
+import { PriceService } from '../../bank/price.service';
+
 @Provider()
 export class LSMCPharmacyProvider {
     @Inject(InventoryManager)
@@ -27,6 +30,9 @@ export class LSMCPharmacyProvider {
     @Inject(Notifier)
     private notifier: Notifier;
 
+    @Inject(PriceService)
+    private priceService: PriceService;
+
     @OnEvent(ServerEvent.LSMC_NPC_HEAL)
     public async onLsmcHeal(source: number) {
         const price = PHARMACY_PRICES.heal;
@@ -36,7 +42,7 @@ export class LSMCPharmacyProvider {
             return;
         }
 
-        if (this.playerMoneyService.remove(source, price)) {
+        if (await this.playerMoneyService.buy(source, price, TaxType.SERVICE)) {
             this.bankService.addMoney('safe_' + JobType.LSMC, Math.round(price / 2));
             if (player.metadata.disease == 'grippe') {
                 this.playerService.setPlayerDisease(player.source, false);
@@ -47,7 +53,10 @@ export class LSMCPharmacyProvider {
         } else {
             this.notifier.notify(
                 source,
-                `T'as cru que je faisais ça par passion ? Il faut payer ~r~$${price}~s~.`,
+                `T'as cru que je faisais ça par passion ? Il faut payer ~r~$${await this.priceService.getPrice(
+                    price,
+                    TaxType.SERVICE
+                )}~s~.`,
                 'error'
             );
         }

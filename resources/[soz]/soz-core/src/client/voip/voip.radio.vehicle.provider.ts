@@ -3,7 +3,7 @@ import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
 import { VehicleSeat } from '../../shared/vehicle/vehicle';
-import { Ear, Radio, RadioChannel, RadioChannelType, RadioType } from '../../shared/voip';
+import { Radio, RadioChannel, RadioChannelType, RadioType } from '../../shared/voip';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { SoundService } from '../sound.service';
 import { StateSelector, Store } from '../store/store';
@@ -32,34 +32,18 @@ export class VoipRadioVehicleProvider {
         const radioLongRange = this.store.getState().radioLongRange;
 
         if (!enabled) {
-            this.voipService.disconnectRadio(
-                RadioType.RadioLongRange,
-                RadioChannelType.Primary,
-                radioLongRange.primary.frequency
-            );
-            this.voipService.disconnectRadio(
-                RadioType.RadioLongRange,
-                RadioChannelType.Secondary,
-                radioLongRange.secondary.frequency
-            );
+            this.voipService.disconnectRadio(radioLongRange.primary.frequency);
+            this.voipService.disconnectRadio(radioLongRange.secondary.frequency);
 
             return;
         }
 
         if (radioLongRange.primary.frequency > 0) {
-            this.voipService.connectRadio(
-                RadioType.RadioLongRange,
-                RadioChannelType.Primary,
-                radioLongRange.primary.frequency
-            );
+            this.voipService.connectRadio(radioLongRange.primary.frequency);
         }
 
         if (radioLongRange.secondary.frequency > 0) {
-            this.voipService.connectRadio(
-                RadioType.RadioLongRange,
-                RadioChannelType.Secondary,
-                radioLongRange.secondary.frequency
-            );
+            this.voipService.connectRadio(radioLongRange.secondary.frequency);
         }
     }
 
@@ -72,11 +56,11 @@ export class VoipRadioVehicleProvider {
         }
 
         if (previousFrequency > 0) {
-            this.voipService.disconnectRadio(RadioType.RadioLongRange, RadioChannelType.Primary, previousFrequency);
+            this.voipService.disconnectRadio(previousFrequency);
         }
 
         if (frequency >= 0) {
-            this.voipService.connectRadio(RadioType.RadioLongRange, RadioChannelType.Primary, frequency);
+            this.voipService.connectRadio(frequency);
         }
     }
 
@@ -89,37 +73,27 @@ export class VoipRadioVehicleProvider {
         }
 
         if (previousFrequency > 0) {
-            this.voipService.disconnectRadio(RadioType.RadioLongRange, RadioChannelType.Secondary, previousFrequency);
+            this.voipService.disconnectRadio(previousFrequency);
         }
 
         if (frequency >= 0) {
-            this.voipService.connectRadio(RadioType.RadioLongRange, RadioChannelType.Secondary, frequency);
+            this.voipService.connectRadio(frequency);
         }
-    }
-
-    @StateSelector(state => state.radioLongRange.primary.ear)
-    public updatePrimaryEar(ear: Ear) {
-        this.voipService.setRadioEar(RadioType.RadioLongRange, RadioChannelType.Primary, ear);
-    }
-
-    @StateSelector(state => state.radioLongRange.secondary.ear)
-    public updateSecondaryEar(ear: Ear) {
-        this.voipService.setRadioEar(RadioType.RadioLongRange, RadioChannelType.Secondary, ear);
-    }
-
-    @StateSelector(state => state.radioLongRange.primary.volume)
-    public updatePrimaryVolume(volume: number) {
-        this.voipService.setRadioVolume(RadioType.RadioLongRange, RadioChannelType.Primary, volume);
-    }
-
-    @StateSelector(state => state.radioLongRange.secondary.volume)
-    public updateSecondaryVolume(volume: number) {
-        this.voipService.setRadioVolume(RadioType.RadioLongRange, RadioChannelType.Secondary, volume);
     }
 
     @StateSelector(state => state.radioLongRange)
     public updateRadioShortRange(radioShortRange: Radio) {
-        this.nuiDispatch.dispatch('radio_vehicle', 'Update', radioShortRange);
+        this.nuiDispatch.dispatch('radio_vehicle', 'Update', {
+            ...radioShortRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 
     @OnEvent(ClientEvent.BASE_ENTERED_VEHICLE)
@@ -178,7 +152,6 @@ export class VoipRadioVehicleProvider {
     @OnNuiEvent(NuiEvent.VoipUpdateRadioVehicleChannel)
     public async onUpdateRadioChannel({ channel, type }: { channel: Partial<RadioChannel>; type: RadioChannelType }) {
         const vehicle = GetVehiclePedIsIn(PlayerPedId(), false);
-        const volume = channel?.volume || this.store.getState().radioLongRange[type].volume;
 
         if (!vehicle) {
             return;
@@ -195,7 +168,24 @@ export class VoipRadioVehicleProvider {
         const vehicleNetworkId = NetworkGetNetworkIdFromEntity(vehicle);
 
         TriggerServerEvent(ServerEvent.VOIP_RADIO_VEHICLE_UPDATE, vehicleNetworkId, type, channel);
-        this.soundService.play('click', volume / 100);
+    }
+
+    @OnNuiEvent(NuiEvent.VoipUpdateRadioVehicleVolumeClick)
+    public async onUpdateRadioVolumeClick({ volume, type }: { volume: number; type: RadioChannelType }) {
+        this.voipService.setVoiceClickVolume(RadioType.RadioLongRange, type, volume);
+        this.soundService.play(RadioType.RadioLongRange + '/mic_click_on', volume / 100);
+
+        this.nuiDispatch.dispatch('radio_vehicle', 'Update', {
+            ...this.store.getState().radioLongRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 
     @OnEvent(ClientEvent.VOIP_RADIO_VEHICLE_ENABLE)
@@ -255,6 +245,16 @@ export class VoipRadioVehicleProvider {
     }
 
     public openRadioInterface() {
-        this.nuiDispatch.dispatch('radio_vehicle', 'Open', this.store.getState().radioLongRange);
+        this.nuiDispatch.dispatch('radio_vehicle', 'Open', {
+            ...this.store.getState().radioLongRange,
+            primaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Primary
+            ),
+            secondaryClickVolume: this.voipService.getVoiceClickVolume(
+                RadioType.RadioLongRange,
+                RadioChannelType.Secondary
+            ),
+        });
     }
 }

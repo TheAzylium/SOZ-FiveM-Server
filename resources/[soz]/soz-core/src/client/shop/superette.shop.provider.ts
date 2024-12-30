@@ -1,12 +1,14 @@
 import { Logger } from '@core/logger';
+import { InventoryManager } from '@public/client/inventory/inventory.manager';
 import { ShopBrand, ShopsConfig } from '@public/config/shops';
 import { OnNuiEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
+import { TaxType } from '@public/shared/bank';
 import { NuiEvent, ServerEvent } from '@public/shared/event';
+import { PositiveNumberValidator } from '@public/shared/nui/input';
 import { MenuType } from '@public/shared/nui/menu';
 import { Vector4 } from '@public/shared/polyzone/vector';
-import { Err, Ok } from '@public/shared/result';
 import { ShopProduct } from '@public/shared/shop';
 import { ShopsContent, SuperetteItem } from '@public/shared/shop/superette';
 
@@ -29,6 +31,9 @@ export class SuperetteShopProvider {
     @Inject(PlayerService)
     private playerService: PlayerService;
 
+    @Inject(InventoryManager)
+    private inventoryManager: InventoryManager;
+
     @Inject(Logger)
     private logger: Logger;
 
@@ -44,7 +49,12 @@ export class SuperetteShopProvider {
                 } as SuperetteItem;
                 superetteContent.push(sharedItem);
             }
-            exports['soz-inventory'].openShop(superetteContent, 'menu_shop_supermarket'); // Superettes are handled by soz-inventory
+
+            this.inventoryManager.openShopInventory(
+                superetteContent,
+                'menu_shop_supermarket',
+                brand === ShopBrand.Supermarket247Cayo ? null : TaxType.FOOD
+            );
         } else {
             // Zkea and Ammunation are handled by soz-core here
             const licences = this.playerService.getPlayer().metadata.licences;
@@ -76,6 +86,7 @@ export class SuperetteShopProvider {
     @OnNuiEvent(NuiEvent.SuperetteShopBuy)
     public async onBuySuperette(product: ShopProduct) {
         let quantity = 1;
+
         if (product.type !== 'weapon') {
             const value = await this.inputService.askInput(
                 {
@@ -83,20 +94,21 @@ export class SuperetteShopProvider {
                     defaultValue: '1',
                     maxCharacters: 3,
                 },
-                (input: string) => {
-                    const value = parseInt(input);
-                    if (isNaN(value) || value < 0) {
-                        return Err('Quantité invalide');
-                    }
-                    return Ok(true);
-                }
+                PositiveNumberValidator
             );
+
             if (!value) {
                 return;
             }
-            quantity = parseInt(value);
+
+            quantity = value;
         }
 
-        TriggerServerEvent(ServerEvent.SHOP_BUY, product, ShopBrand.Zkea, quantity);
+        TriggerServerEvent(
+            ServerEvent.SHOP_BUY,
+            product,
+            product.type === 'weapon' || product.type === 'weapon_ammo' ? ShopBrand.Ammunation : ShopBrand.Zkea,
+            quantity
+        );
     }
 }

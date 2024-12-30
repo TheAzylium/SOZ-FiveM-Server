@@ -826,6 +826,15 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
                 minZ: 30.23,
                 maxZ: 34.23,
             }),
+
+            new BoxZone([48.61, 6340.86, 31.23], 15.2, 15.2, {
+                heading: 298.95,
+                minZ: 29.23,
+                maxZ: 33.23,
+                data: {
+                    capacity: [PlaceCapacity.Medium, PlaceCapacity.Large],
+                },
+            }),
         ],
         transferList: ['cayo'],
     },
@@ -1126,6 +1135,31 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
             }),
         ],
     },
+    lsmc_north: {
+        name: 'LSMC Nord Parking',
+        type: GarageType.Job,
+        job: JobType.LSMC,
+        category: GarageCategory.Car,
+        zone: new BoxZone([1806.96, 3675.22, 33.21], 1.0, 1.0, {
+            heading: 123.21,
+            minZ: 33.21,
+            maxZ: 36.21,
+        }),
+        parkingPlaces: [
+            new BoxZone([1812.62, 3669.99, 33.93], 6.6, 3.2, {
+                heading: 210,
+                minZ: 32.93,
+                maxZ: 34.93,
+                data: { capacity: [PlaceCapacity.Small, PlaceCapacity.Medium, PlaceCapacity.Large] },
+            }),
+            new BoxZone([1817.19, 3672.09, 33.93], 5.2, 3.4, {
+                heading: 210,
+                minZ: 32.93,
+                maxZ: 34.93,
+                data: { capacity: [PlaceCapacity.Small, PlaceCapacity.Medium, PlaceCapacity.Large] },
+            }),
+        ],
+    },
     lsmc_air: {
         name: 'LSMC Air Parking',
         type: GarageType.Job,
@@ -1149,6 +1183,27 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
                 heading: 50,
                 minZ: 45.51,
                 maxZ: 49.51,
+                data: {
+                    capacity: [PlaceCapacity.Small, PlaceCapacity.Medium, PlaceCapacity.Large],
+                },
+            }),
+        ],
+    },
+    lsmc_north_air: {
+        name: 'LSMC Nord Air Parking',
+        type: GarageType.Job,
+        job: JobType.LSMC,
+        category: GarageCategory.Air,
+        zone: new BoxZone([1830.12, 3689.08, 37.28], 1.0, 1.0, {
+            heading: 210,
+            minZ: 37.28,
+            maxZ: 40.28,
+        }),
+        parkingPlaces: [
+            new BoxZone([1836.44, 3682.93, 39.78], 8.4, 6.2, {
+                heading: 212.38,
+                minZ: 38.78,
+                maxZ: 40.78,
                 data: {
                     capacity: [PlaceCapacity.Small, PlaceCapacity.Medium, PlaceCapacity.Large],
                 },
@@ -1968,7 +2023,7 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
             maxZ: 3.0,
         }),
         parkingPlaces: [
-            new BoxZone([6.64, -2767.71, 1.0], 4.0, 2.8, {
+            new BoxZone([6.64, -2771.71, 1.0], 4.0, 2.8, {
                 heading: 175.66,
                 minZ: 0.0,
                 maxZ: 2.0,
@@ -1976,7 +2031,7 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
                     capacity: [PlaceCapacity.Small, PlaceCapacity.Medium],
                 },
             }),
-            new BoxZone([6.2, -2785.6, 1.0], 15, 7.2, {
+            new BoxZone([6.2, -2787.6, 1.0], 15, 7.2, {
                 heading: 180.79,
                 minZ: 0.0,
                 maxZ: 2.0,
@@ -2560,6 +2615,45 @@ export const GarageList: Record<string, Omit<Garage, 'id'>> = {
                 heading: 319.41,
                 minZ: 42.55,
                 maxZ: 44.55,
+                data: {
+                    capacity: [PlaceCapacity.Medium, PlaceCapacity.Large],
+                },
+            }),
+        ],
+    },
+    lscs: {
+        name: 'LSCS Parking',
+        type: GarageType.Job,
+        job: JobType.LSCS,
+        category: GarageCategory.Car,
+        // Position of the garage
+        zone: new BoxZone([458.45, -1010.67, 27.26], 1.0, 1.0, {
+            heading: 272.48,
+            minZ: 27.26,
+            maxZ: 29.26,
+        }),
+
+        parkingPlaces: [
+            new BoxZone([446.16, -1026.39, 28.52], 3.4, 2.2, {
+                heading: 5.21,
+                minZ: 27.52,
+                maxZ: 29.52,
+                data: {
+                    capacity: [PlaceCapacity.Small],
+                },
+            }),
+            new BoxZone([438.46, -1027.08, 28.79], 3.7, 2.4, {
+                heading: 7.04,
+                minZ: 27.79,
+                maxZ: 29.79,
+                data: {
+                    capacity: [PlaceCapacity.Small],
+                },
+            }),
+            new BoxZone([438.1, -1019.48, 28.84], 8.0, 5.0, {
+                heading: 91.67,
+                minZ: 27.84,
+                maxZ: 29.84,
                 data: {
                     capacity: [PlaceCapacity.Medium, PlaceCapacity.Large],
                 },

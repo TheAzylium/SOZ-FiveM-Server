@@ -47,10 +47,11 @@ export class StonkDeliveryProvider {
     private fieldIdentifier = 'stonk_delivery';
 
     private getLiveryLocation(): NamedZone {
-        const locationId = Math.trunc((new Date().getHours() / 4) % StonkConfig.delivery.location.length);
+        const locationId = Math.trunc(new Date().getHours() % StonkConfig.delivery.location.length);
         return StonkConfig.delivery.location[locationId];
     }
-    @Once(OnceStep.Start)
+
+    @Once(OnceStep.RepositoriesLoaded)
     public async onInit() {
         await this.fieldService.createField({
             identifier: this.fieldIdentifier,
@@ -121,7 +122,8 @@ export class StonkDeliveryProvider {
             return false;
         }
 
-        const harvest = this.fieldService.harvestField(this.fieldIdentifier, 1);
+        const harvest = await this.fieldService.harvestField(this.fieldIdentifier, 1);
+
         if (!harvest) {
             this.notifier.notify(source, `Vous n'avez plus de caisse à récupérer.`, 'error');
             return false;

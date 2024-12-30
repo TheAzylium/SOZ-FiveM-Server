@@ -18,12 +18,30 @@ Config.Storages["lspd_armory"] = {
     offsetUpZ = 2.5,
 }
 
-Config.Storages["lspd_seizure"] = {
+Config.Storages["lspd_seizure1"] = {
     label = "Saisie LSPD",
     type = "seizure",
     owner = "lspd",
-    position = vector3(617.77, -12.12, 76.73),
-    size = vec2(6.0, 6.0),
+    position = vector3(618.06, -9.32, 76.63),
+    size = vec2(7.80, 1.0),
+    heading = 80,
+}
+
+Config.Storages["lspd_seizure2"] = {
+    label = "Saisie LSPD",
+    type = "seizure",
+    owner = "lspd",
+    position = vector3(618.29, -12.10, 76.63),
+    size = vec2(1.0, 6.2),
+    heading = -10,
+}
+
+Config.Storages["lspd_seizure3"] = {
+    label = "Saisie LSPD",
+    type = "seizure",
+    owner = "lspd",
+    position = vector3(617.14, -15.00, 76.63),
+    size = vec2(7.60, 1.75),
     heading = 260,
 }
 
@@ -39,6 +57,16 @@ Config.Storages["lspd_boss_storage"] = {
 Config.Storages["lspd_storage"] = {
     label = "Coffre LSPD",
     type = "storage",
+    owner = "lspd",
+    position = vector3(616.57, -7.69, 90.51),
+    size = vec2(2.0, 2.80),
+    heading = 158.27,
+    offsetUpZ = 2.5,
+}
+
+Config.Storages["lspd_evidence_storage"] = {
+    label = "Coffre de preuves LSPD",
+    type = "evidence_storage",
     owner = "lspd",
     position = vector3(615.95, -15.24, 90.5),
     size = vec2(2.5, 6.5),

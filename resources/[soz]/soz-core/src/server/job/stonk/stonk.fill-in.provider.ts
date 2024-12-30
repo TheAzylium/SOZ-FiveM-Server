@@ -45,13 +45,7 @@ export class StonkFillInProvider {
     private logger: Logger;
 
     @OnEvent(ServerEvent.STONK_FILL_IN)
-    public async onFillIn(
-        source: number,
-        bank: string,
-        item: StonkBagType,
-        currentBalance: number,
-        maxBalance: number
-    ) {
+    public async onFillIn(source: number, accountName: string, item: StonkBagType, maxBalance: number) {
         const [playerJob, playerJobGrade] = this.playerService.getPlayerJobAndGrade(source);
 
         if (
@@ -70,11 +64,16 @@ export class StonkFillInProvider {
             return;
         }
 
+        if (this.numberOfItemsRequired(item, maxBalance, accountName) == 0) {
+            this.notifier.notify(source, "C'est déjà ~r~rempli~s~");
+            return;
+        }
+
         this.notifier.notify(source, 'Vous ~g~commencez~s~ à remplir.', 'success');
 
-        while (this.canFillIn(source, item, currentBalance, maxBalance)) {
+        do {
             const outputItemLabel = this.itemService.getItem(item).label;
-            const [hasResold, fillAmount] = await this.doFillIn(source, item, currentBalance, maxBalance);
+            const [hasResold, fillAmount] = await this.doFillIn(source, item, maxBalance, accountName);
 
             if (hasResold) {
                 this.monitor.publish(
@@ -93,7 +92,7 @@ export class StonkFillInProvider {
 
                 const transfer = await this.bankService.transferBankMoney(
                     StonkConfig.bankAccount.bankRefill,
-                    bank.includes('atm') ? bank : `bank_${bank}`,
+                    accountName,
                     StonkConfig.collection[item].refill_value * fillAmount
                 );
                 if (!transfer) {
@@ -101,7 +100,7 @@ export class StonkFillInProvider {
                         'Failed to transfer money to safe',
                         JSON.stringify({
                             account_source: StonkConfig.bankAccount.bankRefill,
-                            account_destination: bank.includes('atm') ? bank : `bank_${bank}`,
+                            account_destination: accountName,
                             amount: StonkConfig.collection[item].refill_value * fillAmount,
                         })
                     );
@@ -123,32 +122,31 @@ export class StonkFillInProvider {
                     );
                 }
 
-                currentBalance += StonkConfig.collection[item].refill_value * fillAmount;
-
                 this.notifier.notify(source, `Vous avez rempli ${fillAmount} ~g~${outputItemLabel}~s~.`);
             } else {
                 this.notifier.notify(source, 'Vous avez ~r~arrêté~s~ de remplir.');
                 return;
             }
-        }
+        } while (this.canFillIn(source, item, maxBalance, accountName));
     }
 
-    private numberOfItemsRequired(item: StonkBagType, currentBalance: number, maxBalance: number): number {
+    private numberOfItemsRequired(item: StonkBagType, maxBalance: number, accountName: string): number {
+        const currentBalance = this.bankService.getAccountMoney(accountName);
         return Math.floor((maxBalance - currentBalance) / StonkConfig.collection[item].refill_value);
     }
 
-    private canFillIn(source: number, item: StonkBagType, currentBalance: number, maxBalance: number): boolean {
+    private canFillIn(source: number, item: StonkBagType, maxBalance: number, accountName: string): boolean {
         return (
             this.inventoryManager.getFirstItemInventory(source, item) !== null &&
-            this.numberOfItemsRequired(item, currentBalance, maxBalance) > 0
+            this.numberOfItemsRequired(item, maxBalance, accountName) > 0
         );
     }
 
     private async doFillIn(
         source: number,
         item: StonkBagType,
-        currentBalance: number,
-        maxBalance: number
+        maxBalance: number,
+        accountName: string
     ): Promise<[boolean, number]> {
         const { completed } = await this.progressService.progress(
             source,
@@ -172,9 +170,9 @@ export class StonkFillInProvider {
         }
 
         const items = this.inventoryManager.getFirstItemInventory(source, item);
-        let fillInAmount = this.numberOfItemsRequired(item, currentBalance, maxBalance);
+        let fillInAmount = this.numberOfItemsRequired(item, maxBalance, accountName);
 
-        if (!items) {
+        if (!items || fillInAmount == 0) {
             return [false, 0];
         }
 

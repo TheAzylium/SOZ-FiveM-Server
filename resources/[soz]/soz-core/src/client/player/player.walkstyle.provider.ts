@@ -1,8 +1,8 @@
-import { Once, OnceStep, OnEvent } from '@core/decorators/event';
+import { Once, OnceStep } from '@core/decorators/event';
 import { Inject } from '@core/decorators/injectable';
 import { Provider } from '@core/decorators/provider';
+import { PlayerUpdate } from '@public/core/decorators/player';
 
-import { ClientEvent } from '../../shared/event';
 import { PlayerData } from '../../shared/player';
 import { ResourceLoader } from '../repository/resource.loader';
 import { PlayerService } from './player.service';
@@ -75,8 +75,12 @@ export class PlayerWalkstyleProvider {
     }
 
     async updateWalkStyle(kind: keyof WalkStyleConf, walkStyle: string | null, transitionSpeed = 1.0): Promise<void> {
-        this.conf[kind] = walkStyle;
         const player = this.playerService.getPlayer();
+        if (!player) {
+            return;
+        }
+
+        this.conf[kind] = walkStyle;
         await this.applyWalkStyle(player.metadata.walk, transitionSpeed);
     }
 
@@ -99,7 +103,7 @@ export class PlayerWalkstyleProvider {
         }
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(player: PlayerData): Promise<void> {
         if (player.metadata.walk) {
             await this.applyWalkStyle(player.metadata.walk);

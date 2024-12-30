@@ -9,7 +9,6 @@ import { toVector3Object, Vector3 } from '../../../shared/polyzone/vector';
 import { Monitor } from '../../monitor/monitor';
 import { InputService } from '../../nui/input.service';
 import { NuiMenu } from '../../nui/nui.menu';
-import { getProperGroundPositionForObject } from '../../object/object.utils';
 import { PlayerService } from '../../player/player.service';
 
 @Provider()
@@ -57,7 +56,6 @@ export class NewsMenuProvider {
         const message = await this.inputService.askInput({
             title,
             maxCharacters: 235,
-            defaultValue: '',
         });
 
         if (!message || message === '') {
@@ -86,15 +84,5 @@ export class NewsMenuProvider {
                 position: toVector3Object(GetEntityCoords(PlayerPedId(), false) as Vector3),
             }
         );
-    }
-
-    @OnNuiEvent(NuiEvent.NewsPlaceObject)
-    public async onPlaceObject({ item, props, rotation }: { item: string; props: string; rotation?: number }) {
-        const ped = PlayerPedId();
-        const position = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.0, 0.0) as Vector3;
-        const heading = GetEntityHeading(ped) + (rotation || 0);
-        const groundPosition = getProperGroundPositionForObject(GetHashKey(props), position, heading);
-
-        TriggerServerEvent(ServerEvent.NEWS_PLACE_OBJECT, item, props, groundPosition);
     }
 }

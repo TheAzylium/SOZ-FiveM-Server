@@ -4,10 +4,12 @@ import { On, Once } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
+import { TaxType } from '../../shared/bank';
 import { DrivingSchoolConfig, DrivingSchoolLicenseType } from '../../shared/driving-school';
 import { ClientEvent, ServerEvent } from '../../shared/event';
 import { Vector4 } from '../../shared/polyzone/vector';
 import { RpcServerEvent } from '../../shared/rpc';
+import { PriceService } from '../bank/price.service';
 import { PrismaService } from '../database/prisma.service';
 import { Notifier } from '../notifier';
 import { PlayerMoneyService } from '../player/player.money.service';
@@ -35,6 +37,9 @@ export class DrivingSchoolProvider {
     @Inject(PlayerPositionProvider)
     private playerPositionProvider: PlayerPositionProvider;
 
+    @Inject(PriceService)
+    private priceService: PriceService;
+
     @Once()
     public onStart() {
         this.playerPositionProvider.registerZone(
@@ -44,13 +49,13 @@ export class DrivingSchoolProvider {
     }
 
     @On(ServerEvent.DRIVING_SCHOOL_PLAYER_PAY)
-    public makePlayerPay(source: number, licenseType: DrivingSchoolLicenseType, spawnPoint: Vector4) {
+    public async makePlayerPay(source: number, licenseType: DrivingSchoolLicenseType, spawnPoint: Vector4) {
         const lData = DrivingSchoolConfig.licenses[licenseType];
         if (!lData || typeof lData.price !== 'number') {
             return;
         }
 
-        if (!this.playerMoneyService.remove(source, lData.price)) {
+        if (!(await this.playerMoneyService.buy(source, lData.price, TaxType.VEHICLE))) {
             this.notifier.notify(source, "Vous n'avez pas assez d'argent", 'error');
             return;
         }
@@ -82,7 +87,8 @@ export class DrivingSchoolProvider {
 
     @On(ServerEvent.DRIVING_SCHOOL_UPDATE_VEHICLE_LIMIT)
     public async updateVehicleLimit(source: number, limit: number, price: number) {
-        if (!this.playerMoneyService.remove(source, price, 'money')) {
+        // @TODO Price client side
+        if (!(await this.playerMoneyService.buy(source, price, TaxType.VEHICLE))) {
             this.notifier.notify(source, "Vous n'avez pas assez d'argent", 'error');
             return;
         }
@@ -91,7 +97,10 @@ export class DrivingSchoolProvider {
 
         this.notifier.notify(
             source,
-            `Vous venez d'améliorer votre carte grise au niveau ${limit} pour $${price}`,
+            `Vous venez d'améliorer votre carte grise au niveau ${limit} pour $${await this.priceService.getPrice(
+                price,
+                TaxType.VEHICLE
+            )}`,
             'success'
         );
     }

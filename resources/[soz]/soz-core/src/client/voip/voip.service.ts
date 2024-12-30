@@ -1,49 +1,174 @@
-import { Injectable } from '@public/core/decorators/injectable';
+import { emitRpc } from '@core/rpc';
+import { NuiDispatch } from '@public/client/nui/nui.dispatch';
+import { VoiceRadioProvider } from '@public/client/voip/voice/voice.radio.provider';
+import { Inject, Injectable } from '@public/core/decorators/injectable';
+import { wait } from '@public/core/utils';
 import { ServerEvent } from '@public/shared/event';
-import { Ear, RadioChannelType, RadioType } from '@public/shared/voip';
+import { VoiceMode } from '@public/shared/hud';
+import { RpcServerEvent } from '@public/shared/rpc';
+import { RadioChannelType, RadioType } from '@public/shared/voip';
+
+const WHISPER_RANGE = 2.0;
+const NORMAL_RANGE = 4.5;
+const SHOUT_RANGE = 8.0;
+const MEGAPHONE_RANGE = 38.0;
+const MICROPHONE_RANGE = 38.0;
+
+type VoiceModeRange = VoiceMode.Shouting | VoiceMode.Normal | VoiceMode.Whisper;
 
 @Injectable()
 export class VoipService {
-    public mutePlayer(value: boolean) {
-        exports['soz-voip'].MutePlayer(value);
+    @Inject(NuiDispatch)
+    private readonly nuiDispatch: NuiDispatch;
+
+    @Inject(VoiceRadioProvider)
+    private readonly voiceRadioProvider: VoiceRadioProvider;
+
+    private channels = new Map<number, number>();
+
+    private voiceModeRange: VoiceModeRange = VoiceMode.Normal;
+
+    private isMicrophoneInUse = false;
+
+    private isMegaphoneInUse = false;
+
+    private overrideInputRange: number | null = null;
+
+    private isMuted = false;
+
+    private ready = false;
+
+    public getVoiceClickVolume(radioType: RadioType, channelType: RadioChannelType) {
+        return this.voiceRadioProvider.getVoiceClickVolume(radioType, channelType);
     }
 
-    public setPlayerMegaphoneInUse(value: boolean, range: number | null = null) {
-        exports['soz-voip'].SetPlayerMegaphoneInUse(value, range);
+    public setVoiceClickVolume(radioType: RadioType, channelType: RadioChannelType, value: number) {
+        SetResourceKvp(`radio_volume_${radioType}_${channelType}`, value.toString());
+    }
+
+    public setVoiceModeRange(mode: VoiceModeRange) {
+        this.voiceModeRange = mode;
+
+        this.updateRange();
+    }
+
+    public getVoiceMode(): VoiceMode {
+        if (this.isMuted) {
+            return VoiceMode.Mute;
+        }
+
+        if (this.isMegaphoneInUse) {
+            return VoiceMode.Megaphone;
+        }
+
+        if (this.isMicrophoneInUse) {
+            return VoiceMode.Microphone;
+        }
+
+        return this.voiceModeRange;
+    }
+
+    public getOverrideInputRange() {
+        return this.overrideInputRange;
+    }
+
+    public resetVoiceMode() {
+        this.isMuted = false;
+        this.isMicrophoneInUse = false;
+        this.isMicrophoneInUse = false;
+        this.voiceModeRange = VoiceMode.Normal;
+        this.overrideInputRange = null;
+
+        this.updateRange();
+    }
+
+    public async mutePlayer(value: boolean) {
+        while (!this.ready) {
+            await wait(100);
+        }
+
+        const isOk = await emitRpc<boolean>(RpcServerEvent.VOIP_SET_MUTE, GetPlayerServerId(PlayerId()), value);
+
+        if (!isOk) {
+            return;
+        }
+
+        this.isMuted = value;
+
+        this.updateRange();
+    }
+
+    public isPlayerMuted() {
+        return this.isMuted;
+    }
+
+    public setPlayerMegaphoneInUse(value: boolean, range: number = MEGAPHONE_RANGE) {
         TriggerServerEvent(ServerEvent.VOIP_SET_MEGAPHONE, value);
+
+        this.overrideInputRange = value ? range : null;
+        this.isMegaphoneInUse = value;
+
+        this.updateRange();
     }
 
     public setPlayerMicrophoneInUse(value: boolean) {
-        exports['soz-voip'].SetPlayerMicrophoneInUse(value);
+        this.overrideInputRange = value ? MICROPHONE_RANGE : null;
+        this.isMicrophoneInUse = value;
+
+        this.updateRange();
     }
 
-    public disconnectRadio(type: RadioType, channelType: RadioChannelType, frequency: number) {
-        TriggerServerEvent('voip:server:radio:disconnect', type, frequency, channelType);
+    public disconnectRadio(frequency: number) {
+        if (!this.channels.has(frequency)) {
+            return;
+        }
+
+        this.channels.set(frequency, this.channels.get(frequency) - 1);
+
+        if (this.channels.get(frequency) <= 0) {
+            this.channels.delete(frequency);
+            this.voiceRadioProvider.stopTransmitting(frequency);
+            this.voiceRadioProvider.removeListenersOnFrequency(frequency);
+
+            TriggerServerEvent(ServerEvent.VOIP_RADIO_LEAVE_CHANNEL, frequency);
+        }
     }
 
-    public connectRadio(type: RadioType, channelType: RadioChannelType, frequency: number) {
-        TriggerServerEvent('voip:server:radio:connect', type, channelType, frequency);
+    public connectRadio(frequency: number) {
+        if (!this.channels.has(frequency)) {
+            this.channels.set(frequency, 0);
+            TriggerServerEvent(ServerEvent.VOIP_RADIO_JOIN_CHANNEL, frequency);
+        }
+
+        this.channels.set(frequency, this.channels.get(frequency) + 1);
     }
 
-    public setRadioEar(type: RadioType, channelType: RadioChannelType, ear: Ear) {
-        TriggerEvent('voip:client:radio:set-balance', type, channelType, ear);
+    public updateRange() {
+        const voiceMode = this.getVoiceMode();
+        this.nuiDispatch.dispatch('hud', 'UpdateVoiceMode', voiceMode);
+
+        if (voiceMode === VoiceMode.Normal) {
+            MumbleSetTalkerProximity(NORMAL_RANGE);
+        } else if (voiceMode === VoiceMode.Whisper) {
+            MumbleSetTalkerProximity(WHISPER_RANGE);
+        } else if (voiceMode === VoiceMode.Shouting) {
+            MumbleSetTalkerProximity(SHOUT_RANGE);
+        } else if (voiceMode === VoiceMode.Megaphone) {
+            MumbleSetTalkerProximity(MEGAPHONE_RANGE);
+        } else if (voiceMode === VoiceMode.Microphone) {
+            MumbleSetTalkerProximity(MICROPHONE_RANGE);
+        }
+
+        if (this.overrideInputRange !== null) {
+            MumbleSetTalkerProximity(this.overrideInputRange);
+        }
     }
 
-    public setRadioVolume(type: RadioType, channelType: RadioChannelType, volume: number) {
-        if (type === RadioType.RadioShortRange && channelType === RadioChannelType.Primary) {
-            exports['soz-voip'].SetRadioShortRangePrimaryVolume(volume);
-        }
+    public isReady(): boolean {
+        return this.ready;
+    }
 
-        if (type === RadioType.RadioShortRange && channelType === RadioChannelType.Secondary) {
-            exports['soz-voip'].SetRadioShortRangeSecondaryVolume(volume);
-        }
-
-        if (type === RadioType.RadioLongRange && channelType === RadioChannelType.Primary) {
-            exports['soz-voip'].SetRadioLongRangePrimaryVolume(volume);
-        }
-
-        if (type === RadioType.RadioLongRange && channelType === RadioChannelType.Secondary) {
-            exports['soz-voip'].SetRadioLongRangeSecondaryVolume(volume);
-        }
+    public setReady(value: boolean) {
+        this.ready = value;
     }
 }

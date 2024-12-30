@@ -8,7 +8,7 @@ import { Monitor } from '@public/server/monitor/monitor';
 import { Notifier } from '@public/server/notifier';
 import { ProgressService } from '@public/server/player/progress.service';
 import { ServerEvent } from '@public/shared/event';
-import { FieldItem } from '@public/shared/field';
+import { FieldItem, getAmount } from '@public/shared/field';
 import { DMC_FIELDS } from '@public/shared/job/dmc';
 import { toVector3Object, Vector3 } from '@public/shared/polyzone/vector';
 
@@ -38,7 +38,7 @@ export class DmcHarvestProvider {
     @Inject(Monitor)
     private monitor: Monitor;
 
-    @Once(OnceStep.Start)
+    @Once(OnceStep.RepositoriesLoaded)
     public async init() {
         for (const field of Object.values(DMC_FIELDS)) {
             await this.fieldService.createField({
@@ -81,12 +81,18 @@ export class DmcHarvestProvider {
             return false;
         }
 
-        if (!this.fieldService.harvestField(field, 1)) {
+        if (!(await this.fieldService.harvestField(field, 1))) {
             this.notifier.notify(source, `La mine est épuisée.`);
             return false;
         }
 
-        const items = DMC_FIELDS[field].item as FieldItem[];
+        const fieldItems = DMC_FIELDS[field].item as FieldItem[];
+        const items = [];
+
+        for (const fieldItem of fieldItems) {
+            const amount = getAmount(fieldItem.amount);
+            items.push({ name: fieldItem.name, amount });
+        }
 
         if (!this.inventoryManager.canCarryItems(source, items)) {
             this.notifier.notify(

@@ -1,7 +1,9 @@
 import { ApartmentMenuData } from '@public/shared/housing/housing';
 import { JobType } from '@public/shared/job';
+import { MenuOilData } from '@public/shared/job/oil';
 import { NuiJobEmployeeOnDuty, PromoteMenuData } from '@public/shared/nui/job';
 import { PlayerPersonalMenuData } from '@public/shared/nui/player';
+import { EditorMenuData } from '@public/shared/object';
 
 import { AdminMenuStateProps } from '../../nui/components/Admin/AdminMenu';
 import { PlayerCloakroomItem, WardrobeMenuData } from '../cloth';
@@ -9,6 +11,7 @@ import { DrivingSchoolMenuData } from '../driving-school';
 import { FuelType } from '../fuel';
 import { AdminMapperMenuData, HousingUpgradesMenuData } from '../housing/menu';
 import { DmcJobMenuData } from '../job/dmc';
+import { PlasterMenuData } from '../job/lsmc';
 import {
     PoliceJobFineMenuData,
     PoliceJobLicencesMenuData,
@@ -66,6 +69,7 @@ export enum MenuType {
     JobBennys = 'job_bennys',
     JobUpw = 'job_upw',
     JobNews = 'job_news',
+    JobOil = 'job_oil',
     UpwOrderMenu = 'upw_order',
     OilSetStationPrice = 'oil_set_station_price',
     SetHealthState = 'set_health_state',
@@ -96,6 +100,7 @@ export enum MenuType {
     GouvJobMenu = 'gouv_job',
     FDFJobMenu = 'fdf_job',
     DmcJobMenu = 'dmc_job',
+    ObjectEditor = 'object_editor',
     PoliceJobMenu = 'police_job_menu',
     PoliceJobLicences = 'police_job_licences',
     PoliceJobMoneychecker = 'police_job_moneychecker',
@@ -111,6 +116,7 @@ export enum MenuType {
     HousingAddRoommateMenu = 'housing_add_roommate_menu',
     HousingRemoveRoommateMenu = 'housing_remove_roommate_menu',
     HousingCloakroomMenu = 'housing_cloakroom_menu',
+    LsmcPlaster = 'lsmc_plaster',
 }
 
 export interface MenuTypeMap extends Record<MenuType, any> {
@@ -129,6 +135,7 @@ export interface MenuTypeMap extends Record<MenuType, any> {
         insideUpgradeZone: boolean;
     };
     [MenuType.JobUpw]: MenuUpwData;
+    [MenuType.JobOil]: MenuOilData;
     [MenuType.UpwOrderMenu]: UpwOrderMenuData;
     [MenuType.OilSetStationPrice]: Record<FuelType, number>;
     [MenuType.SetHealthState]: number;
@@ -139,7 +146,7 @@ export interface MenuTypeMap extends Record<MenuType, any> {
     [MenuType.Wardrobe]: WardrobeMenuData;
     [MenuType.GunSmith]: WeaponsMenuData;
     [MenuType.LsmcPharmacy]: any;
-    [MenuType.MandatoryJobMenu]: any;
+    [MenuType.MandatoryJobMenu]: { onDuty: boolean; displayRadar: boolean };
     [MenuType.IllegalShop]: Map<string, ShopProduct[]>;
     [MenuType.EasterShop]: ShopProduct[];
     [MenuType.TaxiJobMenu]: any;
@@ -152,7 +159,7 @@ export interface MenuTypeMap extends Record<MenuType, any> {
     [MenuType.RentBoat]: any;
     [MenuType.RaceAdmin]: Race[];
     [MenuType.RaceRank]: { id: number; name: string };
-    [MenuType.GouvJobMenu]: { onDuty: boolean };
+    [MenuType.GouvJobMenu]: { onDuty: boolean; displayRadar: boolean };
     [MenuType.PropPlacementMenu]: PropPlacementMenuData;
     [MenuType.FDFJobMenu]: any;
     [MenuType.JobNews]: { job: JobType };
@@ -173,4 +180,6 @@ export interface MenuTypeMap extends Record<MenuType, any> {
     [MenuType.HousingCloakroomMenu]: {
         items: PlayerCloakroomItem[];
     };
+    [MenuType.LsmcPlaster]: PlasterMenuData;
+    [MenuType.ObjectEditor]: EditorMenuData;
 }

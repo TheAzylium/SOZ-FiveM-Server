@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@core/decorators/injectable';
-import { CardType } from '@public/shared/nui/card';
+import { DrugSkill } from '@private/shared/drugs';
+import { PlayerLoader } from '@public/core/loader/player.loader';
+import { PatientClothes } from '@public/shared/job/lsmc';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
 
 import { Outfit } from '../../shared/cloth';
 import { ClientEvent, ServerEvent } from '../../shared/event';
 import { FakeId, PlayerClientState, PlayerData, PlayerLicenceType } from '../../shared/player';
-import { AnimationService } from '../animation/animation.service';
 import { Notifier } from '../notifier';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { Qbcore } from '../qbcore';
@@ -15,12 +16,10 @@ export class PlayerService {
     @Inject(Notifier)
     private notifier: Notifier;
 
-    @Inject(AnimationService)
-    private animationService: AnimationService;
-
     private player: PlayerData | null = null;
     private fakeId: FakeId = null;
     private deguisement = false;
+    private pushing = false;
 
     private state: PlayerClientState = {
         isDead: false,
@@ -31,7 +30,6 @@ export class PlayerService {
         isInHospital: false,
         isInShop: false,
         isInventoryBusy: false,
-        tankerEntity: null,
         disableMoneyCase: false,
         hasPrisonerClothes: false,
         isWearingPatientOutfit: false,
@@ -47,9 +45,13 @@ export class PlayerService {
     @Inject(NuiDispatch)
     private nuiDispatch: NuiDispatch;
 
+    @Inject(PlayerLoader)
+    private playerLoader: PlayerLoader;
+
     public setPlayer(player: PlayerData) {
         this.player = player;
-        TriggerEvent(ClientEvent.PLAYER_UPDATE.toString(), player);
+
+        this.playerLoader.trigger(player);
         this.nuiDispatch.dispatch('player', 'Update', player);
     }
 
@@ -59,6 +61,16 @@ export class PlayerService {
 
     public getPlayer(): PlayerData | null {
         return this.player;
+    }
+
+    public hasDrugSkill(skill: DrugSkill): boolean {
+        const player = this.getPlayer();
+
+        if (!player) {
+            return false;
+        }
+
+        return player.metadata.drugs_skills.includes(skill);
     }
 
     public getState(): PlayerClientState {
@@ -87,6 +99,23 @@ export class PlayerService {
     }
 
     public setTempClothes(clothes: Outfit | null) {
+        const player = this.getPlayer();
+        const state = this.getState();
+        if (state.isWearingPatientOutfit) {
+            clothes = {
+                Components: {
+                    ...PatientClothes[player.skin.Model.Hash]['Patient'].Components,
+                    ...clothes?.Components,
+                },
+                Props: {
+                    ...PatientClothes[player.skin.Model.Hash]['Patient'].Props,
+                    ...clothes?.Props,
+                },
+                GlovesID: clothes?.GlovesID,
+                TopID: clothes?.TopID,
+            };
+        }
+
         TriggerEvent(ClientEvent.CHARACTER_SET_TEMPORARY_CLOTH, clothes || {});
     }
 
@@ -102,16 +131,26 @@ export class PlayerService {
         return !this.state.isDead && !this.state.isHandcuffed && !this.state.isZipped && !this.state.isEscorting;
     }
 
-    public getPlayersAround(position: Vector3, distance: number): number[] {
+    public getPlayersAround(
+        position: Vector3,
+        distance: number,
+        filterself = false,
+        filter: (number) => boolean = null
+    ): number[] {
         const players = GetActivePlayers() as number[];
+        const playerId = PlayerId();
         const closePlayers = [];
 
         for (const player of players) {
+            if (playerId == player && filterself) {
+                continue;
+            }
+
             const ped = GetPlayerPed(player);
             const pedCoords = GetEntityCoords(ped) as Vector3;
             const playerDistance = getDistance(position, pedCoords);
 
-            if (playerDistance <= distance) {
+            if (playerDistance <= distance && (!filter || filter(player))) {
                 closePlayers.push(GetPlayerServerId(player));
             }
         }
@@ -138,32 +177,6 @@ export class PlayerService {
         return player;
     }
 
-    public async showCard(type: CardType, accountId?: string) {
-        const position = GetEntityCoords(PlayerPedId()) as Vector3;
-        const players = this.getPlayersAround(position, 3.0);
-
-        if (players.length <= 1) {
-            this.notifier.notify("Il n'y a personne à proximité", 'error');
-            return;
-        }
-
-        const player = this.getId();
-        await this.animationService.playAnimation({
-            base: {
-                dictionary: 'mp_common',
-                name: 'givetake2_a',
-                blendInSpeed: 8.0,
-                blendOutSpeed: 8.0,
-                options: {
-                    enablePlayerControl: true,
-                    onlyUpperBody: true,
-                },
-            },
-        });
-
-        TriggerServerEvent(ServerEvent.PLAYER_SHOW_IDENTITY, type, players, player, accountId);
-    }
-
     public toogleFakeId(fakeId: FakeId) {
         if (!fakeId || (this.fakeId && this.fakeId.id == fakeId.id)) {
             this.fakeId = null;
@@ -184,5 +197,13 @@ export class PlayerService {
 
     public hasDeguisement() {
         return this.deguisement;
+    }
+
+    public setPushing(value: boolean) {
+        this.pushing = value;
+    }
+
+    public isPushing() {
+        return this.pushing;
     }
 }

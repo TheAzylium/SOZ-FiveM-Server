@@ -1,5 +1,5 @@
 import { RepositoryConfig, RepositoryType } from '@public/shared/repository';
-import { applyPatch, generate, observe, Observer } from 'fast-json-patch';
+import { applyPatch, compare, generate, observe, Observer } from 'fast-json-patch';
 
 export abstract class RepositoryLegacy<T> {
     private data: T | null;
@@ -59,7 +59,7 @@ export abstract class Repository<
         });
     }
 
-    public async init() {
+    public async init(): Promise<Record<K, V>> {
         this.data = await this.load();
         this.observer = observe(this.data);
 
@@ -69,6 +69,17 @@ export abstract class Repository<
 
         this.loadResolve();
         this.loadPromise = null;
+
+        return this.data;
+    }
+
+    public async refresh(): Promise<Record<K, V>> {
+        const data = await this.load();
+
+        const patch = compare(this.data, data);
+        applyPatch(this.data, patch);
+
+        return this.data;
     }
 
     public delete(id: K): void {
@@ -115,7 +126,7 @@ export abstract class Repository<
 
     public observe() {
         if (!this.observer) {
-            return;
+            return [];
         }
 
         return generate(this.observer);

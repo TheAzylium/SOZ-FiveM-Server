@@ -7,6 +7,8 @@ export type CommandMetadata = {
     role: SozRole[] | SozRole | null;
     keys: CommandKey[];
     passthroughNuiFocus: boolean;
+    passthroughPauseMenu: boolean;
+    toggle: boolean;
 };
 
 export type CommandKey = {
@@ -26,6 +28,8 @@ export const Command = (name: string, options: Partial<Omit<CommandMetadata, 'na
                 role: options.role || null,
                 keys: options.keys || [],
                 passthroughNuiFocus: options.passthroughNuiFocus || false,
+                passthroughPauseMenu: options.passthroughPauseMenu || false,
+                toggle: options.toggle || false,
             },
             target,
             propertyKey

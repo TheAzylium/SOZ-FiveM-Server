@@ -32,6 +32,25 @@ export const BOOK_LIST: Book[] = [
         ],
     },
     {
+        item: 'lsmc_calendar_2024',
+        images: [
+            'lsmc-calendar-2024/lsmc-calendar-2024-01.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-02.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-03.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-04.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-05.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-06.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-07.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-08.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-09.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-10.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-11.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-12.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-13.webp',
+            'lsmc-calendar-2024/lsmc-calendar-2024-14.webp',
+        ],
+    },
+    {
         item: 'welcome_book',
         images: [
             'welcome/welcome-0.webp',

@@ -1,0 +1,72 @@
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":0}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"grise"}' where id = 6165;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":1}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"dorée"}' where id = 6166;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":2}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"bleue"}' where id = 6167;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":3}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"noire"}' where id = 6168;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":4}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"café"}' where id = 6169;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":5}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"grise claire"}' where id = 6170;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":6}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"kaki"}' where id = 6171;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":7}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"beige"}' where id = 6172;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":8}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"verte"}' where id = 6173;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":9}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"blanche contour rouge"}' where id = 6174;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":10}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"grise rayé"}' where id = 6175;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":11}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"bleue rayé"}' where id = 6176;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":12}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"noire contour blanc"}' where id = 6177;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":13}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"chocolat"}' where id = 6178;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":14}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"bleu et noir"}' where id = 6179;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":15}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"prune"}' where id = 6180;
+update shop_content set data = '{"components":{"11":{"Drawable":28,"Palette":0,"Texture":15}},"modelHash":-1667301416,"underTypes":[100],"modelLabel":"Jacket boutonnée","colorLabel":"prune"}' where id = 6180;
+update shop_content set data = '{"components":{"11":{"Drawable":303,"Palette":0,"Texture":0}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rouge"}' where id = 10530;
+
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":0}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"gris"}' where id = 11212;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":1}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"noir"}' where id = 11213;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":2}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rose"}' where id = 11214;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":3}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rayures gris"}' where id = 11215;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":4}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"beige"}' where id = 11216;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":5}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"bleu"}' where id = 11217;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":6}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"gris"}' where id = 11218;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":7}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"marron"}' where id = 11219;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":8}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rouge et noir"}' where id = 11220;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":9}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"bordeaux"}' where id = 11221;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":10}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"col america"}' where id = 11222;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":11}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"USA"}' where id = 11223;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":12}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"america"}' where id = 11224;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":13}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux bleu"}' where id = 11225;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":14}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rayures rouge"}' where id = 11226;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":15}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux gris"}' where id = 11227;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":16}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux violet"}' where id = 11228;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":17}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux blanc"}' where id = 11229;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":18}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux ciel"}' where id = 11230;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":19}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux brun"}' where id = 11231;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":20}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"rayures brun"}' where id = 11232;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":21}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux rouge"}' where id = 11233;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":22}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux beige"}' where id = 11234;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":23}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux crème"}' where id = 11235;
+update shop_content set data = '{"components":{"11":{"Drawable":334,"Palette":0,"Texture":24}},"modelHash":-1667301416,"underTypes":[101],"modelLabel":"Gilet costume","colorLabel":"carreaux bleu foncé"}' where id = 11236;
+
+
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":0}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"Broker rouge"}' where id = 4172;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":1}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"Broker noir"}' where id = 4173;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":2}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"Broker turquoise"}' where id = 4174;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":3}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"taupe Fly Bravo"}' where id = 4175;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":4}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"bleu foncé Fly Bravo"}' where id = 4176;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":5}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"jaune Fly Bravo"}' where id = 4177;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":6}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"noir Guffy"}' where id = 4178;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":7}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"turquoise Guffy"}' where id = 4179;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":8}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"dégradé rose-bleu Guffy"}' where id = 4180;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":9}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"léopard rose Guffy"}' where id = 4181;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":10}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"camo gris"}' where id = 4182;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":11}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"camo jaune-vert"}' where id = 4183;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":12}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"camo sable-brun"}' where id = 4184;
+update shop_content set data = '{"components":{"11":{"Drawable":309,"Palette":0,"Texture":13}},"modelHash":1885233650,"underTypes":[1, 2, 4],"modelLabel":"Doudoune à motif ouverte","colorLabel":"fleurs"}' where id = 4185;
+	
+	
+INSERT INTO `shop_content` (`shop_id`, `category_id`, `label`, `price`, `data`, `stock`) VALUES
+	(3, 62, 'Chemisier manche retroussé blanc', 50, '{"components":{"8":{"Drawable":185,"Palette":0,"Texture":0}},"modelHash":-1667301416,"undershirtType":101,"modelLabel":"Chemisier manche retroussé","colorLabel":"blanc"}', 0),
+	(3, 62, 'Chemisier manche longue blanc', 50, '{"components":{"8":{"Drawable":193,"Palette":0,"Texture":0}},"modelHash":-1667301416,"undershirtType":101,"modelLabel":"Chemisier manche longue","colorLabel":"blanc"}', 0),
+	(3, 62, 'Chemisier manche longue boutonné blanc', 50, '{"components":{"8":{"Drawable":194,"Palette":0,"Texture":0}},"modelHash":-1667301416,"undershirtType":101,"modelLabel":"Chemisier manche longue boutonné","colorLabel":"blanc"}', 0),
+	(3, 62, 'Chemisier blanc', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":0}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"blanc"}', 0),
+	(3, 62, 'Chemisier noir', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":1}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"noir"}', 0),
+	(3, 62, 'Chemisier beige', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":2}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"beige"}', 0),
+	(3, 62, 'Chemisier gris rayé', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":3}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"gris rayé"}', 0),
+	(3, 62, 'Chemisier rose rayé', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":4}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"rose rayé"}', 0),
+	(3, 62, 'Chemisier gris', 50, '{"components":{"8":{"Drawable":24,"Palette":0,"Texture":5}},"modelHash":-1667301416,"undershirtType":100,"modelLabel":"Chemisier","colorLabel":"gris"}', 0);

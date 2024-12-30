@@ -35,17 +35,26 @@ RegisterNetEvent("inventory:client:requestOpenInventory", function(data)
     TriggerServerEvent("inventory:server:openInventory", data.invType, data.invID)
 end)
 
-function Handle.Functions.handleFish(inventory)
+function HydrateInventory(inventory)
+    local isZoologiste = false
     for _, value in ipairs(PlayerData.metadata.drugs_skills) do
         -- 2 is Zoologiste
         if value == 2 then
-            for key, value in pairs(inventory.items) do
-                if value.type == "fish" then
-                    value.useable = true
-                    value.usableLabel = "Ponctionner les toxines"
-                end
-            end
+            isZoologiste = true;
+            break
         end
+    end
+
+    for key, value in pairs(inventory.items) do
+        if value.type == "fish" and isZoologiste then
+            value.useable = true
+            value.usableLabel = "Ponctionner les toxines"
+        end
+
+        local itemDef = QBCore.Shared.Items[value.name]
+        value.storageItemType = itemDef.storageItemType
+        value.openStorageLabel = itemDef.openStorageLabel
+        value.canShow = itemDef.canShow
     end
 
     return inventory
@@ -111,7 +120,7 @@ RegisterNUICallback("transfertItem", function(data, cb)
     QBCore.Functions.TriggerCallback("inventory:server:TransfertItem", function(success, reason, invSource, invTarget)
         cb({status = success, sourceInventory = invSource, targetInventory = invTarget})
         if not success then
-            exports["soz-core"]:DrawNotification(Config.ErrorMessage[reason] or reason, "error")
+            exports["soz-core"]:DrawNotification(Config.ErrorMessage[reason] or reason or "Echec du transfert", "error")
         elseif success and (invSource.type == "bin" or invTarget.type == "bin") then
             QBCore.Functions.RequestAnimDict("missfbi4prepp1")
             TaskPlayAnim(PlayerPedId(), "missfbi4prepp1", "_bag_pickup_garbage_man", 6.0, -6.0, 2500, 49, 0, 1, 1, 0)
@@ -154,7 +163,7 @@ RegisterNUICallback("sortItem", function(data, cb)
     end
 
     QBCore.Functions.TriggerCallback("inventory:server:TransfertItem", function(success, reason, invSource, invTarget)
-        invSource = Handle.Functions.handleFish(invSource)
+        invSource = HydrateInventory(invSource)
         cb({status = success, sourceInventory = invSource, targetInventory = invTarget})
         if not success then
             exports["soz-core"]:DrawNotification(Config.ErrorMessage[reason] or reason, "error")
@@ -240,8 +249,14 @@ end)
 
 -- SHOPS
 
-AddEventHandler("inventory:client:openShop", function(shopContent, shopHeaderTexture)
-    SendNUIMessage({action = "openShop", shopContent = shopContent, shopHeaderTexture = shopHeaderTexture})
+AddEventHandler("inventory:client:openShop", function(shopContent, shopHeaderTexture, taxValue, taxType)
+    SendNUIMessage({
+        action = "openShop",
+        shopContent = shopContent,
+        shopHeaderTexture = shopHeaderTexture,
+        taxValue = taxValue,
+        taxType = taxType,
+    })
     SetNuiFocus(true, true)
     InventoryOpen = true
 end)
@@ -256,7 +271,7 @@ RegisterNUICallback("player/validateCart", function(data, cb)
     SetNuiFocus(false, false)
     local cartContent = data
 
-    TriggerServerEvent("soz-core:server:shop:validate-cart", cartContent)
+    TriggerServerEvent("soz-core:server:shop:validate-cart", cartContent.items, cartContent.tax)
 
     SetNuiFocus(true, true)
     cb(amount)

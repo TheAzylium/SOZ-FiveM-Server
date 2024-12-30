@@ -3,7 +3,9 @@ import { Inject } from '@core/decorators/injectable';
 import { Provider } from '@core/decorators/provider';
 import { EasterShopContent } from '@public/shared/shop/easter';
 
+import { TaxType } from '../../shared/bank';
 import { ClientEvent, ServerEvent } from '../../shared/event';
+import { PriceService } from '../bank/price.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { ItemService } from '../item/item.service';
 import { Monitor } from '../monitor/monitor';
@@ -35,6 +37,9 @@ export class EasterShopProvider {
 
     @Inject(ProgressService)
     private progressService: ProgressService;
+
+    @Inject(PriceService)
+    private priceService: PriceService;
 
     @Inject(Monitor)
     private monitor: Monitor;
@@ -88,7 +93,8 @@ export class EasterShopProvider {
             return;
         }
 
-        if (!this.playerMoneyService.remove(source, item.price)) {
+        // @TODO Price client side
+        if (!(await this.playerMoneyService.buy(source, item.price, TaxType.SUPPLY))) {
             this.notifier.notify(source, "Vous avez n'avez pas assez d'argent.", 'error');
             return;
         }
@@ -109,9 +115,10 @@ export class EasterShopProvider {
         );
 
         this.inventoryManager.addItemToInventory(source, item.id, 1, item.metadata || {});
+        const taxed = await this.priceService.getPrice(item.price, TaxType.SUPPLY);
         this.notifier.notify(
             source,
-            `Vous avez acheté ~b~${this.itemService.getItem(item.id).label}~s~ pour ~r~${item.price}$~s~`,
+            `Vous avez acheté ~b~${this.itemService.getItem(item.id).label}~s~ pour ~r~${taxed}$~s~`,
             'success'
         );
     }

@@ -7,6 +7,17 @@ QBCore.Player = {}
 
 function QBCore.Player.Login(source, citizenid, newData)
     local src = source
+
+    local allowDuplicateCharacter = GetConvar("soz_allow_duplicate_character", "false") == "true"
+    if not allowDuplicateCharacter and citizenid then
+        for _, player in pairs(QBCore.Players) do
+            if player.PlayerData.citizenid == citizenid then
+                DropPlayer(src, "Un joueur est déjà connecté sur ce personnage, si vous venez d'être déconnecté, veuillez attendre un peu.")
+                return false
+            end
+        end
+    end
+
     if src then
         if citizenid then
             local license = QBCore.Functions.GetSozIdentifier(src)
@@ -131,9 +142,11 @@ function QBCore.Player.CheckPlayerData(source, PlayerData)
     PlayerData.metadata['health_book_fiber'] = PlayerData.metadata['health_book_fiber'] or nil
     PlayerData.metadata['health_book_lipid'] = PlayerData.metadata['health_book_lipid'] or nil
     PlayerData.metadata['health_book_protein'] = PlayerData.metadata['health_book_protein'] or nil
+    PlayerData.metadata['health_book_update_date'] = PlayerData.metadata['health_book_update_date'] or nil
     PlayerData.metadata['last_exercise_completed'] = PlayerData.metadata['last_exercise_completed'] or nil
     PlayerData.metadata['gym_subscription_expire_at'] = PlayerData.metadata['gym_subscription_expire_at'] or nil
     PlayerData.metadata['drug'] = PlayerData.metadata['drug'] or 0
+    PlayerData.metadata['itt_end'] = PlayerData.metadata['itt_end'] or 0
     PlayerData.metadata['armor'] = {current = 0, hidden = false}
     PlayerData.metadata['inlaststand'] = PlayerData.metadata['inlaststand'] or false
     PlayerData.metadata['ishandcuffed'] = PlayerData.metadata['ishandcuffed'] or false
@@ -198,6 +211,7 @@ function QBCore.Player.CheckPlayerData(source, PlayerData)
 
     PlayerData.metadata['rp_death'] = PlayerData.metadata['rp_death'] or false
     PlayerData.metadata['is_senator'] = PlayerData.metadata['is_senator'] or false
+    PlayerData.metadata['plaster'] = PlayerData.metadata['plaster'] or {}
 
     if not PlayerData.metadata.lastBidTime then
         PlayerData.metadata.canBid = true
@@ -260,6 +274,18 @@ function QBCore.Player.Logout(source)
     QBCore.Players[src] = nil
 end
 
+local playersToSync = {}
+CreateThread(function()
+    while true do
+        for player, _ in pairs(playersToSync) do
+            TriggerClientEvent('QBCore:Player:SetPlayerData', player, QBCore.Players[player].PlayerData)
+        end
+        playersToSync = {}
+
+        Wait(0)
+    end
+end)
+
 -- Create a new character
 -- Don't touch any of this unless you know what you are doing
 -- Will cause major issues!
@@ -274,7 +300,7 @@ function QBCore.Player.CreatePlayer(PlayerData)
     end
 
     self.Functions.UpdatePlayerData = function(dontUpdateChat)
-        TriggerClientEvent('QBCore:Player:SetPlayerData', self.PlayerData.source, self.PlayerData)
+        playersToSync[self.PlayerData.source] = true
         TriggerEvent('QBCore:Server:PlayerUpdate', self.PlayerData)
 
         if dontUpdateChat == nil then
@@ -428,11 +454,11 @@ function QBCore.Player.CreatePlayer(PlayerData)
         return exports['soz-inventory']:RemoveItem(self.PlayerData.source, item, amount, false, slot)
     end
 
-    self.Functions.SetInventory = function(items, dontUpdateChat)
+    self.Functions.SetInventory = function(items)
         self.PlayerData.items = items
-        self.Functions.UpdatePlayerData(dontUpdateChat)
+        self.Functions.UpdatePlayerData(true)
 
-        exports['soz-core']:Log('DEBUG', 'Inventory movement - Set ! items set: ' .. json.encode(items), { player = self.PlayerData })
+        exports['soz-core']:Log('DEBUG', 'Inventory movement - Set ! items set: ' .. json.encode(items))
     end
 
     self.Functions.SetSkin = function(skin, skipApply)
@@ -512,6 +538,7 @@ function QBCore.Player.CreatePlayer(PlayerData)
         self.Functions.UpdateArmour()
 
         if not skipApply then
+            Wait(0) -- As UpdatePlayerData is async need to wait one tick so the client received the new ClothConfig
             TriggerClientEvent("soz-character:Client:ApplyCurrentClothConfig", self.PlayerData.source)
         end
 

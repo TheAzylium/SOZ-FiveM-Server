@@ -17,7 +17,7 @@ export class CommandLoader {
         for (const methodName of Object.keys(commandMethodList)) {
             const commandMetadata = commandMethodList[methodName];
             const method = provider[methodName].bind(provider);
-            const commandMethod = (source: number, args: string[]): void => {
+            const commandMethod = (source: number, args: any[]): void => {
                 if (SOZ_CORE_IS_CLIENT) {
                     if (
                         commandMetadata.keys &&
@@ -27,6 +27,10 @@ export class CommandLoader {
                     ) {
                         return;
                     }
+
+                    if (!commandMetadata.passthroughPauseMenu && IsPauseMenuActive()) {
+                        return;
+                    }
                 }
 
                 method(source, ...args);
@@ -34,27 +38,47 @@ export class CommandLoader {
 
             if (SOZ_CORE_IS_CLIENT) {
                 if (commandMetadata.keys) {
+                    let name = commandMetadata.name;
+
+                    if (commandMetadata.toggle) {
+                        name = `+${name}`;
+                    }
+
                     for (const key of commandMetadata.keys) {
-                        RegisterKeyMapping(
-                            commandMetadata.name,
-                            commandMetadata.description || '',
-                            key.mapper,
-                            key.key
-                        );
+                        RegisterKeyMapping(name, commandMetadata.description || '', key.mapper, key.key);
                     }
                 }
             }
 
-            RegisterCommand(commandMetadata.name, commandMethod, commandMetadata.role !== null);
+            if (commandMetadata.toggle) {
+                const activateCommand = (source: number, args: any[]) => {
+                    commandMethod(source, [true, ...args]);
+                };
+                const deactivateCommand = (source: number, args: any[]) => {
+                    commandMethod(source, [false, ...args]);
+                };
+
+                RegisterCommand(`+${commandMetadata.name}`, activateCommand, commandMetadata.role !== null);
+                RegisterCommand(`-${commandMetadata.name}`, deactivateCommand, commandMetadata.role !== null);
+            } else {
+                RegisterCommand(commandMetadata.name, commandMethod, commandMetadata.role !== null);
+            }
+
             this.commands.push(commandMetadata);
 
             if (commandMetadata.role !== null) {
+                let name = commandMetadata.name;
+
+                if (commandMetadata.toggle) {
+                    name = `+${name}`;
+                }
+
                 if (Array.isArray(commandMetadata.role)) {
                     for (const role of commandMetadata.role) {
-                        this.permissions.allowCommandForRole(commandMetadata.name, role);
+                        this.permissions.allowCommandForRole(name, role);
                     }
                 } else {
-                    this.permissions.allowCommandForRole(commandMetadata.name, commandMetadata.role);
+                    this.permissions.allowCommandForRole(name, commandMetadata.role);
                 }
             }
         }

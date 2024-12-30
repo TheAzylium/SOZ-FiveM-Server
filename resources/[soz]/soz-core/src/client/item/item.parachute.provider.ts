@@ -1,15 +1,14 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
 import { Tick } from '@public/core/decorators/tick';
 import { PlayerData } from '@public/shared/player';
 
-import { OnEvent } from '../../core/decorators/event';
 import { Provider } from '../../core/decorators/provider';
-import { ClientEvent } from '../../shared/event';
 
 @Provider()
 export class ItemParachuteProvider {
     private hasConsumedParachute = false;
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     public onPlayerUpdate(player: PlayerData) {
         const ped = PlayerPedId();
         const parachuteWeapon = GetHashKey('GADGET_PARACHUTE');

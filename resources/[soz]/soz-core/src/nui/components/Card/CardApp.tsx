@@ -35,6 +35,14 @@ export const CardItem: FunctionComponent<CardItemProps> = ({ card }) => {
         }, 10000);
     }, []);
 
+    let rightOffset = '';
+    if (
+        (window.innerWidth > 5000 && window.innerHeight < 1500) ||
+        (window.innerWidth > 3079 && window.innerHeight < 1200)
+    ) {
+        rightOffset = 'pr-[94vh]';
+    }
+
     return (
         <Transition
             show={show}
@@ -44,6 +52,7 @@ export const CardItem: FunctionComponent<CardItemProps> = ({ card }) => {
             leave="transform ease-in duration-300 transition"
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
+            className={rightOffset}
         >
             {card.type === 'identity' && <IdentityCard player={card.player} />}
             {card.type === 'license' && <LicenseCard player={card.player} />}
@@ -85,7 +94,7 @@ export const CardApp: FunctionComponent = () => {
 
     return (
         <div className="absolute w-full h-full">
-            <div className="flex flex-column justify-end h-full">
+            <div className="flex flex-column h-full justify-end">
                 <div className="h-full overflow-hidden p-6">
                     {cardQueue.map(item => {
                         return <CardItem key={item.id} card={item.card} />;

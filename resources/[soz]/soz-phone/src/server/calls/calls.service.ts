@@ -211,7 +211,7 @@ class CallsService {
         const targetCallItem = this.callMap.get(data.transmitterNumber);
 
         emitNet(
-            'voip:client:call:setMute',
+            'soz-core:client:voip:voice:mute-call',
             data.isTransmitter ? targetCallItem.receiverSource : targetCallItem.transmitterSource,
             data.muted
         );

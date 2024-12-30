@@ -98,12 +98,11 @@ export async function createMessageGroupsFromPhoneNumber(
 
     const conversationId = createGroupHashID([sourcePhoneNumber, tgtPhoneNumber]);
     const existingConversation = await MessagesDB.doesConversationExist(conversationId, tgtPhoneNumber);
+    const updatedAt = existingConversation ? existingConversation.updatedAt : new Date().getTime();
 
     if (!existingConversation) {
         await MessagesDB.createMessageGroup(sourcePhoneNumber, conversationId, sourcePhoneNumber);
         await MessagesDB.createMessageGroup(sourcePhoneNumber, conversationId, tgtPhoneNumber);
-    } else {
-        await MessagesDB.updateMessageGroupDate(conversationId);
     }
 
     // wrap this in a transaction to make sure ALL of these INSERTs succeed
@@ -117,7 +116,7 @@ export async function createMessageGroupsFromPhoneNumber(
         identifiers: [sourcePhoneNumber, tgtPhoneNumber],
         phoneNumber: tgtPhoneNumber,
         participant: tgtIdentifier,
-        updatedAt: new Date().getTime(),
+        updatedAt: updatedAt,
     };
 }
 

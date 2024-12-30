@@ -75,5 +75,5 @@ export type GarageMenuData = {
 };
 
 export function getTransferPrice(weight: number) {
-    return 100 + Math.round((weight / 1000) * 15);
+    return 90 + Math.round((weight / 1000) * 13);
 }

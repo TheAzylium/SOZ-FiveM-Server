@@ -33,7 +33,7 @@ export class FoodHarvestProvider {
     @Inject(Notifier)
     private notifier: Notifier;
 
-    @Once(OnceStep.Start)
+    @Once(OnceStep.RepositoriesLoaded)
     public async init() {
         await this.fieldService.createField({
             identifier: EASTER_FIELD,
@@ -74,7 +74,7 @@ export class FoodHarvestProvider {
             return false;
         }
 
-        if (!this.fieldService.harvestField(EASTER_FIELD, 1)) {
+        if (!(await this.fieldService.harvestField(EASTER_FIELD, 1))) {
             this.notifier.notify(source, `Le champs est épuisé.`);
             return false;
         }

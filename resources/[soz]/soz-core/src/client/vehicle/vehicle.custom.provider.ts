@@ -16,7 +16,7 @@ import {
     VehicleCustomMenuData,
     VehicleUpgradeOptions,
 } from '../../shared/vehicle/modification';
-import { VehicleSeat } from '../../shared/vehicle/vehicle';
+import { VehicleClass, VehicleSeat } from '../../shared/vehicle/vehicle';
 import { Notifier } from '../notifier';
 import { NuiMenu } from '../nui/nui.menu';
 import { VehicleRepository } from '../repository/vehicle.repository';
@@ -225,8 +225,6 @@ export class VehicleCustomProvider {
         const configuration = await this.vehicleService.getVehicleConfiguration(vehicleEntityId);
         this.vehicleService.applyVehicleConfigurationPerformance(vehicleEntityId, configuration);
 
-        if (GetVehicleHasKers(vehicleEntityId)) {
-            SetVehicleKersAllowed(vehicleEntityId, false);
-        }
+        SetVehicleKersAllowed(vehicleEntityId, GetVehicleClass(vehicleEntityId) === VehicleClass.Cycles);
     }
 }

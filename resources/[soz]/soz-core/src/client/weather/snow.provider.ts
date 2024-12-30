@@ -4,7 +4,7 @@ import { Weather } from '../../shared/weather';
 import { ResourceLoader } from '../repository/resource.loader';
 import { StateSelector, Store } from '../store/store';
 
-const WEATHER_WITH_SNOW: Weather[] = ['BLIZZARD', 'SNOWLIGHT', 'SNOW'];
+const WEATHER_WITH_SNOW: Weather[] = [];
 
 @Provider()
 export class SnowProvider {

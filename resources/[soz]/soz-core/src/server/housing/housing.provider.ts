@@ -4,6 +4,7 @@ import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
 import { wait } from '../../core/utils';
+import { TaxType } from '../../shared/bank';
 import { ClientEvent } from '../../shared/event/client';
 import { ServerEvent } from '../../shared/event/server';
 import {
@@ -18,6 +19,7 @@ import { PlayerData } from '../../shared/player';
 import { getDistance, Vector3, Vector4 } from '../../shared/polyzone/vector';
 import { RpcServerEvent } from '../../shared/rpc';
 import { BankService } from '../bank/bank.service';
+import { PriceService } from '../bank/price.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { Monitor } from '../monitor/monitor';
 import { Notifier } from '../notifier';
@@ -67,6 +69,9 @@ export class HousingProvider {
 
     @Inject(ProgressService)
     private progressService: ProgressService;
+
+    @Inject(PriceService)
+    private priceService: PriceService;
 
     private playerTemporaryAccess = new Map<string, Set<number>>();
 
@@ -279,7 +284,7 @@ export class HousingProvider {
             return;
         }
 
-        if (this.playerMoneyService.remove(player.source, apartment.price) === false) {
+        if (!(await this.playerMoneyService.buy(player.source, apartment.price, TaxType.HOUSING))) {
             this.notifier.error(player.source, "Vous n'avez pas assez d'argent.");
 
             return;
@@ -302,7 +307,10 @@ export class HousingProvider {
 
         this.notifier.notify(
             player.source,
-            `Vous venez ~g~d'acquérir~s~ une maison pour ~b~$${apartment.price}.`,
+            `Vous venez ~g~d'acquérir~s~ une maison pour ~b~$${await this.priceService.getPrice(
+                apartment.price,
+                TaxType.HOUSING
+            )}.`,
             'success'
         );
     }
@@ -536,6 +544,7 @@ export class HousingProvider {
 
     @OnEvent(ServerEvent.HOUSING_UPGRADE_APARTMENT_TIER)
     public async upgradeTier(source: number, tier: number, price: number, zkeaAmount: number) {
+        // @TODO Price client side
         const player = this.playerService.getPlayer(source);
 
         if (!player) {
@@ -557,18 +566,19 @@ export class HousingProvider {
             return;
         }
 
-        if (!this.playerMoneyService.remove(player.source, price)) {
+        if (this.inventoryManager.getItemCount('cabinet_storage', 'cabinet_zkea') < zkeaAmount) {
+            this.notifier.error(player.source, "Amélioration de palier impossible car Zkea n'a pas assez de stock.");
+
+            return;
+        }
+
+        if (!(await this.playerMoneyService.buy(player.source, price, TaxType.HOUSING))) {
             this.notifier.error(player.source, "Vous n'avez pas assez d'argent.");
 
             return;
         }
 
-        if (!this.inventoryManager.removeItemFromInventory('cabinet_storage', 'cabinet_zkea', zkeaAmount)) {
-            this.notifier.error(player.source, "Amélioration de palier impossible car Zkea n'a pas assez de stock.");
-            this.playerMoneyService.add(player.source, price);
-
-            return;
-        }
+        this.inventoryManager.removeItemFromInventory('cabinet_storage', 'cabinet_zkea', zkeaAmount);
 
         this.inventoryManager.setHouseStashMaxWeightFromTier(apartment.identifier, tier);
         this.playerService.setPlayerApartmentTier(player.source, tier);
@@ -577,7 +587,10 @@ export class HousingProvider {
 
         this.notifier.notify(
             player.source,
-            `Vous venez ~g~d'améliorer~s~ votre appartement au palier ~g~${tier}~s~ pour ~b~$${price}~s~.`,
+            `Vous venez ~g~d'améliorer~s~ votre appartement au palier ~g~${tier}~s~ pour ~b~$${await this.priceService.getPrice(
+                price,
+                TaxType.HOUSING
+            )}~s~.`,
             'success'
         );
 
@@ -604,6 +617,7 @@ export class HousingProvider {
 
     @OnEvent(ServerEvent.HOUSING_ADD_PARKING_PLACE)
     public async addParkingPlace(source: number, hasParking: boolean, price: number) {
+        // @TODO Price client side
         const player = this.playerService.getPlayer(source);
 
         if (!player) {
@@ -629,7 +643,7 @@ export class HousingProvider {
             return;
         }
 
-        if (!this.playerMoneyService.remove(player.source, price)) {
+        if (!(await this.playerMoneyService.buy(player.source, price, TaxType.HOUSING))) {
             this.notifier.error(player.source, "Vous n'avez pas assez d'argent.");
 
             return;
@@ -641,7 +655,10 @@ export class HousingProvider {
 
         this.notifier.notify(
             player.source,
-            `Vous venez ~g~d'ajouter~s~ une place de parking à votre caravane pour ~b~$${price}~s~.`,
+            `Vous venez ~g~d'ajouter~s~ une place de parking à votre caravane pour ~b~$${await this.priceService.getPrice(
+                price,
+                TaxType.HOUSING
+            )}~s~.`,
             'success'
         );
     }

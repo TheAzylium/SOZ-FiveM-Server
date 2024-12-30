@@ -61,16 +61,20 @@ export enum NuiEvent {
     AdminSetVisible = 'soz-core:client:admin:set-visible',
     AdminTeleportToWaypoint = 'soz-core:client:admin:teleport-to-waypoint',
     AdminToggleDisplayOwners = 'soz-core:client:admin:toggle-display-owners',
+    AdminToggleDisplaySurfaceDebug = 'soz-core:client:admin:toggle-debug-surface',
     AdminToggleDisplayPlayerNames = 'soz-core:client:admin:toggle-display-player-names',
     AdminToggleDisplayPlayersOnMap = 'soz-core:client:admin:toggle-display-players-on-map',
     AdminToggleDuty = 'soz-core:client:admin:set-job-duty',
     AdminToggleNoStall = 'soz-core:client:admin:set-no-stall',
+    AdminToggleNoSurfaceCalc = 'soz-core:client:admin:set-no-surface-calc',
+    AdminToggleBurstTyres = 'soz-core:client:admin:set-no-burst-tyres',
     AdminToggleMoneyCase = 'soz-core:client:admin:toggle-disable-money-case',
     AdminToggleNoClip = 'soz-core:client:admin:toggle-noclip',
     AdminToggleShowCoordinates = 'soz-core:client:admin:toggle-show-coordinates',
     AdminToggleShowMileage = 'soz-core:client:admin:toggle-show-mileage',
     AdminUpdateState = 'soz-core:client:admin:update-state',
     AdminMenuGameMasterUncuff = 'soz-core:client:admin:game-master:uncuff',
+    AdminMenuGameMasterArmor = 'soz-core:client:admin:game-master:armor',
     AdminMenuVehicleSpawn = 'soz-core:client:admin:vehicle:spawn',
     AdminMenuVehicleSeeCarPrice = 'soz-core:client:admin:vehicle:see-car-price',
     AdminMenuVehicleChangeCarPrice = 'soz-core:client:admin:vehicle:change-car-price',
@@ -90,6 +94,10 @@ export enum NuiEvent {
     AdminSetPoliceLocator = 'soz-core:client:admin:police-locator',
     AdminMenuCharacterCreateNew = 'soz-core:client:admin:character:create-new',
     AdminMenuCharacterSwitch = 'soz-core:client:admin:character:switch',
+    AdminMenuPlayerSetVoipDebug = 'soz-core:nui:admin:player:set-voip-debug',
+
+    GetAPIConfig = 'soz-core:nui:get-api-config',
+    GetJWTToken = 'soz-core:nui:get-jwt-token',
 
     BaunDisplayBlip = 'soz-core:client:job:baun:display-blip',
     CraftingDoCraft = 'soz-core:nui:crafting:do-craft',
@@ -97,12 +105,20 @@ export enum NuiEvent {
     CraftingCancel = 'soz-core:nui:crafting:cancel',
     StonkDisplayBlip = 'soz-core:client:job:stonk:display-blip',
 
-    JobPlaceProps = 'soz-core:client:job:place-props',
-
     LsmcPharmacyBuyItem = 'soz-core:nui:job:lsmc:pharmacy:buy-item',
+    LsmcPlaster = 'soz-core:nui:job:lsmc:plaster',
+    LsmcMedicalDiagExit = 'soz-core:nui:job:lsmc:exit-medical-diag',
 
     NewsCreateAnnounce = 'soz-core:nui:news:create-announce',
-    NewsPlaceObject = 'soz-core:client:news:place-object',
+
+    ObjectPlace = 'soz-core:nui:object:place',
+
+    ObjectEditorReset = 'soz-core:nui:object-editor:reset',
+    ObjectEditorCancel = 'soz-core:nui:object-editor:cancel',
+    ObjectEditorSave = 'soz-core:nui:object-editor:save',
+    ObjectEditorDelete = 'soz-core:nui:object-editor:delete',
+    ObjectEditorToggleCollision = 'soz-core:nui:object-editor:toggle-collision',
+    ObjectEditorToggleSnap = 'soz-core:nui:object-editor:toggle-snap',
 
     BennysCancelOrder = 'soz-core:client:job:bennys:cancel-order',
     BennysOrder = 'soz-core:client:job:bennys:order',
@@ -122,6 +138,9 @@ export enum NuiEvent {
     JobBossShopBuyItem = 'soz-core:nui:job:boss-shop:buy-item',
     JobPromote = 'soz-core:nui:job:promote',
     OilAskStationPrice = 'soz-core:nui:job:oil:ask-station-price',
+    OilShowOilFields = 'soz-core:nui:job:oil:show-oil-fields',
+    OilShowRefinery = 'soz-core:nui:job:oil:show-refinery',
+    OilShowReseller = 'soz-core:nui:job:oil:show-reseller',
     UpwDisplayBlips = 'soz-core:nui:job:upw:display-blips',
 
     PanelClosed = 'soz-core:nui:panel:closed',
@@ -150,6 +169,7 @@ export enum NuiEvent {
     PlayerMenuJobGradeSetDefault = 'soz-core:nui:player:menu:job-grade-set-default',
     PlayerMenuJobGradeUpdateSalary = 'soz-core:nui:player:menu:job-grade-update-salary',
     PlayerMenuJobGradeUpdateWeight = 'soz-core:nui:player:menu:job-grade-update-weight',
+    PlayerMenuJobGradeUpdateName = 'soz-core:nui:player:menu:job-grade-update-name',
     PlayerMenuJobGradePermissionUpdate = 'soz-core:nui:player:menu:job-grade-permission-update',
     PlayerMenuRemoveDeguisement = 'soz-core:nui:player:menu:cloth-remove-deguisement',
     PlayerMenuReDress = 'soz-core:nui:player:menu:cloth-redress',
@@ -157,6 +177,8 @@ export enum NuiEvent {
     PlayerMenuHudSetArachnophobe = 'soz-core:nui:player:menu:arachnophobe',
     SetFocusInput = 'soz-core:nui:set-focus-input',
     SetWardrobeOutfit = 'soz-core:nui:set-wardrobe-outfit',
+
+    PlaySound = 'soz-core:nui:play-sound',
 
     BossShopBuy = 'soz-core:client:shop:boss:buy',
 
@@ -174,10 +196,8 @@ export enum NuiEvent {
     JewelryShopBackspace = 'soz-core:client:shop:jewelry:backspace',
     JewelryShopToggleCamera = 'soz-core:client:shop:jewelry:toggle-camera',
     BarberShopPreview = 'soz-core:client:shop:barber:preview',
+    BarberShopThroughCategory = 'soz-core:client:shop:tattoo:through-category',
     BarberShopBuy = 'soz-core:client:shop:barber:buy',
-
-    TriggerServerEvent = 'soz-core:nui:trigger-server-event',
-    TriggerClientEvent = 'soz-core:nui:trigger-client-event',
 
     VehicleAuctionBid = 'soz-core:client:vehicle:auction:bid',
 
@@ -209,10 +229,12 @@ export enum NuiEvent {
     VoipCloseRadio = 'soz-core:nui:voip:close-radio',
     VoipEnableRadio = 'soz-core:nui:voip:enable-radio',
     VoipUpdateRadioChannel = 'soz-core:nui:voip:update-radio-channel',
+    VoipUpdateRadioVolumeClick = 'soz-core:nui:voip:update-radio-volume-click',
 
     VoipCloseRadioVehicle = 'soz-core:nui:voip:close-radio-vehicle',
     VoipEnableRadioVehicle = 'soz-core:nui:voip:enable-radio-vehicle',
     VoipUpdateRadioVehicleChannel = 'soz-core:nui:voip:update-radio-vehicle-channel',
+    VoipUpdateRadioVehicleVolumeClick = 'soz-core:nui:voip:update-radio-volume-vehicle-click',
 
     UpwGetOrders = 'soz-core:client:job:upw:get-orders',
     UpwOrder = 'soz-core:client:job:upw:order',
@@ -240,7 +262,6 @@ export enum NuiEvent {
     HousingCloakroomRename = 'soz-core:nui:housing:cloakroom:rename',
     HousingCloakroomDelete = 'soz-core:nui:housing:cloakroom:delete',
 
-    ToggleRadarMendatory = 'soz-core:client:mendatory:radar:toggle',
     RedCallMendatory = 'soz-core:client:mendatory:red-call',
     ToggleRadar = 'soz-core:client:police:radar:toggle',
     RedCall = 'soz-core:client:police:red-call',
@@ -253,6 +274,9 @@ export enum NuiEvent {
     PoliceGetWantedPlayers = 'soz-core:client:police:get-wantedPlayers',
     PoliceDeleteWantedPlayer = 'soz-core:client:police:delete-wantedPlayer',
     PoliceGatherMoneyMarked = 'soz-core:client:police:gather-money-marked',
+    PoliceSaveDetectiveBoard = 'soz-core:client:police:save-detective-board',
+    PolicePlaceSpike = 'soz-core:nui:police:place-spike',
+    PolicePlaceSpeedZone = 'soz-core:nui:police:place-speedzone',
 
     IllegalShopBuyItem = 'soz-core:client:hubshop:buy',
 
@@ -268,6 +292,7 @@ export enum NuiEvent {
     TaxiSetMission = 'soz-core:client:taxi:set-mission',
     TaxiSetHorodateur = 'soz-core:client:taxi:set-horodateur',
     TaxiDisplayHorodateur = 'soz-core:client:taxi:display-horodateur',
+    BusSetService = 'soz-core:client:taxi:bus-set-service',
 
     AlbumPlay = 'soz-core:client:album:play',
     AlbumVolume = 'soz-core:client:album:volume',
@@ -313,6 +338,14 @@ export enum NuiEvent {
     RaceUpdateGarage = 'soz-core:client:race:garage',
 
     GouvAnnoncement = 'soz-core:client:gouv:annoncement',
+    GouvSetTax = 'soz-core:nui:gouv:set-tax',
+    GouvSetJobTaxTier = 'soz-core:nui:gouv:set-job-tax-tier',
+    GouvSetJobTaxTierPercentage = 'soz-core:nui:gouv:set-job-tax-tier-percentage',
+    GouvFineAdd = 'soz-core:nui:gouv:fine-add',
+    GouvFineRemove = 'soz-core:nui:gouv:fine-remove',
+    GouvFineSetLabel = 'soz-core:nui:gouv:fine-set-label',
+    GouvFineSetMinPrice = 'soz-core:nui:gouv:fine-set-min-price',
+    GouvFineSetMaxPrice = 'soz-core:nui:gouv:fine-set-max-price',
 
     SelectPlacedProp = 'soz-core:client:placement:select-placed-prop',
     SelectPropToCreate = 'soz-core:client:placement:select-prop-to-create',
@@ -331,6 +364,8 @@ export enum NuiEvent {
     RequestToggleCollectionLoad = 'soz-core:client:placement:toggle-collection-load',
     RequestDeletePropCollection = 'soz-core:client:placement:delete-collection',
     RequestCreatePropCollection = 'soz-core:client:placement:create-collection',
+    RequestPersistPropCollection = 'soz-core:client:placement:persist-collection',
+    PlacementCollectionTeleport = 'soz-core:client:placement:tp-collection',
     RequestDeleteProp = 'soz-core:client:placement:delete-prop',
     PlacementCollectionRename = 'soz-core:client:placement:rename-collection',
 
@@ -345,4 +380,6 @@ export enum NuiEvent {
     HubEntryShow = 'soz-core:client:hub:entry-show',
     HubEntryUpdate = 'soz-core:client:hub:entry-update',
     HubEntryAdminMenuOpen = 'soz-core:client:hub:entry-open-menu',
+
+    PoliceUploadScientistPhoto = 'soz-core:client:job:police:upload-photo',
 }

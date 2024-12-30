@@ -134,12 +134,12 @@ export class PoliceProvider {
         return targetPlayer.metadata.alcohol;
     }
 
-    @Rpc(RpcServerEvent.POLICE_DRUGLEVEL)
+    @Rpc(RpcServerEvent.POLICE_DRUGLEVEL_AND_TYPE)
     public getDrugLevel(source: number, target: number) {
         this.inventoryManager.removeItemFromInventory(source, 'screening_test', 1);
         const targetPlayer = this.playerService.getPlayer(target);
         TriggerClientEvent(ClientEvent.POLICE_BREATHANALYZER_TARGET, targetPlayer.source);
-        return targetPlayer.metadata.drug;
+        return { level: targetPlayer.metadata.drug, type: targetPlayer.metadata.last_drug_eaten };
     }
 
     @Rpc(RpcServerEvent.POLICE_GET_MARKED_MONEY)

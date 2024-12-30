@@ -176,7 +176,7 @@ export class WeaponGunsmithProvider {
                     if (value.length < 2) {
                         return Err('Le nom doit faire au moins 2 caractères');
                     }
-                    return Ok(true);
+                    return Ok(value);
                 }
             );
 

@@ -11,19 +11,11 @@ import { MenuType } from '@public/shared/nui/menu';
 import { RpcServerEvent } from '@public/shared/rpc';
 
 import { BlipFactory } from '../../blip';
-import { InventoryManager } from '../../inventory/inventory.manager';
-import { ItemService } from '../../item/item.service';
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
 
 @Provider()
 export class FoodProvider {
-    @Inject(InventoryManager)
-    private inventoryManager: InventoryManager;
-
-    @Inject(ItemService)
-    private itemService: ItemService;
-
     @Inject(NuiMenu)
     private nuiMenu: NuiMenu;
 
@@ -59,7 +51,7 @@ export class FoodProvider {
 
         this.blipFactory.hide('displayMilkBlip', true);
 
-        if (isFeatureEnabled(Feature.Easter)) {
+        if (isFeatureEnabled(Feature.EasterFood)) {
             this.state.easterEnabled = true;
 
             this.blipFactory.create('displayEasterEggBlip', {

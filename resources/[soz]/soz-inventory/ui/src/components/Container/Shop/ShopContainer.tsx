@@ -15,12 +15,16 @@ export const ShopContainer = () => {
     const [shopContent, setShopContent] = useState<ShopItem[] | null>();
     const [cartContent, setCartContent] = useState<ShopItem[]>([]);
     const [shopHeaderTexture, setShopHeaderTexture] = useState<string>('')
+    const [taxValue, setTaxValue] = useState<number>(0)
+    const [taxType, setTaxType] = useState<string | null>(null)
 
     const closeMenu = useCallback(() => {
         setDisplay(false)
         setShopContent(null);
         setCartContent([]);
         setCartAmount(0);
+        setTaxValue(0);
+        setTaxType(null);
     }, [setShopContent, setCartContent, setCartAmount, setDisplay]);
 
     const onMessageReceived = useCallback(
@@ -31,6 +35,8 @@ export const ShopContainer = () => {
                     setShopContent(event.data.shopContent);
                     setShopHeaderTexture(event.data.shopHeaderTexture)
                     setDisplay(true);
+                    setTaxValue(event.data.taxValue || 0);
+                    setTaxType(event.data.taxType || null);
                 } catch (e: any) {
                     closeNUI(() => { closeMenu(); })
                 }
@@ -62,11 +68,14 @@ export const ShopContainer = () => {
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
-            body: JSON.stringify(cartContent)
+            body: JSON.stringify({
+                items: cartContent,
+                tax: taxType,
+            })
         }).then(() => {
             closeNUI(() => closeMenu());
         });
-    }, [closeMenu]);
+    }, [closeMenu, taxType]);
 
     const putInCart = useCallback((event: DragEndEvent) => {
         if (!event.active.data.current) return;
@@ -113,10 +122,10 @@ export const ShopContainer = () => {
         if (event.active.data.current.container === 'shop' && event.over.data.current.container === 'cart') {
 
             let draggedItem: ShopItem = structuredClone(event.active.data.current.item)
-            draggedItem.slot = event.over.data.current.slot            
+            draggedItem.slot = event.over.data.current.slot
             const existingItem = cartContent.find((item) => item.name == draggedItem.name && item.metadata?.label === draggedItem.metadata?.label)
             const existingSlot = cartContent.find((item) => item.slot == event?.over?.data?.current?.slot)
-            
+
             if (!existingItem && existingSlot) return
 
             fetch(`https://soz-inventory/player/askForAmount`, {
@@ -193,12 +202,14 @@ export const ShopContainer = () => {
                         <ContainerWrapper
                             display={true}
                             banner={`https://nui-img/soz/${shopHeaderTexture}`}
+                            bannerType='thick'
                             maxWeight={-1}
                         >
                             <ShopContainerSlots
                                 id='shop'
                                 rows={shopRow}
                                 items={shopContent.map((item, i) => ({ ...item, id: i }))}
+                                taxValue={taxValue}
                             />
 
                             <CartContainerSlots
@@ -208,6 +219,7 @@ export const ShopContainer = () => {
                                 rows={2}
                                 items={cartContent.map((item, i) => ({ ...item, id: i }))}
                                 validateAction={validateCart}
+                                taxValue={taxValue}
                             />
                         </ContainerWrapper>
                     </div>

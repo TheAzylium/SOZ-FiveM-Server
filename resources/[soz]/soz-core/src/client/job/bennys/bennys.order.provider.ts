@@ -40,12 +40,11 @@ export class BennysOrderProvider {
         const model = await this.inputService.askInput(
             {
                 title: 'Modèle du véhicule à commander:',
-                defaultValue: '',
                 maxCharacters: 32,
             },
             value => {
                 if (!value || IsModelInCdimage(value) || IsModelValid(value)) {
-                    return Ok(true);
+                    return Ok(value);
                 }
                 return Err('Le modèle du véhicule est invalide.');
             }
@@ -66,16 +65,10 @@ export class BennysOrderProvider {
 
     @OnNuiEvent(NuiEvent.BennysCancelOrder)
     public async onCancelOrder(uuid: string) {
-        const value = await this.inputService.askInput(
-            {
-                title: 'Voulez-vous vraiment annuler cette commande ? (Tapez "oui" pour confirmer)',
-                defaultValue: '',
-                maxCharacters: 3,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const value = await this.inputService.askInput({
+            title: 'Voulez-vous vraiment annuler cette commande ? (Tapez "oui" pour confirmer)',
+            maxCharacters: 3,
+        });
 
         if (value && value.toLowerCase() === 'oui') {
             await emitRpc<string>(RpcServerEvent.BENNYS_CANCEL_ORDER, uuid);

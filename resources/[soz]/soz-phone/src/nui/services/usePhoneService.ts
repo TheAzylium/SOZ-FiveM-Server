@@ -43,6 +43,6 @@ export const usePhoneService = () => {
     useNuiEvent<string>('PHONE', PhoneEvents.OPEN_APP, handleOpenApp);
 
     useEffect(() => {
-        fetchNui(PhoneEvents.PHONE_LOADED);
+        fetchNui(PhoneEvents.PHONE_LOADED, null, 'null');
     }, []);
 };

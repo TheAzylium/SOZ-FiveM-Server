@@ -1,8 +1,8 @@
-import { ServerEvent } from '@public/shared/event';
+import { NuiEvent } from '@public/shared/event';
 import { FunctionComponent } from 'react';
 
 import { MenuType } from '../../../shared/nui/menu';
-import { triggerServerEvent } from '../../fetch';
+import { fetchNui } from '../../fetch';
 import {
     MainMenu,
     Menu,
@@ -35,17 +35,15 @@ export const LsmcJobMenu: FunctionComponent<LSMCStateProps> = ({ data }) => {
         );
     }
 
-    const onConfirm = (item, props) => {
-        triggerServerEvent(ServerEvent.JOBS_PLACE_PROPS, item, props);
-    };
-
     return (
         <Menu type={MenuType.LsmcJobMenu}>
             <MainMenu>
                 <MenuTitle banner={banner}></MenuTitle>
                 <MenuContent>
                     <MenuItemSelect
-                        onConfirm={(index, value) => onConfirm(value.item, value.props)}
+                        onConfirm={(index, value) => {
+                            fetchNui(NuiEvent.ObjectPlace, value);
+                        }}
                         title="🚧 Poser un objet"
                     >
                         <MenuItemSelectOption

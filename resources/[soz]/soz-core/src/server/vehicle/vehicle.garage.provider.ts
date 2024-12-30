@@ -6,6 +6,7 @@ import { Once, OnceStep, OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
+import { TaxType } from '../../shared/bank';
 import { ServerEvent } from '../../shared/event';
 import { joaat } from '../../shared/joaat';
 import { FDO, JobPermission, JobType } from '../../shared/job';
@@ -26,6 +27,7 @@ import {
 import { getDefaultVehicleConfiguration } from '../../shared/vehicle/modification';
 import { PlayerServerVehicle, PlayerVehicleState } from '../../shared/vehicle/player.vehicle';
 import { getDefaultVehicleCondition, VehicleCategory } from '../../shared/vehicle/vehicle';
+import { PriceService } from '../bank/price.service';
 import { PrismaService } from '../database/prisma.service';
 import { HousingProvider } from '../housing/housing.provider';
 import { InventoryManager } from '../inventory/inventory.manager';
@@ -107,6 +109,9 @@ export class VehicleGarageProvider {
     @Inject(HousingProvider)
     private housingProvider: HousingProvider;
 
+    @Inject(PriceService)
+    private priceService: PriceService;
+
     @Once(OnceStep.RepositoriesLoaded)
     public async init(): Promise<void> {
         const queries = `
@@ -144,8 +149,8 @@ export class VehicleGarageProvider {
         });
 
         const garages = await this.garageRepository.get();
-        const toPound = [];
-        const toVoid = [];
+        const toPound: number[] = [];
+        const toVoid: number[] = [];
 
         for (const vehicle of vehicles) {
             const parkingTime = new Date(vehicle.parkingtime * 1000);
@@ -180,10 +185,19 @@ export class VehicleGarageProvider {
                 toVoid.push(vehicle.id);
             } else if (garage && garage.type === GarageType.Depot && days > 7) {
                 toVoid.push(vehicle.id);
-            } else if ((!garage || garage.type !== GarageType.Job) && days > 21) {
+            } else if ((!garage || garage.type !== GarageType.Job || !vehicle.job) && days > 21) {
                 toPound.push(vehicle.id);
             }
         }
+
+        this.monitor.publish(
+            'vehicle_init_move',
+            {},
+            {
+                pound: toPound.join(','),
+                destroyed: toVoid.join(','),
+            }
+        );
 
         if (toVoid.length) {
             await this.prismaService.playerVehicle.updateMany({
@@ -945,6 +959,12 @@ export class VehicleGarageProvider {
                 const timestamp = Math.floor(Date.now() / 1000);
 
                 if (garage.type === GarageType.Depot) {
+                    if (vehicle.requiredLicence && !player.metadata.licences[vehicle.requiredLicence]) {
+                        this.notifier.notify(source, `Vous n'avez pas le permis nécessaire.`, 'error');
+
+                        return;
+                    }
+
                     if (playerVehicle.state == PlayerVehicleState.InSoftPound) {
                         const hours = (timestamp - playerVehicle.parkingtime) / 3600;
                         if (hours > 1) {
@@ -977,7 +997,11 @@ export class VehicleGarageProvider {
                     price = Math.min(200, hours * 20);
                 }
 
-                if (!use_ticket && price !== 0 && !this.playerMoneyService.remove(source, price)) {
+                if (
+                    !use_ticket &&
+                    price !== 0 &&
+                    !(await this.playerMoneyService.buy(source, price, TaxType.VEHICLE))
+                ) {
                     this.notifier.notify(source, "Vous n'avez pas assez d'argent.", 'error');
 
                     return;
@@ -1086,7 +1110,7 @@ export class VehicleGarageProvider {
         const weight = await this.inventoryManager.getVehicleStorageWeight(playerVehicle.plate);
         const transferPrice = getTransferPrice(weight);
 
-        if (!this.playerMoneyService.remove(source, transferPrice)) {
+        if (!(await this.playerMoneyService.buy(source, transferPrice, TaxType.TRAVEL))) {
             this.notifier.notify(source, "Vous n'avez pas assez d'argent.", 'error');
 
             return;
@@ -1099,7 +1123,14 @@ export class VehicleGarageProvider {
             },
         });
 
-        this.notifier.notify(source, `Vous avez transféré votre véhicule pour ${transferPrice}$.`, 'success');
+        this.notifier.notify(
+            source,
+            `Vous avez transféré votre véhicule pour ${await this.priceService.getPrice(
+                transferPrice,
+                TaxType.TRAVEL
+            )}$.`,
+            'success'
+        );
     }
 
     @Tick(TickInterval.EVERY_MINUTE, 'soft-pound-check')

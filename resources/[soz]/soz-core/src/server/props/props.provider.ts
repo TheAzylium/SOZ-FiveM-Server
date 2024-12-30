@@ -64,6 +64,7 @@ export class PropsProvider {
                 size: 0,
                 loaded_size: 0,
                 props: {},
+                persistant: propCollection.persistant,
             };
         }
 
@@ -87,11 +88,19 @@ export class PropsProvider {
             this.collections[placedProp.collection].size++;
             this.collectionOfProp[placedProp.unique_id] = placedProp.collection;
         }
+
+        for (const collection of Object.values(this.collections)) {
+            if (!collection.persistant) {
+                continue;
+            }
+
+            this.loadCollection(collection);
+        }
     }
 
     @Rpc(RpcServerEvent.PROP_REQUEST_CREATE_COLLECTION)
     public async createCollection(source: number, collection_name: string): Promise<PropCollectionData[]> {
-        if (this.collections[collection_name]) {
+        if (Object.keys(this.collections).find(elem => elem.toLowerCase() == collection_name.toLowerCase())) {
             this.notifier.notify(source, `La collection ${collection_name} existe déjà`, 'error');
         } else {
             const player = this.playerService.getPlayer(source);
@@ -111,6 +120,7 @@ export class PropsProvider {
                 size: 0,
                 loaded_size: 0,
                 props: {},
+                persistant: false,
             };
             this.notifier.notify(source, `La collection ${collection_name} a été créée`, 'success');
 
@@ -183,7 +193,7 @@ export class PropsProvider {
         if (!collection) {
             this.notifier.notify(source, `La collection ${collectionName} n'existe pas`, 'error');
         } else {
-            this.unloadCollection(source, collection);
+            this.unloadCollection(collection);
             await this.prismaService.collection_prop.delete({
                 where: {
                     name: collectionName,
@@ -199,6 +209,50 @@ export class PropsProvider {
                 },
                 {
                     collection_name: collectionName,
+                }
+            );
+        }
+        return this.getCollectionData(source);
+    }
+
+    @Rpc(RpcServerEvent.PROP_REQUEST_PERSIST_COLLECTION)
+    public async persistCollection(
+        source: number,
+        collectionName: string,
+        persist: boolean
+    ): Promise<PropCollectionData[]> {
+        if (!this.permissionService.isStaff(source)) {
+            return;
+        }
+
+        const collection = this.collections[collectionName];
+        if (!collection) {
+            this.notifier.notify(source, `La collection ${collectionName} n'existe pas`, 'error');
+        } else {
+            this.collections[collectionName].persistant = persist;
+            await this.prismaService.collection_prop.update({
+                data: {
+                    persistant: persist,
+                },
+                where: {
+                    name: collectionName,
+                },
+            });
+
+            if (persist) {
+                this.notifier.notify(source, `La collection est persistée`);
+            } else {
+                this.notifier.notify(source, `La collection n'est plus persistée`);
+            }
+
+            this.monitor.publish(
+                'hammer_persist_collection',
+                {
+                    player_source: source,
+                },
+                {
+                    collection_name: collectionName,
+                    value: persist,
                 }
             );
         }
@@ -356,9 +410,9 @@ export class PropsProvider {
             return;
         }
         if (value) {
-            this.loadCollection(source, this.collections[collectionName]);
+            this.loadCollection(this.collections[collectionName]);
         } else {
-            this.unloadCollection(source, this.collections[collectionName]);
+            this.unloadCollection(this.collections[collectionName]);
         }
 
         this.monitor.publish(
@@ -375,23 +429,27 @@ export class PropsProvider {
         return await this.getCollection(source, collectionName);
     }
 
-    public loadCollection(source: number, collection: PropCollection) {
+    public loadCollection(collection: PropCollection) {
         collection.loaded_size = Object.keys(collection.props).length;
         this.createPropsToAllClients(
-            Object.values(collection.props).map(item => {
-                item.loaded = true;
-                return item.object;
-            })
+            Object.values(collection.props)
+                .filter(item => !item.loaded)
+                .map(item => {
+                    item.loaded = true;
+                    return item.object;
+                })
         );
     }
 
-    public unloadCollection(source: number, collection: PropCollection) {
+    public unloadCollection(collection: PropCollection) {
         collection.loaded_size = 0;
         this.deletePropsToAllClients(
-            Object.values(collection.props).map(item => {
-                item.loaded = false;
-                return item.object.id;
-            })
+            Object.values(collection.props)
+                .filter(item => item.loaded)
+                .map(item => {
+                    item.loaded = false;
+                    return item.object.id;
+                })
         );
     }
 
@@ -419,6 +477,7 @@ export class PropsProvider {
                 creation_date: propCollection.creation_date,
                 size: propCollection.size,
                 loaded_size: propCollection.loaded_size,
+                persistant: propCollection.persistant,
             });
         }
 
@@ -476,11 +535,11 @@ export class PropsProvider {
     public createPropsToAllClients(props: WorldObject[]) {
         this.objectProvider.addObjects(props);
     }
+
     public deletePropsToAllClients(propIds: string[]) {
-        for (const propId of propIds) {
-            this.objectProvider.deleteObject(propId);
-        }
+        this.objectProvider.deleteObjects(propIds);
     }
+
     public async editPropToAllClients(prop: WorldObject) {
         this.objectProvider.updateObject(prop);
     }

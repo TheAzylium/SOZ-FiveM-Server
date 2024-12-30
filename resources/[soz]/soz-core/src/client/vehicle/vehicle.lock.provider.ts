@@ -13,9 +13,10 @@ import { BoxZone } from '../../shared/polyzone/box.zone';
 import { getDistance, Vector3 } from '../../shared/polyzone/vector';
 import { RpcServerEvent } from '../../shared/rpc';
 import {
+    DoorType,
     LockPickAlertMessage,
+    SEATS_CONFIG,
     VehicleClass,
-    VehicleDoorIndex,
     VehicleLockStatus,
     VehicleSeat,
     VehicleVolatileState,
@@ -23,114 +24,11 @@ import {
 import { AnimationService } from '../animation/animation.service';
 import { Notifier } from '../notifier';
 import { PlayerService } from '../player/player.service';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { SoundService } from '../sound.service';
 import { VehicleSeatbeltProvider } from './vehicle.seatbelt.provider';
 import { VehicleService } from './vehicle.service';
 import { VehicleStateService } from './vehicle.state.service';
-
-const DoorType = {
-    Door: 'door',
-    Bone: 'bone',
-};
-
-type VehicleSeatConfig = {
-    type: string;
-    doorIndex?: number;
-    seatIndex: number;
-    seatBone?: string;
-    doorBone?: string;
-};
-
-const SEATS_CONFIG: Record<string, VehicleSeatConfig> = {
-    ['driver_seat']: {
-        type: DoorType.Door,
-        doorIndex: VehicleDoorIndex.FrontLeftDoor,
-        seatIndex: VehicleSeat.Driver,
-        seatBone: 'seat_dside_f',
-        doorBone: 'door_dside_f',
-    },
-    ['passenger_seat']: {
-        type: DoorType.Door,
-        doorIndex: VehicleDoorIndex.FrontRightDoor,
-        seatIndex: VehicleSeat.Copilot,
-        seatBone: 'seat_pside_f',
-        doorBone: 'door_pside_f',
-    },
-    ['rear_left_seat']: {
-        type: DoorType.Door,
-        doorIndex: VehicleDoorIndex.BackLeftDoor,
-        seatIndex: VehicleSeat.BackLeft,
-        seatBone: 'seat_dside_r',
-        doorBone: 'door_dside_r',
-    },
-    ['rear_right_seat']: {
-        type: DoorType.Door,
-        doorIndex: VehicleDoorIndex.BackRightDoor,
-        seatIndex: VehicleSeat.BackRight,
-        seatBone: 'seat_pside_r',
-        doorBone: 'door_pside_r',
-    },
-    ['extra_1']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat1,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_2']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat2,
-        seatBone: 'wheel_rr',
-    },
-    ['extra_3']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat3,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_4']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat5,
-        seatBone: 'wheel_rr',
-    },
-    ['extra_5']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat6,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_6']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat7,
-        seatBone: 'wheel_rr',
-    },
-    ['extra_7']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat8,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_8']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat9,
-        seatBone: 'wheel_rr',
-    },
-    ['extra_9']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat10,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_10']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat11,
-        seatBone: 'wheel_rr',
-    },
-    ['extra_11']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat12,
-        seatBone: 'wheel_lr',
-    },
-    ['extra_12']: {
-        type: DoorType.Bone,
-        seatIndex: VehicleSeat.ExtraSeat13,
-        seatBone: 'wheel_rr',
-    },
-};
 
 export const VEHICLE_TRUNK_TYPES = {
     [GetHashKey('tanker')]: 'tanker',
@@ -163,6 +61,9 @@ export class VehicleLockProvider {
     @Inject(VehicleService)
     private vehicleService: VehicleService;
 
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
+
     @Inject(Notifier)
     private notifier: Notifier;
 
@@ -182,11 +83,17 @@ export class VehicleLockProvider {
 
     private vehicleOpened: Set<number> = new Set();
 
+    private lockTempDisabled = false;
+
     @Once(OnceStep.PlayerLoaded)
     public async setupVehicleOpened() {
         const vehicleOpened = await emitRpc<number[]>(RpcServerEvent.VEHICLE_GET_OPENED);
 
         this.vehicleOpened = new Set(vehicleOpened);
+    }
+
+    public isVehOpen(entity: number) {
+        return this.vehicleOpened.has(VehToNet(entity));
     }
 
     @Once(OnceStep.Start)
@@ -279,6 +186,10 @@ export class VehicleLockProvider {
             return;
         }
 
+        if (this.lockTempDisabled) {
+            return;
+        }
+
         if (!player.metadata.godmode && !this.vehicleOpened.has(vehicleNetworkId)) {
             SetVehicleDoorsLocked(vehicle, VehicleLockStatus.Locked);
 
@@ -296,6 +207,32 @@ export class VehicleLockProvider {
             return;
         }
 
+        const closestSeat = this.getClosestSeat(ped, vehicle);
+
+        const start = GetGameTimer();
+
+        if (closestSeat !== null) {
+            TaskEnterVehicle(ped, vehicle, -1, closestSeat, 1.0, 1, 0);
+
+            await wait(200);
+
+            let enteringVehicle = GetVehiclePedIsEntering(ped) || GetVehiclePedIsTryingToEnter(ped);
+            let time = GetGameTimer() - start;
+
+            while (enteringVehicle !== 0 && time < 10000) {
+                await wait(200);
+                time = GetGameTimer() - start;
+
+                enteringVehicle = GetVehiclePedIsEntering(ped) || GetVehiclePedIsTryingToEnter(ped);
+            }
+
+            if (enteringVehicle !== 0) {
+                ClearPedTasksImmediately(ped);
+            }
+        }
+    }
+
+    public getClosestSeat(ped: number, vehicle: number): number | null {
         const maxSeats = GetVehicleMaxNumberOfPassengers(vehicle);
         const playerPosition = GetEntityCoords(ped, false) as Vector3;
         const minDistance = 2.0;
@@ -313,7 +250,11 @@ export class VehicleLockProvider {
 
             if (useSeat) {
                 let entryPosition: Vector3;
-                if (seat.type === DoorType.Door && !VEHICLE_FORCE_USE_BONES[GetEntityModel(vehicle)]) {
+                if (
+                    seat.type === DoorType.Door &&
+                    !VEHICLE_FORCE_USE_BONES[GetEntityModel(vehicle)] &&
+                    !IsThisModelABoat(GetEntityModel(vehicle))
+                ) {
                     entryPosition = GetEntryPositionOfDoor(vehicle, seat.doorIndex) as Vector3;
                 } else {
                     const bone = seat.seatBone;
@@ -358,27 +299,7 @@ export class VehicleLockProvider {
             }
         }
 
-        const start = GetGameTimer();
-
-        if (closestDoor !== null) {
-            TaskEnterVehicle(ped, vehicle, -1, closestDoor.seatIndex, 1.0, 1, 0);
-
-            await wait(200);
-
-            let enteringVehicle = GetVehiclePedIsEntering(ped) || GetVehiclePedIsTryingToEnter(ped);
-            let time = GetGameTimer() - start;
-
-            while (enteringVehicle !== 0 && time < 10000) {
-                await wait(200);
-                time = GetGameTimer() - start;
-
-                enteringVehicle = GetVehiclePedIsEntering(ped) || GetVehiclePedIsTryingToEnter(ped);
-            }
-
-            if (enteringVehicle !== 0) {
-                ClearPedTasksImmediately(ped);
-            }
-        }
+        return closestDoor ? closestDoor.seatIndex : null;
     }
 
     @Command('soz_vehicle_toggle_vehicle_trunk', {
@@ -640,26 +561,34 @@ export class VehicleLockProvider {
     }
 
     @OnEvent(ClientEvent.VEHICLE_LOCKPICK)
-    public onLockpick(type: string) {
+    public onLockpick(type: string, model: number) {
         const coords = GetEntityCoords(PlayerPedId());
         const zoneID = GetNameOfZone(coords[0], coords[1], coords[2]);
         if (zoneID == 'ISHEIST') {
             return;
         }
         const zone = GetLabelText(zoneID);
+        const modelInfo = this.vehicleRepository.getByModelHash(model);
 
         const messages = [...LockPickAlertMessage.all, ...LockPickAlertMessage[type]];
 
         const message = getRandomItem(messages);
+        const modelName = modelInfo ? modelInfo.name : GetDisplayNameFromVehicleModel(model);
 
         TriggerServerEvent('phone:sendSocietyMessage', 'phone:sendSocietyMessage:' + uuidv4(), {
             anonymous: true,
             number: '555-POLICE',
-            message: message.replace('${0}', zone),
-            htmlMessage: message.replace('${0}', `<span {class}>${zone}</span>`),
+            message: message.replace('${0}', zone).replace('${1}', modelName),
+            htmlMessage: message
+                .replace('${0}', `<span {class}>${zone}</span>`)
+                .replace('${1}', `<span {class}>${modelName}</span>`),
             position: true,
             info: { type: 'auto-theft' },
             overrideIdentifier: 'System',
         });
+    }
+
+    public setLockTempDisabled(value: boolean) {
+        this.lockTempDisabled = value;
     }
 }

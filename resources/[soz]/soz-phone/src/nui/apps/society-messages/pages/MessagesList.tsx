@@ -107,6 +107,7 @@ const MessagesList = (): any => {
                         height={height}
                         deferredMeasurementCache={cache}
                         rowHeight={cache.rowHeight}
+                        containerStyle={{ overflow: 'initial' }}
                     />
                 )}
             </AutoSizer>
@@ -176,9 +177,21 @@ export const MessageItem: FunctionComponent<MessageItemProps> = ({
                                 ) : (
                                     <span></span>
                                 )}
+                                {message?.info?.notificationId ? (
+                                    <span
+                                        className={cn('rounded-full px-3 py-0', {
+                                            'bg-gray-200': config.theme.value === 'light',
+                                            'bg-gray-600': config.theme.value === 'dark',
+                                        })}
+                                    >
+                                        #{message.info.notificationId}
+                                    </span>
+                                ) : (
+                                    <span></span>
+                                )}
                             </p>
                             <p
-                                className={cn('text-left text-sm font-medium break-words', {
+                                className={cn('text-left text-sm font-medium break-words whitespace-pre-wrap', {
                                     'text-gray-100': config.theme.value === 'dark',
                                     'text-gray-700': config.theme.value === 'light',
                                 })}

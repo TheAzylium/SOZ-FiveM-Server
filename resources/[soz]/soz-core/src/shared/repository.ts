@@ -1,3 +1,7 @@
+import { Tax, TaxType } from '@public/shared/bank';
+import { Configuration } from '@public/shared/configuration';
+import { Field } from '@public/shared/field';
+import { Fine } from '@public/shared/job/police';
 import { ZoneTyped } from '@public/shared/polyzone/box.zone';
 import { SenateParty } from '@public/shared/senate';
 
@@ -17,6 +21,9 @@ import { Vehicle } from './vehicle/vehicle';
 export enum RepositoryType {
     Billboard = 'billboard',
     ChargerUpw = 'chargerUpw',
+    Configuration = 'configuration',
+    Field = 'field',
+    Fine = 'fine',
     Garage = 'garage',
     Housing = 'housing',
     JobGrade = 'jobGrade',
@@ -31,6 +38,7 @@ export enum RepositoryType {
     StationFuel = 'stationFuel',
     StationUpw = 'stationUpw',
     Vehicle = 'vehicle',
+    Tax = 'tax',
     TowRope = 'towRope',
     Zone = 'zone',
 }
@@ -38,6 +46,9 @@ export enum RepositoryType {
 export type RepositoryMapping = {
     [RepositoryType.Billboard]: Billboard;
     [RepositoryType.ChargerUpw]: UpwCharger;
+    [RepositoryType.Configuration]: any;
+    [RepositoryType.Field]: Field;
+    [RepositoryType.Fine]: Fine;
     [RepositoryType.Garage]: Garage;
     [RepositoryType.Housing]: Property;
     [RepositoryType.JobGrade]: JobGrade;
@@ -52,15 +63,21 @@ export type RepositoryMapping = {
     [RepositoryType.StationFuel]: FuelStation;
     [RepositoryType.StationUpw]: UpwStation;
     [RepositoryType.Vehicle]: Vehicle;
+    [RepositoryType.Tax]: Tax;
     [RepositoryType.TowRope]: TowRope;
     [RepositoryType.Zone]: ZoneTyped;
 };
 
 export interface RepositoryConfig extends Record<keyof RepositoryMapping, any> {
     // Implemented
+    [RepositoryType.Configuration]: Configuration;
+    [RepositoryType.Field]: Record<string, Field>;
+    [RepositoryType.Fine]: Record<number, Fine>;
     [RepositoryType.Housing]: Record<number, Property>;
     [RepositoryType.JobGrade]: Record<number, JobGrade>;
+    [RepositoryType.Radar]: Record<number, Radar>;
     [RepositoryType.SenateParty]: Record<string, SenateParty>;
+    [RepositoryType.Tax]: Record<TaxType, Tax>;
     [RepositoryType.TowRope]: Record<string, TowRope>;
     [RepositoryType.Zone]: Record<number, ZoneTyped>;
     // Not implemented
@@ -69,7 +86,6 @@ export interface RepositoryConfig extends Record<keyof RepositoryMapping, any> {
     [RepositoryType.Garage]: Record<string, Garage>;
     [RepositoryType.Object]: Record<string, WorldObject>;
     [RepositoryType.Race]: Record<number, Race>;
-    [RepositoryType.Radar]: Record<number, Radar>;
     [RepositoryType.Shop]: Record<number, ClothingShop>;
     [RepositoryType.ShopCategory]: Record<number, any>; // @TODO Fix this
     [RepositoryType.ShopUnderTypes]: Record<number, number[]>;

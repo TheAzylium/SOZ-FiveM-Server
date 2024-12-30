@@ -6,6 +6,7 @@ import { wait } from '@public/core/utils';
 import { Control } from '@public/shared/input';
 import { add2Vector3, multVector3, Vector3 } from '@public/shared/polyzone/vector';
 
+import { Notifier } from '../notifier';
 import { VoipService } from '../voip/voip.service';
 import { WeaponDrawingProvider } from '../weapon/weapon.drawing.provider';
 
@@ -24,6 +25,9 @@ export class NoClipProvider {
 
     @Inject(WeaponDrawingProvider)
     public weaponDrawingProvider: WeaponDrawingProvider;
+
+    @Inject(Notifier)
+    public notifier: Notifier;
 
     private input = [0, 0, 0];
     private previousVelocity: Vector3 = [0, 0, 0];
@@ -65,12 +69,11 @@ export class NoClipProvider {
             Timestep() * breakSpeed
         );
 
-        SetEntityCoords(
+        SetEntityCoordsNoOffset(
             this.noClippingEntity,
             c[0] + this.previousVelocity[0],
             c[1] + this.previousVelocity[1],
-            c[2] + this.previousVelocity[2] - 1,
-            true,
+            c[2] + this.previousVelocity[2],
             true,
             true,
             false
@@ -145,14 +148,19 @@ export class NoClipProvider {
             this.SetInvincible(true, this.noClippingEntity);
             if (!this.isClippedVeh) {
                 ClearPedTasksImmediately(playerPed);
+            } else {
+                this.notifier.notify(
+                    "Le noclip en véhicule fait depop les PNJ d'ambiance en cas de collision",
+                    'warning'
+                );
             }
             this.isNoClipping = val;
         }
     }
 
-    public ToggleNoClipMode() {
+    public async ToggleNoClipMode() {
         //return exports['soz-core'].isNoClipping();
-        return this.SetNoClip(!this.isNoClipping);
+        return await this.SetNoClip(!this.isNoClipping);
     }
 
     public IsNoClipMode() {

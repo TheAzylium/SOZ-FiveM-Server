@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@public/core/decorators/injectable';
 import { Logger } from '@public/core/logger';
 import { wait } from '@public/core/utils';
-import { ServerEvent } from '@public/shared/event';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
 
 import { Notifier } from './notifier';
+import { AttachedObjectService } from './object/attached.object.service';
 
 interface RopeState {
     rope: number;
@@ -12,6 +12,7 @@ interface RopeState {
     maxLength: number;
     attachPosition: Vector3;
     holdingObjectProp: number;
+    lastRopeLength?: number;
 }
 
 @Injectable()
@@ -22,17 +23,20 @@ export class RopeService {
     @Inject(Logger)
     private logger: Logger;
 
+    @Inject(AttachedObjectService)
+    private attachedObjectService: AttachedObjectService;
+
     private ropeState: RopeState | null = null;
 
-    public createNewRope(
+    public async createNewRope(
         attachPosition: Vector3,
         baseEntity: number,
         ropeType: number,
         maxLength: number,
         holdingObjectPropName: string,
         ropeData?: string
-    ): number | null {
-        const position = GetEntityCoords(PlayerPedId(), true) as Vector3;
+    ): Promise<number | null> {
+        const position = GetEntityCoords(PlayerPedId()) as Vector3;
         if (this.ropeState) {
             this.notifier.notify("Vous vous surestimez. Vous n'êtes pas assez musclé pour tirer deux cordes.", 'error');
             return null;
@@ -62,35 +66,12 @@ export class RopeService {
             LoadRopeData(rope, ropeData);
         }
 
-        const object = CreateObject(
-            GetHashKey(holdingObjectPropName),
-            position[0],
-            position[1],
-            position[2] - 1.0,
-            true,
-            true,
-            true
-        );
-        const netId = ObjToNet(object);
-        SetNetworkIdCanMigrate(netId, false);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-        AttachEntityToEntity(
-            object,
-            PlayerPedId(),
-            GetPedBoneIndex(PlayerPedId(), 26610),
-            0.04,
-            -0.04,
-            0.02,
-            305.0,
-            270.0,
-            -40.0,
-            true,
-            true,
-            false,
-            true,
-            0,
-            true
-        );
+        const object = await this.attachedObjectService.attachObjectToPlayer({
+            bone: 26610,
+            model: holdingObjectPropName,
+            position: [0.04, -0.04, 0.02],
+            rotation: [305.0, 270.0, -40.0],
+        });
 
         this.ropeState = {
             rope,
@@ -107,6 +88,7 @@ export class RopeService {
             attachPosition[2],
             true
         );
+
         try {
             ActivatePhysics(this.ropeState.rope);
         } catch (e) {
@@ -114,7 +96,9 @@ export class RopeService {
             this.deleteRope();
             return null;
         }
+
         this.manageRopePhysics();
+
         return this.ropeState.rope;
     }
 
@@ -123,50 +107,52 @@ export class RopeService {
             const ped = PlayerPedId();
             const rope = this.ropeState.rope;
             const ropeLength = GetRopeLength(rope);
-            const stationPosition = GetEntityCoords(this.ropeState.baseEntity) as Vector3;
-            const playerPosition = GetEntityCoords(ped, true) as Vector3;
-            const distanceStationPlayer = getDistance(stationPosition, playerPosition);
-            const floatingRange = 0.1;
-
-            if (distanceStationPlayer < ropeLength) {
-                // current length > desired length : winding case
-                StopRopeUnwindingFront(rope);
-                StartRopeWinding(rope);
-                RopeForceLength(rope, distanceStationPlayer + floatingRange);
-            } else if (distanceStationPlayer > ropeLength) {
-                // current length < desired length : unwinding case
-                StopRopeWinding(rope);
-                StartRopeUnwindingFront(rope);
-                RopeForceLength(rope, distanceStationPlayer + floatingRange);
-            } else {
-                StopRopeWinding(rope);
-                StopRopeUnwindingFront(rope);
-                RopeForceLength(rope, distanceStationPlayer + floatingRange);
-            }
-
             const handPosition = GetWorldPositionOfEntityBone(
-                PlayerPedId(),
-                GetEntityBoneIndexByName(PlayerPedId(), 'BONETAG_L_FINGER2')
+                ped,
+                GetEntityBoneIndexByName(ped, 'BONETAG_L_FINGER2')
             ) as Vector3;
-
-            const distance = Math.min(getDistance(stationPosition, handPosition) + 2.0, this.ropeState.maxLength);
 
             AttachEntitiesToRope(
                 this.ropeState.rope,
                 this.ropeState.baseEntity,
-                PlayerPedId(),
+                ped,
                 this.ropeState.attachPosition[0],
                 this.ropeState.attachPosition[1],
                 this.ropeState.attachPosition[2],
                 handPosition[0],
                 handPosition[1],
                 handPosition[2],
-                distance,
+                this.ropeState.maxLength,
                 true,
                 true,
                 null,
                 'BONETAG_L_FINGER2'
             );
+
+            if (!this.ropeState.lastRopeLength) {
+                this.ropeState.lastRopeLength = ropeLength;
+
+                continue;
+            }
+
+            const desiredRopeLength = Math.max(ropeLength + 0.3, 3.0);
+
+            if (desiredRopeLength < 5.0) {
+                StopRopeWinding(rope);
+                StartRopeUnwindingFront(rope);
+                RopeForceLength(rope, desiredRopeLength);
+            } else if (this.ropeState.lastRopeLength < ropeLength) {
+                StopRopeUnwindingFront(rope);
+                StartRopeWinding(rope);
+                RopeResetLength(rope, desiredRopeLength);
+            } else if (this.ropeState.lastRopeLength > ropeLength) {
+                StopRopeWinding(rope);
+                StartRopeUnwindingFront(rope);
+                RopeForceLength(rope, desiredRopeLength);
+            }
+
+            this.ropeState.lastRopeLength = ropeLength;
+
             await wait(0);
         }
     }
@@ -185,9 +171,7 @@ export class RopeService {
     public deleteRope() {
         RopeUnloadTextures();
         DeleteRope(this.ropeState.rope);
-        SetEntityAsMissionEntity(this.ropeState.holdingObjectProp, true, true);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(this.ropeState.holdingObjectProp));
-        DeleteEntity(this.ropeState.holdingObjectProp);
+        this.attachedObjectService.detachObjectToPlayer(this.ropeState.holdingObjectProp);
         this.ropeState = null;
     }
 }

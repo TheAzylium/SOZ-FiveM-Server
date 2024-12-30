@@ -8,6 +8,7 @@ import { Disease, Organ } from './disease';
 import { DrivingSchoolLicenseType } from './driving-school';
 import { InventoryItem } from './item';
 import { JobType } from './job';
+import { PlasterLocation } from './job/lsmc';
 import { Halloween2022, Halloween2023 } from './story/halloween2022';
 
 export type QBCorePlayer = {
@@ -80,6 +81,9 @@ export type Skin = {
         EyebrowType?: number;
         EyebrowOpacity?: number;
         EyebrowColor?: number;
+        ChestHairType?: number;
+        ChestHairOpacity?: number;
+        ChestHairColor?: number;
     };
     Makeup: {
         BeardType?: number;
@@ -208,7 +212,6 @@ export type PlayerClientState = {
     isInHospital: boolean;
     isInHub: boolean;
     disableMoneyCase: boolean;
-    tankerEntity: number | null;
     hasPrisonerClothes: boolean;
     isWearingPatientOutfit: boolean;
     isLooted: boolean;
@@ -262,6 +265,7 @@ export type PlayerMetadata = PlayerHealthBook & {
     thirst: number;
     alcohol: number;
     drug: number;
+    last_drug_eaten?: string;
     fiber: number;
     lipid: number;
     sugar: number;
@@ -299,12 +303,15 @@ export type PlayerMetadata = PlayerHealthBook & {
     injuries_count: number;
     injuries_date: number;
     itt: boolean;
+    itt_end: number;
     hazmat: boolean;
     mood?: string | null;
     rp_death: boolean;
     is_senator: boolean;
     injail: boolean;
     scuba: boolean;
+    health_book_update_date: number | null;
+    plaster: PlasterLocation[];
 };
 
 export const isAdmin = (player: PlayerData) => {

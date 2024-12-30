@@ -1,3 +1,4 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
 import { VehicleMidDamageThreshold } from '@public/shared/vehicle/vehicle';
 
 import { On, OnEvent } from '../../core/decorators/event';
@@ -145,7 +146,7 @@ export class PlayerStressProvider {
             return;
         }
 
-        if (name === 'coffee') {
+        if (name === 'coffee' || name === 'chocolate' || name === 'tea') {
             this.updateStress(StressLooseType.DrinkCoffee);
         }
 
@@ -340,7 +341,7 @@ export class PlayerStressProvider {
         }
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(player: PlayerData): Promise<void> {
         if (!isFeatureEnabled(Feature.MyBodySummer)) {
             return;

@@ -15,7 +15,7 @@ class _WeatherService {
 
     async handleFetchStormAlert(reqObj: PromiseRequest<void>, resp: PromiseEventResp<number>) {
         try {
-            const alert = exports['soz-core'].getStormAlert();
+            const alert = exports['soz-core'].getStormAlert() as number;
             resp({ status: 'ok', data: alert });
         } catch (e) {
             weatherLogger.error(`Error in handleFetchStormAlert, ${e.toString()}`);

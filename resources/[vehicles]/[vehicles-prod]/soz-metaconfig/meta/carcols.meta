@@ -370,13 +370,13 @@
             <liveryNames/>
         </Item>
         <Item>
-            <kitName>999_police5_modkit</kitName>
+            <kitName>999_lspd10_modkit</kitName>
             <id value="999"/>
             <kitType>MKT_SPECIAL</kitType>
             <visibleMods>
                 <!-- CallSign 0 Left -->
                 <Item>
-                    <modelName>police5_callsign_a0</modelName>
+                    <modelName>lspd10_callsign_a0</modelName>
                     <modShopLabel>BFL_A0</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -392,7 +392,7 @@
                 </Item>
                 <!-- CallSign 1 Left -->
                 <Item>
-                    <modelName>police5_callsign_a1</modelName>
+                    <modelName>lspd10_callsign_a1</modelName>
                     <modShopLabel>BFL_A1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -408,7 +408,7 @@
                 </Item>
                 <!-- CallSign 2 Left -->
                 <Item>
-                    <modelName>police5_callsign_a2</modelName>
+                    <modelName>lspd10_callsign_a2</modelName>
                     <modShopLabel>BFL_A2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -424,7 +424,7 @@
                 </Item>
                 <!-- CallSign 3 Left -->
                 <Item>
-                    <modelName>police5_callsign_a3</modelName>
+                    <modelName>lspd10_callsign_a3</modelName>
                     <modShopLabel>BFL_A3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -440,7 +440,7 @@
                 </Item>
                 <!-- CallSign 4 Left -->
                 <Item>
-                    <modelName>police5_callsign_a4</modelName>
+                    <modelName>lspd10_callsign_a4</modelName>
                     <modShopLabel>BFL_A4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -456,7 +456,7 @@
                 </Item>
                 <!-- CallSign 5 Left -->
                 <Item>
-                    <modelName>police5_callsign_a5</modelName>
+                    <modelName>lspd10_callsign_a5</modelName>
                     <modShopLabel>BFL_A5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -472,7 +472,7 @@
                 </Item>
                 <!-- CallSign 6 Left -->
                 <Item>
-                    <modelName>police5_callsign_a6</modelName>
+                    <modelName>lspd10_callsign_a6</modelName>
                     <modShopLabel>BFL_A6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -488,7 +488,7 @@
                 </Item>
                 <!-- CallSign 7 Left -->
                 <Item>
-                    <modelName>police5_callsign_a7</modelName>
+                    <modelName>lspd10_callsign_a7</modelName>
                     <modShopLabel>BFL_A7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -504,7 +504,7 @@
                 </Item>
                 <!-- CallSign 8 Left -->
                 <Item>
-                    <modelName>police5_callsign_a8</modelName>
+                    <modelName>lspd10_callsign_a8</modelName>
                     <modShopLabel>BFL_A8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -520,7 +520,7 @@
                 </Item>
                 <!-- CallSign 9 Left -->
                 <Item>
-                    <modelName>police5_callsign_a9</modelName>
+                    <modelName>lspd10_callsign_a9</modelName>
                     <modShopLabel>BFL_A9</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -536,7 +536,7 @@
                 </Item>
                 <!-- CallSign 0 Right -->
                 <Item>
-                    <modelName>police5_callsign_c0</modelName>
+                    <modelName>lspd10_callsign_c0</modelName>
                     <modShopLabel>BFL_C0</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -552,7 +552,7 @@
                 </Item>
                 <!-- CallSign 1 Right -->
                 <Item>
-                    <modelName>police5_callsign_c1</modelName>
+                    <modelName>lspd10_callsign_c1</modelName>
                     <modShopLabel>BFL_C1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -568,7 +568,7 @@
                 </Item>
                 <!-- CallSign 2 Right -->
                 <Item>
-                    <modelName>police5_callsign_c2</modelName>
+                    <modelName>lspd10_callsign_c2</modelName>
                     <modShopLabel>BFL_C2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -584,7 +584,7 @@
                 </Item>
                 <!-- CallSign 3 Right -->
                 <Item>
-                    <modelName>police5_callsign_c3</modelName>
+                    <modelName>lspd10_callsign_c3</modelName>
                     <modShopLabel>BFL_C3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -600,7 +600,7 @@
                 </Item>
                 <!-- CallSign 4 Right -->
                 <Item>
-                    <modelName>police5_callsign_c4</modelName>
+                    <modelName>lspd10_callsign_c4</modelName>
                     <modShopLabel>BFL_C4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -616,7 +616,7 @@
                 </Item>
                 <!-- CallSign 5 Right -->
                 <Item>
-                    <modelName>police5_callsign_c5</modelName>
+                    <modelName>lspd10_callsign_c5</modelName>
                     <modShopLabel>BFL_C5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -632,7 +632,7 @@
                 </Item>
                 <!-- CallSign 6 Right -->
                 <Item>
-                    <modelName>police5_callsign_c6</modelName>
+                    <modelName>lspd10_callsign_c6</modelName>
                     <modShopLabel>BFL_C6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -648,7 +648,7 @@
                 </Item>
                 <!-- CallSign 7 Right -->
                 <Item>
-                    <modelName>police5_callsign_c7</modelName>
+                    <modelName>lspd10_callsign_c7</modelName>
                     <modShopLabel>BFL_C7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -664,7 +664,7 @@
                 </Item>
                 <!-- CallSign 8 Right -->
                 <Item>
-                    <modelName>police5_callsign_c8</modelName>
+                    <modelName>lspd10_callsign_c8</modelName>
                     <modShopLabel>BFL_C8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -680,7 +680,7 @@
                 </Item>
                 <!-- CallSign 9 Right -->
                 <Item>
-                    <modelName>police5_callsign_c9</modelName>
+                    <modelName>lspd10_callsign_c9</modelName>
                     <modShopLabel>BFL_C9</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -695,8 +695,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_hood_1</modelName>
-                    <modShopLabel>POLICE5_HOOD_1</modShopLabel>
+                    <modelName>lspd10_hood_1</modelName>
+                    <modShopLabel>lspd10_HOOD_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>bonnet</item>
@@ -712,8 +712,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_hood_2</modelName>
-                    <modShopLabel>POLICE5_HOOD_2</modShopLabel>
+                    <modelName>lspd10_hood_2</modelName>
+                    <modShopLabel>lspd10_HOOD_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>bonnet</item>
@@ -729,8 +729,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_hood_3</modelName>
-                    <modShopLabel>POLICE5_HOOD_3</modShopLabel>
+                    <modelName>lspd10_hood_3</modelName>
+                    <modShopLabel>lspd10_HOOD_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>bonnet</item>
@@ -746,8 +746,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_hood_4</modelName>
-                    <modShopLabel>POLICE5_HOOD_4</modShopLabel>
+                    <modelName>lspd10_hood_4</modelName>
+                    <modShopLabel>lspd10_HOOD_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>bonnet</item>
@@ -763,8 +763,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_louv_1</modelName>
-                    <modShopLabel>POLICE5_LOUV_1</modShopLabel>
+                    <modelName>lspd10_louv_1</modelName>
+                    <modShopLabel>lspd10_LOUV_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_t</item>
@@ -780,8 +780,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_louv_2</modelName>
-                    <modShopLabel>POLICE5_LOUV_2</modShopLabel>
+                    <modelName>lspd10_louv_2</modelName>
+                    <modShopLabel>lspd10_LOUV_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_t</item>
@@ -797,8 +797,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_skirt1</modelName>
-                    <modShopLabel>POLICE5_SKRT_1</modShopLabel>
+                    <modelName>lspd10_skirt1</modelName>
+                    <modShopLabel>lspd10_SKRT_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_SKIRT</type>
@@ -812,8 +812,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_skirt1a</modelName>
-                    <modShopLabel>POLICE5_SKRT_2</modShopLabel>
+                    <modelName>lspd10_skirt1a</modelName>
+                    <modShopLabel>lspd10_SKRT_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_SKIRT</type>
@@ -827,8 +827,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_skirt2</modelName>
-                    <modShopLabel>POLICE5_SKRT_3</modShopLabel>
+                    <modelName>lspd10_skirt2</modelName>
+                    <modShopLabel>lspd10_SKRT_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_SKIRT</type>
@@ -842,8 +842,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_skirt2a</modelName>
-                    <modShopLabel>POLICE5_SKRT_4</modShopLabel>
+                    <modelName>lspd10_skirt2a</modelName>
+                    <modShopLabel>lspd10_SKRT_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_SKIRT</type>
@@ -857,8 +857,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_1</modelName>
-                    <modShopLabel>POLICE5_SPLT_1</modShopLabel>
+                    <modelName>lspd10_splt_1</modelName>
+                    <modShopLabel>lspd10_SPLT_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -872,8 +872,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_1a</modelName>
-                    <modShopLabel>POLICE5_SPLT_2</modShopLabel>
+                    <modelName>lspd10_splt_1a</modelName>
+                    <modShopLabel>lspd10_SPLT_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -887,8 +887,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_2</modelName>
-                    <modShopLabel>POLICE5_SPLT_3</modShopLabel>
+                    <modelName>lspd10_splt_2</modelName>
+                    <modShopLabel>lspd10_SPLT_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -902,8 +902,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_2a</modelName>
-                    <modShopLabel>POLICE5_SPLT_4</modShopLabel>
+                    <modelName>lspd10_splt_2a</modelName>
+                    <modShopLabel>lspd10_SPLT_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -917,8 +917,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_3</modelName>
-                    <modShopLabel>POLICE5_SPLT_5</modShopLabel>
+                    <modelName>lspd10_splt_3</modelName>
+                    <modShopLabel>lspd10_SPLT_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -932,8 +932,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_3a</modelName>
-                    <modShopLabel>POLICE5_SPLT_6</modShopLabel>
+                    <modelName>lspd10_splt_3a</modelName>
+                    <modShopLabel>lspd10_SPLT_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -947,8 +947,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_4</modelName>
-                    <modShopLabel>POLICE5_SPLT_7</modShopLabel>
+                    <modelName>lspd10_splt_4</modelName>
+                    <modShopLabel>lspd10_SPLT_7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -962,8 +962,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_splt_4a</modelName>
-                    <modShopLabel>POLICE5_SPLT_8</modShopLabel>
+                    <modelName>lspd10_splt_4a</modelName>
+                    <modShopLabel>lspd10_SPLT_8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_BUMPER_F</type>
@@ -977,8 +977,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_intercooler_1</modelName>
-                    <modShopLabel>POLICE5_INTE_1</modShopLabel>
+                    <modelName>lspd10_intercooler_1</modelName>
+                    <modShopLabel>lspd10_INTE_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_g</item>
@@ -994,8 +994,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_intercooler_2</modelName>
-                    <modShopLabel>POLICE5_INTE_2</modShopLabel>
+                    <modelName>lspd10_intercooler_2</modelName>
+                    <modShopLabel>lspd10_INTE_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_g</item>
@@ -1011,8 +1011,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_intercooler_3</modelName>
-                    <modShopLabel>POLICE5_INTE_3</modShopLabel>
+                    <modelName>lspd10_intercooler_3</modelName>
+                    <modShopLabel>lspd10_INTE_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_g</item>
@@ -1028,8 +1028,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_intercooler_4</modelName>
-                    <modShopLabel>POLICE5_INTE_4</modShopLabel>
+                    <modelName>lspd10_intercooler_4</modelName>
+                    <modShopLabel>lspd10_INTE_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_g</item>
@@ -1045,8 +1045,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_intercooler_5</modelName>
-                    <modShopLabel>POLICE5_INTE_5</modShopLabel>
+                    <modelName>lspd10_intercooler_5</modelName>
+                    <modShopLabel>lspd10_INTE_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_g</item>
@@ -1062,8 +1062,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_1</modelName>
-                    <modShopLabel>POLICE5_CAGE_1</modShopLabel>
+                    <modelName>lspd10_cage_1</modelName>
+                    <modShopLabel>lspd10_CAGE_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_INTERIOR2</type>
@@ -1077,8 +1077,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_2</modelName>
-                    <modShopLabel>POLICE5_CAGE_2</modShopLabel>
+                    <modelName>lspd10_cage_2</modelName>
+                    <modShopLabel>lspd10_CAGE_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_s</item>
@@ -1094,8 +1094,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_3</modelName>
-                    <modShopLabel>POLICE5_CAGE_3</modShopLabel>
+                    <modelName>lspd10_cage_3</modelName>
+                    <modShopLabel>lspd10_CAGE_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_s</item>
@@ -1111,8 +1111,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_4</modelName>
-                    <modShopLabel>POLICE5_CAGE_4</modShopLabel>
+                    <modelName>lspd10_cage_4</modelName>
+                    <modShopLabel>lspd10_CAGE_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_s</item>
@@ -1128,8 +1128,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_5</modelName>
-                    <modShopLabel>POLICE5_CAGE_5</modShopLabel>
+                    <modelName>lspd10_cage_5</modelName>
+                    <modShopLabel>lspd10_CAGE_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_s</item>
@@ -1145,8 +1145,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_cage_6</modelName>
-                    <modShopLabel>POLICE5_CAGE_6</modShopLabel>
+                    <modelName>lspd10_cage_6</modelName>
+                    <modShopLabel>lspd10_CAGE_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_s</item>
@@ -1162,8 +1162,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_1</modelName>
-                    <modShopLabel>POLICE5_WING_1</modShopLabel>
+                    <modelName>lspd10_wing_1</modelName>
+                    <modShopLabel>lspd10_WING_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1179,8 +1179,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_1a</modelName>
-                    <modShopLabel>POLICE5_WING_2</modShopLabel>
+                    <modelName>lspd10_wing_1a</modelName>
+                    <modShopLabel>lspd10_WING_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1196,8 +1196,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_2</modelName>
-                    <modShopLabel>POLICE5_WING_3</modShopLabel>
+                    <modelName>lspd10_wing_2</modelName>
+                    <modShopLabel>lspd10_WING_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1213,8 +1213,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_2a</modelName>
-                    <modShopLabel>POLICE5_WING_4</modShopLabel>
+                    <modelName>lspd10_wing_2a</modelName>
+                    <modShopLabel>lspd10_WING_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1230,8 +1230,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_3</modelName>
-                    <modShopLabel>POLICE5_WING_5</modShopLabel>
+                    <modelName>lspd10_wing_3</modelName>
+                    <modShopLabel>lspd10_WING_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1247,8 +1247,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_3a</modelName>
-                    <modShopLabel>POLICE5_WING_6</modShopLabel>
+                    <modelName>lspd10_wing_3a</modelName>
+                    <modShopLabel>lspd10_WING_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1264,8 +1264,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_4</modelName>
-                    <modShopLabel>POLICE5_WING_7</modShopLabel>
+                    <modelName>lspd10_wing_4</modelName>
+                    <modShopLabel>lspd10_WING_7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1281,8 +1281,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_5</modelName>
-                    <modShopLabel>POLICE5_WING_8</modShopLabel>
+                    <modelName>lspd10_wing_5</modelName>
+                    <modShopLabel>lspd10_WING_8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1298,8 +1298,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_6</modelName>
-                    <modShopLabel>POLICE5_WING_9</modShopLabel>
+                    <modelName>lspd10_wing_6</modelName>
+                    <modShopLabel>lspd10_WING_9</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1315,8 +1315,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_7</modelName>
-                    <modShopLabel>POLICE5_WING_10</modShopLabel>
+                    <modelName>lspd10_wing_7</modelName>
+                    <modShopLabel>lspd10_WING_10</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1332,8 +1332,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_8</modelName>
-                    <modShopLabel>POLICE5_WING_11</modShopLabel>
+                    <modelName>lspd10_wing_8</modelName>
+                    <modShopLabel>lspd10_WING_11</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1349,8 +1349,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_9</modelName>
-                    <modShopLabel>POLICE5_WING_12</modShopLabel>
+                    <modelName>lspd10_wing_9</modelName>
+                    <modShopLabel>lspd10_WING_12</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1366,8 +1366,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_10</modelName>
-                    <modShopLabel>POLICE5_WING_13</modShopLabel>
+                    <modelName>lspd10_wing_10</modelName>
+                    <modShopLabel>lspd10_WING_13</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1383,8 +1383,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_11</modelName>
-                    <modShopLabel>POLICE5_WING_14</modShopLabel>
+                    <modelName>lspd10_wing_11</modelName>
+                    <modShopLabel>lspd10_WING_14</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1400,8 +1400,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_wing_12</modelName>
-                    <modShopLabel>POLICE5_WING_15</modShopLabel>
+                    <modelName>lspd10_wing_12</modelName>
+                    <modShopLabel>lspd10_WING_15</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_a</item>
@@ -1417,8 +1417,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_a</modelName>
-                    <modShopLabel>POLICE5_ROOF_1</modShopLabel>
+                    <modelName>lspd10_roof_a</modelName>
+                    <modShopLabel>lspd10_ROOF_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1432,8 +1432,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_b</modelName>
-                    <modShopLabel>POLICE5_ROOF_2</modShopLabel>
+                    <modelName>lspd10_roof_b</modelName>
+                    <modShopLabel>lspd10_ROOF_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1447,8 +1447,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_c</modelName>
-                    <modShopLabel>POLICE5_ROOF_3</modShopLabel>
+                    <modelName>lspd10_roof_c</modelName>
+                    <modShopLabel>lspd10_ROOF_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1462,8 +1462,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_d</modelName>
-                    <modShopLabel>POLICE5_ROOF_4</modShopLabel>
+                    <modelName>lspd10_roof_d</modelName>
+                    <modShopLabel>lspd10_ROOF_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1477,8 +1477,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_e</modelName>
-                    <modShopLabel>POLICE5_ROOF_5</modShopLabel>
+                    <modelName>lspd10_roof_e</modelName>
+                    <modShopLabel>lspd10_ROOF_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1492,8 +1492,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_f</modelName>
-                    <modShopLabel>POLICE5_ROOF_6</modShopLabel>
+                    <modelName>lspd10_roof_f</modelName>
+                    <modShopLabel>lspd10_ROOF_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1507,8 +1507,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_g</modelName>
-                    <modShopLabel>POLICE5_ROOF_7</modShopLabel>
+                    <modelName>lspd10_roof_g</modelName>
+                    <modShopLabel>lspd10_ROOF_7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1522,8 +1522,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_1</modelName>
-                    <modShopLabel>POLICE5_ROOF_8</modShopLabel>
+                    <modelName>lspd10_roof_1</modelName>
+                    <modShopLabel>lspd10_ROOF_8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1537,8 +1537,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_1a</modelName>
-                    <modShopLabel>POLICE5_ROOF_9</modShopLabel>
+                    <modelName>lspd10_roof_1a</modelName>
+                    <modShopLabel>lspd10_ROOF_9</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1552,8 +1552,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_2</modelName>
-                    <modShopLabel>POLICE5_ROOF_10</modShopLabel>
+                    <modelName>lspd10_roof_2</modelName>
+                    <modShopLabel>lspd10_ROOF_10</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1567,8 +1567,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_2a</modelName>
-                    <modShopLabel>POLICE5_ROOF_11</modShopLabel>
+                    <modelName>lspd10_roof_2a</modelName>
+                    <modShopLabel>lspd10_ROOF_11</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_ROOF</type>
@@ -1582,8 +1582,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_3</modelName>
-                    <modShopLabel>POLICE5_ROOF_12</modShopLabel>
+                    <modelName>lspd10_roof_3</modelName>
+                    <modShopLabel>lspd10_ROOF_12</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_r</item>
@@ -1599,8 +1599,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_roof_4</modelName>
-                    <modShopLabel>POLICE5_ROOF_13</modShopLabel>
+                    <modelName>lspd10_roof_4</modelName>
+                    <modShopLabel>lspd10_ROOF_13</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_r</item>
@@ -1616,8 +1616,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_1</modelName>
-                    <modShopLabel>POLICE5_EX_1</modShopLabel>
+                    <modelName>lspd10_exh_1</modelName>
+                    <modShopLabel>lspd10_EX_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1635,8 +1635,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_1a</modelName>
-                    <modShopLabel>POLICE5_EX_2</modShopLabel>
+                    <modelName>lspd10_exh_1a</modelName>
+                    <modShopLabel>lspd10_EX_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1654,8 +1654,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_2</modelName>
-                    <modShopLabel>POLICE5_EX_3</modShopLabel>
+                    <modelName>lspd10_exh_2</modelName>
+                    <modShopLabel>lspd10_EX_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1673,8 +1673,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_2a</modelName>
-                    <modShopLabel>POLICE5_EX_4</modShopLabel>
+                    <modelName>lspd10_exh_2a</modelName>
+                    <modShopLabel>lspd10_EX_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1692,8 +1692,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_3</modelName>
-                    <modShopLabel>POLICE5_EX_5</modShopLabel>
+                    <modelName>lspd10_exh_3</modelName>
+                    <modShopLabel>lspd10_EX_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1711,8 +1711,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_3a</modelName>
-                    <modShopLabel>POLICE5_EX_6</modShopLabel>
+                    <modelName>lspd10_exh_3a</modelName>
+                    <modShopLabel>lspd10_EX_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1730,8 +1730,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_4</modelName>
-                    <modShopLabel>POLICE5_EX_7</modShopLabel>
+                    <modelName>lspd10_exh_4</modelName>
+                    <modShopLabel>lspd10_EX_7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1749,8 +1749,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_exh_5</modelName>
-                    <modShopLabel>POLICE5_EX_8</modShopLabel>
+                    <modelName>lspd10_exh_5</modelName>
+                    <modShopLabel>lspd10_EX_8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
                         <item>misc_e</item>
@@ -1768,8 +1768,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv1</modelName>
-                    <modShopLabel>POLICE5_LIV_1</modShopLabel>
+                    <modelName>lspd10_liv1</modelName>
+                    <modShopLabel>lspd10_LIV_1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1783,8 +1783,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv2</modelName>
-                    <modShopLabel>POLICE5_LIV_2</modShopLabel>
+                    <modelName>lspd10_liv2</modelName>
+                    <modShopLabel>lspd10_LIV_2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1798,8 +1798,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv3</modelName>
-                    <modShopLabel>POLICE5_LIV_3</modShopLabel>
+                    <modelName>lspd10_liv3</modelName>
+                    <modShopLabel>lspd10_LIV_3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1813,8 +1813,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv4</modelName>
-                    <modShopLabel>POLICE5_LIV_4</modShopLabel>
+                    <modelName>lspd10_liv4</modelName>
+                    <modShopLabel>lspd10_LIV_4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1828,8 +1828,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv5</modelName>
-                    <modShopLabel>POLICE5_LIV_5</modShopLabel>
+                    <modelName>lspd10_liv5</modelName>
+                    <modShopLabel>lspd10_LIV_5</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1843,8 +1843,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv6</modelName>
-                    <modShopLabel>POLICE5_LIV_6</modShopLabel>
+                    <modelName>lspd10_liv6</modelName>
+                    <modShopLabel>lspd10_LIV_6</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1858,8 +1858,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv7</modelName>
-                    <modShopLabel>POLICE5_LIV_7</modShopLabel>
+                    <modelName>lspd10_liv7</modelName>
+                    <modShopLabel>lspd10_LIV_7</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1873,8 +1873,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv8</modelName>
-                    <modShopLabel>POLICE5_LIV_8</modShopLabel>
+                    <modelName>lspd10_liv8</modelName>
+                    <modShopLabel>lspd10_LIV_8</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1888,8 +1888,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv9</modelName>
-                    <modShopLabel>POLICE5_LIV_9</modShopLabel>
+                    <modelName>lspd10_liv9</modelName>
+                    <modShopLabel>lspd10_LIV_9</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1903,8 +1903,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv10</modelName>
-                    <modShopLabel>POLICE5_LIV_10</modShopLabel>
+                    <modelName>lspd10_liv10</modelName>
+                    <modShopLabel>lspd10_LIV_10</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1918,8 +1918,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv12</modelName>
-                    <modShopLabel>POLICE5_LIV_12</modShopLabel>
+                    <modelName>lspd10_liv12</modelName>
+                    <modShopLabel>lspd10_LIV_12</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1933,8 +1933,8 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_liv11</modelName>
-                    <modShopLabel>POLICE5_LIV_11</modShopLabel>
+                    <modelName>lspd10_liv11</modelName>
+                    <modShopLabel>lspd10_LIV_11</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
                     <type>VMT_LIVERY_MOD</type>
@@ -1948,12 +1948,12 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_lf_arm</modelName>
+                    <modelName>lspd10_lf_arm</modelName>
                     <modShopLabel>JUBIL_LFARM</modShopLabel>
                     <linkedModels>
-                        <item>police5_rf_arm</item>
-                        <item>police5_lr_arm</item>
-                        <item>police5_rr_arm</item>
+                        <item>lspd10_rf_arm</item>
+                        <item>lspd10_lr_arm</item>
+                        <item>lspd10_rr_arm</item>
                     </linkedModels>
                     <turnOffBones/>
                     <type>VMT_CHASSIS</type>
@@ -1967,10 +1967,10 @@
                     <allowBonnetSlide value="true"/>
                 </Item>
                 <Item>
-                    <modelName>police5_mirr_l_1</modelName>
-                    <modShopLabel>POLICE5_MIRR_1</modShopLabel>
+                    <modelName>lspd10_mirr_l_1</modelName>
+                    <modShopLabel>lspd10_MIRR_1</modShopLabel>
                     <linkedModels>
-                        <item>police5_mirr_r_1</item>
+                        <item>lspd10_mirr_r_1</item>
                     </linkedModels>
                     <turnOffBones>
                         <item>misc_n</item>
@@ -1989,22 +1989,22 @@
             </visibleMods>
             <linkMods>
                 <Item>
-                    <modelName>police5_mirr_r_1</modelName>
+                    <modelName>lspd10_mirr_r_1</modelName>
                     <bone>door_pside_f</bone>
                     <turnOffExtra value="false"/>
                 </Item>
                 <Item>
-                    <modelName>police5_rr_arm</modelName>
+                    <modelName>lspd10_rr_arm</modelName>
                     <bone>door_pside_r</bone>
                     <turnOffExtra value="false"/>
                 </Item>
                 <Item>
-                    <modelName>police5_rf_arm</modelName>
+                    <modelName>lspd10_rf_arm</modelName>
                     <bone>door_pside_f</bone>
                     <turnOffExtra value="false"/>
                 </Item>
                 <Item>
-                    <modelName>police5_lr_arm</modelName>
+                    <modelName>lspd10_lr_arm</modelName>
                     <bone>door_dside_r</bone>
                     <turnOffExtra value="false"/>
                 </Item>
@@ -5094,12 +5094,12 @@
             <liveryNames/>
         </Item>
         <Item>
-            <kitName>1015_bcsomanchez_modkit</kitName>
+            <kitName>1015_bcso30_modkit</kitName>
             <id value="1015" />
             <kitType>MKT_SPECIAL</kitType>
             <visibleMods>
                 <Item>
-                    <modelName>manchez3_handlebarpad_1</modelName>
+                    <modelName>bcso30_handlebarpad_1</modelName>
                     <modShopLabel>MAN3_HANBAR1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones/>
@@ -5114,7 +5114,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_frameb</modelName>
+                    <modelName>bcso30_frameb</modelName>
                     <modShopLabel>MAN3_FRAME1</modShopLabel>
                     <linkedModels />
                     <turnOffBones />
@@ -5129,10 +5129,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_framed</modelName>
+                    <modelName>bcso30_framed</modelName>
                     <modShopLabel>MAN3_FRAME2</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_frameb</Item>
+                        <Item>bcso30_frameb</Item>
                     </linkedModels>
                     <turnOffBones />
                     <type>VMT_CHASSIS</type>
@@ -5146,7 +5146,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tanka</modelName>
+                    <modelName>bcso30_tanka</modelName>
                     <modShopLabel>MAN_TANKA</modShopLabel>
                     <linkedModels />
                     <turnOffBones />
@@ -5161,10 +5161,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tanka</modelName>
+                    <modelName>bcso30_tanka</modelName>
                     <modShopLabel>MAN3_TANK2</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_tankb</Item>
+                        <Item>bcso30_tankb</Item>
                     </linkedModels>
                     <turnOffBones />
                     <type>VMT_ROOF</type>
@@ -5178,10 +5178,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tanka</modelName>
+                    <modelName>bcso30_tanka</modelName>
                     <modShopLabel>MAN3_TANK3</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_tankc</Item>
+                        <Item>bcso30_tankc</Item>
                     </linkedModels>
                     <turnOffBones />
                     <type>VMT_ROOF</type>
@@ -5195,7 +5195,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tankd</modelName>
+                    <modelName>bcso30_tankd</modelName>
                     <modShopLabel>MAN3_TANK4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones />
@@ -5210,7 +5210,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fenda</modelName>
+                    <modelName>bcso30_fenda</modelName>
                     <modShopLabel>MAN_FENDA</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5227,7 +5227,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fendb</modelName>
+                    <modelName>bcso30_fendb</modelName>
                     <modShopLabel>MAN3_FEND2</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5244,7 +5244,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fendc</modelName>
+                    <modelName>bcso30_fendc</modelName>
                     <modShopLabel>MAN3_FEND3</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5261,7 +5261,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fendd</modelName>
+                    <modelName>bcso30_fendd</modelName>
                     <modShopLabel>MAN3_FEND4</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5278,7 +5278,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fende</modelName>
+                    <modelName>bcso30_fende</modelName>
                     <modShopLabel>MAN3_FEND5</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5295,7 +5295,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exha</modelName>
+                    <modelName>bcso30_exha</modelName>
                     <modShopLabel>MAN_EXHA</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5313,10 +5313,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exha</modelName>
+                    <modelName>bcso30_exha</modelName>
                     <modShopLabel>MAN_EXHB</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_exhb</Item>
+                        <Item>bcso30_exhb</Item>
                     </linkedModels>
                     <turnOffBones>
                         <Item>misc_b</Item>
@@ -5333,7 +5333,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exhc</modelName>
+                    <modelName>bcso30_exhc</modelName>
                     <modShopLabel>MAN_EXHC</modShopLabel>
                     <linkedModels />
                     <turnOffBones>
@@ -5351,10 +5351,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exhc</modelName>
+                    <modelName>bcso30_exhc</modelName>
                     <modShopLabel>MAN_EXHD</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_exhd</Item>
+                        <Item>bcso30_exhd</Item>
                     </linkedModels>
                     <turnOffBones>
                         <Item>misc_b</Item>
@@ -5371,7 +5371,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exh_1</modelName>
+                    <modelName>bcso30_exh_1</modelName>
                     <modShopLabel>MAN3_EXH1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5389,7 +5389,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exh_2</modelName>
+                    <modelName>bcso30_exh_2</modelName>
                     <modShopLabel>MAN3_EXH2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5407,7 +5407,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exh_3</modelName>
+                    <modelName>bcso30_exh_3</modelName>
                     <modShopLabel>MAN3_EXH3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5425,7 +5425,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exh_4</modelName>
+                    <modelName>bcso30_exh_4</modelName>
                     <modShopLabel>MAN3_EXH4</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5443,7 +5443,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_shroud_1</modelName>
+                    <modelName>bcso30_shroud_1</modelName>
                     <modShopLabel>MAN3_SHROUD1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5460,7 +5460,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_shroud_2</modelName>
+                    <modelName>bcso30_shroud_2</modelName>
                     <modShopLabel>MAN3_SHROUD2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5477,10 +5477,10 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_shroud_3</modelName>
+                    <modelName>bcso30_shroud_3</modelName>
                     <modShopLabel>MAN3_SHROUD3</modShopLabel>
                     <linkedModels>
-                        <Item>manchez3_shroud_1</Item>
+                        <Item>bcso30_shroud_1</Item>
                     </linkedModels>
                     <turnOffBones>
                         <Item>misc_f</Item>
@@ -5496,7 +5496,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_seat_1</modelName>
+                    <modelName>bcso30_seat_1</modelName>
                     <modShopLabel>MAN3_SEAT1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5513,7 +5513,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_seat_2</modelName>
+                    <modelName>bcso30_seat_2</modelName>
                     <modShopLabel>MAN3_SEAT2</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5530,7 +5530,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_seat_3</modelName>
+                    <modelName>bcso30_seat_3</modelName>
                     <modShopLabel>MAN3_SEAT3</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5547,7 +5547,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_swingarm_1</modelName>
+                    <modelName>bcso30_swingarm_1</modelName>
                     <modShopLabel>MAN3_SWING1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5564,7 +5564,7 @@
                     <allowBonnetSlide value="true" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_fairing_1</modelName>
+                    <modelName>bcso30_fairing_1</modelName>
                     <modShopLabel>MAN3_FAIR1</modShopLabel>
                     <linkedModels/>
                     <turnOffBones>
@@ -5583,62 +5583,62 @@
             </visibleMods>
             <linkMods>
                 <Item>
-                    <modelName>manchez3_boxa</modelName>
+                    <modelName>bcso30_boxa</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_frameb</modelName>
+                    <modelName>bcso30_frameb</modelName>
                     <bone>forks_u</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_boxb</modelName>
+                    <modelName>bcso30_boxb</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_boxc</modelName>
+                    <modelName>bcso30_boxc</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_jcan</modelName>
+                    <modelName>bcso30_jcan</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exha</modelName>
+                    <modelName>bcso30_exha</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exhc</modelName>
+                    <modelName>bcso30_exhc</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exhb</modelName>
+                    <modelName>bcso30_exhb</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_exhd</modelName>
+                    <modelName>bcso30_exhd</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_shroud_1</modelName>
+                    <modelName>bcso30_shroud_1</modelName>
                     <bone>forks_l</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tankb</modelName>
+                    <modelName>bcso30_tankb</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
                 <Item>
-                    <modelName>manchez3_tankc</modelName>
+                    <modelName>bcso30_tankc</modelName>
                     <bone>chassis</bone>
                     <turnOffExtra value="false" />
                 </Item>
@@ -6211,5 +6211,371 @@
             </slotNames>
             <liveryNames />
         </Item>
+        <Item>
+            <kitName>706_lsmcheli_modkit</kitName>
+            <id value="706" />
+            <kitType>MKT_SPECIAL</kitType>
+            <visibleMods/>
+            <statMods>
+                <Item>
+                    <identifier />
+                    <modifier value="25" />
+                    <audioApply value="1.000000" />
+                    <weight value="20" />
+                    <type>VMT_ENGINE</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="50" />
+                    <audioApply value="1.000000" />
+                    <weight value="20" />
+                    <type>VMT_ENGINE</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="75" />
+                    <audioApply value="1.000000" />
+                    <weight value="20" />
+                    <type>VMT_ENGINE</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="100" />
+                    <audioApply value="1.000000" />
+                    <weight value="20" />
+                    <type>VMT_ENGINE</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="25" />
+                    <audioApply value="1.000000" />
+                    <weight value="5" />
+                    <type>VMT_BRAKES</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="65" />
+                    <audioApply value="1.000000" />
+                    <weight value="5" />
+                    <type>VMT_BRAKES</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="100" />
+                    <audioApply value="1.000000" />
+                    <weight value="5" />
+                    <type>VMT_BRAKES</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="20" />
+                    <audioApply value="1.000000" />
+                    <weight value="0" />
+                    <type>VMT_ARMOUR</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="40" />
+                    <audioApply value="1.000000" />
+                    <weight value="10" />
+                    <type>VMT_ARMOUR</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="60" />
+                    <audioApply value="1.000000" />
+                    <weight value="20" />
+                    <type>VMT_ARMOUR</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="80" />
+                    <audioApply value="1.000000" />
+                    <weight value="30" />
+                    <type>VMT_ARMOUR</type>
+                </Item>
+                <Item>
+                    <identifier />
+                    <modifier value="100" />
+                    <audioApply value="1.000000" />
+                    <weight value="40" />
+                    <type>VMT_ARMOUR</type>
+                </Item>
+            </statMods>
+            <slotNames/>
+            <liveryNames />
+        </Item>
     </Kits>
+    <Lights>
+        <Item>
+            <id value="902"/>
+            <indicator>
+                <intensity value="0.37500000"/>
+                <falloffMax value="2.50000000"/>
+                <falloffExponent value="8.00000000"/>
+                <innerConeAngle value="20.00000000"/>
+                <outerConeAngle value="50.00000000"/>
+                <emmissiveBoost value="false"/>
+                <color value="0x00000000"/>
+                <textureName/>
+                <mirrorTexture value="true"/>
+            </indicator>
+            <rearIndicatorCorona>
+                <size value="0.00000000"/>
+                <size_far value="0.00000000"/>
+                <intensity value="0.00000000"/>
+                <intensity_far value="0.00000000"/>
+                <color value="0x00000000"/>
+                <numCoronas value="1"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </rearIndicatorCorona>
+            <frontIndicatorCorona>
+                <size value="0.00000000"/>
+                <size_far value="0.00000000"/>
+                <intensity value="0.00000000"/>
+                <intensity_far value="0.00000000"/>
+                <color value="0x00000000"/>
+                <numCoronas value="1"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </frontIndicatorCorona>
+            <tailLight>
+                <intensity value="0.25000000"/>
+                <falloffMax value="4.00000000"/>
+                <falloffExponent value="16.00000000"/>
+                <innerConeAngle value="45.00000000"/>
+                <outerConeAngle value="90.00000000"/>
+                <emmissiveBoost value="false"/>
+                <color value="0xFFFF0000"/>
+                <textureName/>
+                <mirrorTexture value="true"/>
+            </tailLight>
+            <tailLightCorona>
+                <size value="1.20000000"/>
+                <size_far value="2.50000000"/>
+                <intensity value="5.00000000"/>
+                <intensity_far value="1.00000000"/>
+                <color value="0xFFFF0F05"/>
+                <numCoronas value="0"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </tailLightCorona>
+            <tailLightMiddleCorona>
+                <size value="0.00000000"/>
+                <size_far value="0.00000000"/>
+                <intensity value="0.00000000"/>
+                <intensity_far value="0.00000000"/>
+                <color value="0x00000000"/>
+                <numCoronas value="1"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </tailLightMiddleCorona>
+            <headLight>
+                <intensity value="1.50000000"/>
+                <falloffMax value="35.00000000"/>
+                <falloffExponent value="16.00000000"/>
+                <innerConeAngle value="0.00000000"/>
+                <outerConeAngle value="60.00000000"/>
+                <emmissiveBoost value="true"/>
+                <color value="0xFF7FA7E3"/>
+                <textureName>VehicleLight_car_standardmodern</textureName>
+                <mirrorTexture value="false"/>
+            </headLight>
+            <headLightCorona>
+                <size value="0.10000000"/>
+                <size_far value="7.00000000"/>
+                <intensity value="7.00000000"/>
+                <intensity_far value="5.00000000"/>
+                <color value="0xFF61A5FF"/>
+                <numCoronas value="1"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </headLightCorona>
+            <reversingLight>
+                <intensity value="0.50000000"/>
+                <falloffMax value="7.20000000"/>
+                <falloffExponent value="32.00000000"/>
+                <innerConeAngle value="20.00000000"/>
+                <outerConeAngle value="78.00000000"/>
+                <emmissiveBoost value="false"/>
+                <color value="0xFFFFFFFF"/>
+                <textureName/>
+                <mirrorTexture value="true"/>
+            </reversingLight>
+            <reversingLightCorona>
+                <size value="0.80000000"/>
+                <size_far value="2.00000000"/>
+                <intensity value="1.50000000"/>
+                <intensity_far value="1.00000000"/>
+                <color value="0x00F7F7F7"/>
+                <numCoronas value="1"/>
+                <distBetweenCoronas value="128"/>
+                <distBetweenCoronas_far value="255"/>
+                <xRotation value="0.00000000"/>
+                <yRotation value="0.00000000"/>
+                <zRotation value="0.00000000"/>
+                <zBias value="0.25000000"/>
+                <pullCoronaIn value="false"/>
+            </reversingLightCorona>
+            <name>lspd40</name>
+        </Item>
+        <Item>
+            <id value="656" />
+            <indicator>
+                <intensity value="0.375000" />
+                <falloffMax value="2.500000" />
+                <falloffExponent value="8.000000" />
+                <innerConeAngle value="30.000000" />
+                <outerConeAngle value="80.000000" />
+                <emmissiveBoost value="false" />
+                <color value="0xFFFF8000" />
+            </indicator>
+            <rearIndicatorCorona>
+                <size value="0.200000" />
+                <size_far value="0.000000" />
+                <intensity value="0.000000" />
+                <intensity_far value="0.000000" />
+                <color value="0x00000000" />
+                <numCoronas value="1" />
+                <distBetweenCoronas value="128" />
+                <distBetweenCoronas_far value="255" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="0.000000" />
+                <zBias value="0.250000" />
+                <pullCoronaIn value="false" />
+            </rearIndicatorCorona>
+            <frontIndicatorCorona>
+                <size value="0.000000" />
+                <size_far value="0.000000" />
+                <intensity value="0.000000" />
+                <intensity_far value="0.000000" />
+                <color value="0x00000000" />
+                <numCoronas value="1" />
+                <distBetweenCoronas value="128" />
+                <distBetweenCoronas_far value="255" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="0.000000" />
+                <zBias value="0.250000" />
+                <pullCoronaIn value="false" />
+            </frontIndicatorCorona>
+            <tailLight>
+                <intensity value="0.250000" />
+                <falloffMax value="4.000000" />
+                <falloffExponent value="16.000000" />
+                <innerConeAngle value="45.000000" />
+                <outerConeAngle value="90.000000" />
+                <emmissiveBoost value="false" />
+                <color value="0xFFFF0000" />
+            </tailLight>
+            <tailLightCorona>
+                <size value="0.900000" />
+                <size_far value="5.300000" />
+                <intensity value="4.000000" />
+                <intensity_far value="1.000000" />
+                <color value="0xFFFF1E05" />
+                <numCoronas value="0" />
+                <distBetweenCoronas value="0.1" />
+                <distBetweenCoronas_far value="20.5" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="5.667000" />
+                <zBias value="0.000000" />
+                <pullCoronaIn value="false" />
+            </tailLightCorona>
+            <tailLightMiddleCorona>
+                <size value="0.000000" />
+                <size_far value="0.000000" />
+                <intensity value="0.000000" />
+                <intensity_far value="0.000000" />
+                <color value="0x00000000" />
+                <numCoronas value="0" />
+                <distBetweenCoronas value="25" />
+                <distBetweenCoronas_far value="25" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="0.000000" />
+                <zBias value="0.000000" />
+                <pullCoronaIn value="false" />
+            </tailLightMiddleCorona>
+            <headLight>
+                <intensity value="1.000000" />
+                <falloffMax value="35.000000" />
+                <falloffExponent value="16.000000" />
+                <innerConeAngle value="0.000000" />
+                <outerConeAngle value="60.209999" />
+                <emmissiveBoost value="false" />
+                <color value="0xFFFFFFCC" />
+                <textureName>VehicleLight_car_oldsquare</textureName>
+                <mirrorTexture value="true" />
+            </headLight>
+            <headLightCorona>
+                <size value="0.100000" />
+                <size_far value="10.000000" />
+                <intensity value="5.000000" />
+                <intensity_far value="1.000000" />
+                <color value="0xFFFFFFFF" />
+                <numCoronas value="1" />
+                <distBetweenCoronas value="128" />
+                <distBetweenCoronas_far value="255" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="0.000000" />
+                <zBias value="0.250000" />
+                <pullCoronaIn value="false" />
+            </headLightCorona>
+            <reversingLight>
+                <intensity value="0.500000" />
+                <falloffMax value="4.000000" />
+                <falloffExponent value="32.000000" />
+                <innerConeAngle value="45.000000" />
+                <outerConeAngle value="90.000000" />
+                <emmissiveBoost value="false" />
+                <color value="0xFFFFFFFF" />
+            </reversingLight>
+            <reversingLightCorona>
+                <size value="0.800000" />
+                <size_far value="2.000000" />
+                <intensity value="1.500000" />
+                <intensity_far value="1.000000" />
+                <color value="0x00F7F7F7" />
+                <numCoronas value="1" />
+                <distBetweenCoronas value="128" />
+                <distBetweenCoronas_far value="255" />
+                <xRotation value="0.000000" />
+                <yRotation value="0.000000" />
+                <zRotation value="0.000000" />
+                <zBias value="0.250000" />
+                <pullCoronaIn value="false" />
+            </reversingLightCorona>
+            <name>GTR</name>
+        </Item>
+    </Lights>
 </CVehicleModelInfoVarGlobal>

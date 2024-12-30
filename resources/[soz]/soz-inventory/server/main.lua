@@ -79,7 +79,7 @@ function Inventory.Create(id, label, invType, slots, maxWeight, owner, items)
         end
 
         Inventories[self.id] = self
-        _G.Container[self.type]:SyncInventory(self.id, self.items)
+        _G.Container[self.type]:SyncInventory(self)
 
         return Inventories[self.id]
     end
@@ -114,6 +114,7 @@ function Inventory.Load(id, invType, owner)
                     slot = v.slot,
                     combinable = item.combinable,
                     illustrator = item.illustrator,
+                    throwable = item.throwable,
                 }
             end
         end
@@ -133,7 +134,7 @@ function Inventory.Clear(inv, keep)
         if not keep then
             table.wipe(inv.items)
             inv.weight = 0
-            _G.Container[inv.type]:SyncInventory(inv.id, inv.items)
+            _G.Container[inv.type]:SyncInventory(inv)
         end
     end
 end
@@ -210,6 +211,10 @@ function Inventory.GetItemWeight(item, metadata, amount)
 
     if item.type == "crate" then
         weight = item.weight + Inventory.getCrateWeight(metadata)
+    end
+
+    if metadata.storageElements then
+        weight = item.weight + Inventory.getItemStorageWeight(metadata)
     end
 
     return weight
@@ -393,9 +398,21 @@ function Inventory.getCrateWeight(metadata)
     end
     for _, crateItem in pairs(metadata.crateElements) do
         local item = QBCore.Shared.Items[crateItem.name]
-        crateTotalWeight = crateTotalWeight + Inventory.GetItemWeight(item, metadata, crateItem.amount)
+        crateTotalWeight = crateTotalWeight + Inventory.GetItemWeight(item, crateItem.metadata, crateItem.amount)
     end
     return crateTotalWeight
+end
+
+function Inventory.getItemStorageWeight(metadata)
+    local storageTotalWeight = 0
+    if not metadata or not metadata.storageElements then
+        return storageTotalWeight
+    end
+    for _, storageItem in pairs(metadata.storageElements) do
+        local item = QBCore.Shared.Items[storageItem.name]
+        storageTotalWeight = storageTotalWeight + Inventory.GetItemWeight(item, storageItem.metadata, storageItem.amount)
+    end
+    return storageTotalWeight
 end
 
 function Inventory.handleLunchbox(source, inv, slotItem, metadata, amount, item, slotId)
@@ -482,9 +499,20 @@ function Inventory.AddItem(source, inv, item, amount, metadata, slot, cb)
             metadata.maxHealth = 2000
         end
     elseif item.expiresIn and metadata.expiration == nil then
-        metadata.expiration = os.date("%Y-%m-%dT%H:%M:00Z", os.time() + (item.expiresIn * 60))
+        metadata.expiration = os.date("!%Y-%m-%dT%H:%M:00Z", os.time() + (item.expiresIn * 60))
     elseif item.durability and metadata.expiration == nil then
-        metadata.expiration = os.date("%Y-%m-%d", os.time() + (item.durability * 60 * 60 * 24))
+        metadata.expiration = os.date("!%Y-%m-%d", os.time() + (item.durability * 60 * 60 * 24))
+    end
+    if item.type == "evidence" then
+        metadata.creation = os.date("!%Y-%m-%dT%H:%M:00Z", os.time())
+    end
+    if item.storageItemType then
+        if metadata.id == nil then
+            metadata.id = QBCore.Shared.UuidV4()
+        end
+        if metadata.storageElements == nil then
+            metadata.storageElements = {}
+        end
     end
 
     if not Inventory.CanCarryItem(inv, item, amount, metadata) then
@@ -580,8 +608,12 @@ function Inventory.AddItem(source, inv, item, amount, metadata, slot, cb)
     Inventory.SetSlot(inv, item, amount, metadata, slot)
     success = true
 
+    if inv.type == "temporary_trunk" or inv.type == "trunk" then
+        TriggerClientEvent("soz-core:client:police:drug-in-trunk", source, item)
+    end
+
     inv.changed = true
-    _G.Container[inv.type]:SyncInventory(inv.id, inv.items)
+    _G.Container[inv.type]:SyncInventory(inv)
 
     ::endAddItem::
     if cb then
@@ -601,7 +633,7 @@ function Inventory.SetMetadata(inv, slot, metadata)
             for k, v in pairs(metadata) do
                 slot.metadata[k] = v
             end
-            _G.Container[inv.type]:SyncInventory(inv.id, inv.items)
+            _G.Container[inv.type]:SyncInventory(inv)
         end
     end
 end
@@ -620,42 +652,47 @@ function Inventory.RemoveItem(inv, item, amount, metadata, slot, allowMoreThanOw
             metadata = type(metadata) == "string" and {type = metadata} or metadata
         end
 
-        local itemSlots, totalAmount = Inventory.GetItemSlots(inv, item, metadata)
-        if amount > totalAmount then
-            if not allowMoreThanOwned then
-                return false
-            end
-            amount = totalAmount
-        end
         local removed, total, slots = 0, amount, {}
-        if slot and itemSlots[slot] then
-            if itemSlots[slot] < amount then
-                return false
+        if slot and inv.items[slot] then
+            if amount > inv.items[slot].amount then
+                if not allowMoreThanOwned then
+                    return false
+                end
+                amount = totalAmount
             end
             removed = amount
-            Inventory.SetSlot(inv, item, -amount, metadata, slot)
+            Inventory.SetSlot(inv, item, -amount, nil, slot)
             slots[#slots + 1] = inv.items[slot] or slot
-        elseif itemSlots and totalAmount > 0 then
-            for k, v in pairs(itemSlots) do
-                if removed < total then
-                    if v == amount then
-                        removed = total
-                        inv.items[k] = nil
-                        slots[#slots + 1] = inv.items[k] or k
-                    elseif v > amount then
-                        Inventory.SetSlot(inv, item, -amount, metadata, k)
-                        slots[#slots + 1] = inv.items[k] or k
-                        removed = total
-                        amount = v - amount
+        else
+            local itemSlots, totalAmount = Inventory.GetItemSlots(inv, item, metadata)
+            if amount > totalAmount then
+                if not allowMoreThanOwned then
+                    return false
+                end
+                amount = totalAmount
+            end
+            if itemSlots and totalAmount > 0 then
+                for k, v in pairs(itemSlots) do
+                    if removed < total then
+                        if v == amount then
+                            removed = total
+                            inv.items[k] = nil
+                            slots[#slots + 1] = inv.items[k] or k
+                        elseif v > amount then
+                            Inventory.SetSlot(inv, item, -amount, metadata, k)
+                            slots[#slots + 1] = inv.items[k] or k
+                            removed = total
+                            amount = v - amount
+                        else
+                            removed = removed + v
+                            amount = amount - v
+                            inv.items[k] = nil
+                            slots[#slots + 1] = k
+                        end
+                        inv.changed = true
                     else
-                        removed = removed + v
-                        amount = amount - v
-                        inv.items[k] = nil
-                        slots[#slots + 1] = k
+                        break
                     end
-                    inv.changed = true
-                else
-                    break
                 end
             end
         end
@@ -673,7 +710,7 @@ function Inventory.RemoveItem(inv, item, amount, metadata, slot, allowMoreThanOw
             end
 
             inv.changed = true
-            _G.Container[inv.type]:SyncInventory(inv.id, inv.items)
+            _G.Container[inv.type]:SyncInventory(inv)
         end
 
         if overloaded and inv.maxWeight >= inv.weight then
@@ -790,8 +827,11 @@ function Inventory.TransfertItem(source, invSource, invTarget, item, amount, met
             player_source = source,
         }, {item = item.name, itemLabel = item.label, amount = amount})
 
-        _G.Container[invSource.type]:SyncInventory(invSource.id, invSource.items)
-        _G.Container[invTarget.type]:SyncInventory(invTarget.id, invTarget.items)
+        _G.Container[invSource.type]:SyncInventory(invSource)
+        _G.Container[invTarget.type]:SyncInventory(invTarget)
+    else
+        cb(false, "remove_failed")
+        return
     end
 
     if invSource.type ~= "player" and table.length(invSource.users) > 1 then
@@ -859,7 +899,7 @@ function Inventory.SortInventoryAZ(inv, cb)
         inv.changed = true
         inv.items = inventorySorted
 
-        _G.Container[inv.type]:SyncInventory(inv.id, inv.items)
+        _G.Container[inv.type]:SyncInventory(inv)
         success = true
 
         if inv.type ~= "player" and table.length(inv.users) > 1 then
@@ -967,6 +1007,7 @@ function Inventory.SetSlot(inv, item, amount, metadata, slot)
     inv = Inventory(inv)
     local currentSlot = inv.items[slot]
     local newAmount = currentSlot and currentSlot.amount + amount or amount
+    local newMetadata = metadata or currentSlot.metadata
     if currentSlot and newAmount < 1 then
         amount = currentSlot.amount
         inv.items[slot] = nil
@@ -975,9 +1016,9 @@ function Inventory.SetSlot(inv, item, amount, metadata, slot)
             name = item.name,
             label = item.label,
             amount = newAmount,
-            metadata = metadata or currentSlot.metadata,
+            metadata = newMetadata,
             description = item.description,
-            weight = Inventory.GetItemWeight(item, metadata, 1),
+            weight = Inventory.GetItemWeight(item, newMetadata, newAmount),
             type = item.type,
             unique = item.unique,
             useable = item.useable,
@@ -985,8 +1026,8 @@ function Inventory.SetSlot(inv, item, amount, metadata, slot)
             slot = slot,
             combinable = item.combinable,
             illustrator = item.illustrator,
+            throwable = item.throwable,
         }
-        inv.items[slot].weight = Inventory.GetItemWeight(item, inv.items[slot].metadata, inv.items[slot].amount)
     end
     inv.changed = true
 end
@@ -1207,3 +1248,8 @@ local function clearByOwner(owner)
     end
 end
 exports("ClearByOwner", clearByOwner)
+
+local function ErrorMessage(reason)
+    return Config.ErrorMessage[reason] or reason
+end
+exports("ErrorMessage", ErrorMessage)

@@ -15,10 +15,10 @@ export type WeaponAttachment = {
 };
 
 export const WEAPON_CUSTOM_PRICE = {
-    label: 1500,
-    repair: 100, // per percentage price
-    tint: 1500,
-    attachment: 4000,
+    label: 1350,
+    repair: 90, // per percentage price
+    tint: 1350,
+    attachment: 3600,
 };
 
 export const REPAIR_HEALTH_REDUCER = 0.95; // 5% health loss

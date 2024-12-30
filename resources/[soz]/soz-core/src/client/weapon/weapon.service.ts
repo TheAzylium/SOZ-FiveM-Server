@@ -1,9 +1,42 @@
+import { VehicleSeat } from '@public/shared/vehicle/vehicle';
+
 import { Inject, Injectable } from '../../core/decorators/injectable';
 import { InventoryItem } from '../../shared/item';
 import { GlobalWeaponConfig, WeaponConfig, WeaponName, Weapons } from '../../shared/weapons/weapon';
 import { PlayerService } from '../player/player.service';
 
 const MONEY_CASE_HASH = GetHashKey('WEAPON_BRIEFCASE');
+
+const backVeh = [
+    GetHashKey('stockade'),
+    GetHashKey('youga4'),
+    GetHashKey('burrito'),
+    GetHashKey('burrito2'),
+    GetHashKey('burrito3'),
+    GetHashKey('burrito4'),
+    GetHashKey('gburrito'),
+    GetHashKey('gburrito2'),
+    GetHashKey('ambulance'),
+    GetHashKey('ambulance2'),
+    GetHashKey('policet'),
+    GetHashKey('riot'),
+    GetHashKey('mule'),
+    GetHashKey('mule3'),
+    GetHashKey('mule5'),
+    GetHashKey('speedo'),
+    GetHashKey('speedo2'),
+    GetHashKey('speedo4'),
+    GetHashKey('rumpo'),
+    GetHashKey('boxville'),
+    GetHashKey('boxville2'),
+    GetHashKey('boxville3'),
+    GetHashKey('boxville4'),
+    GetHashKey('boxville5'),
+    GetHashKey('boxville6'),
+    GetHashKey('pony'),
+];
+
+const farBackVeh = [GetHashKey('bison'), GetHashKey('dubsta3')];
 
 @Injectable()
 export class WeaponService {
@@ -35,8 +68,6 @@ export class WeaponService {
         this.currentWeapon = weapon;
 
         GiveWeaponToPed(player, weaponHash, ammo, false, true);
-        SetPedAmmo(player, weaponHash, ammo);
-        SetCurrentPedWeapon(player, weaponHash, true);
 
         if (weapon.metadata.tint) {
             SetPedWeaponTintIndex(player, weaponHash, weapon.metadata.tint);
@@ -47,6 +78,9 @@ export class WeaponService {
                 GiveWeaponComponentToPed(player, weaponHash, GetHashKey(attachment));
             });
         }
+
+        SetPedAmmo(player, weaponHash, ammo);
+        SetCurrentPedWeapon(player, weaponHash, true);
     }
 
     async clear() {
@@ -84,20 +118,40 @@ export class WeaponService {
         }
 
         const recoil = this.getWeaponConfig(this.currentWeapon.name)?.recoil ?? 0;
-        const recoilHorizontal = Math.random() * 0.5 * (Math.round(Math.random()) ? 1 : -1);
+        const recoilHorizontal = Math.random() - 0.5;
         const weaponHealth = this.currentWeapon.metadata.health > 0 ? this.currentWeapon.metadata.health : 1;
         const maxWeaponHealth = this.currentWeapon.metadata.maxHealth ?? GlobalWeaponConfig.MaxHealth;
+        const healthdeviation = GlobalWeaponConfig.RecoilOnUsedWeapon * (1 - weaponHealth / maxWeaponHealth);
 
-        const recoilY = recoil + GlobalWeaponConfig.RecoilOnUsedWeapon * (1 - weaponHealth / maxWeaponHealth);
-        const recoilX = recoilHorizontal + GlobalWeaponConfig.RecoilOnUsedWeapon * (1 - weaponHealth / maxWeaponHealth);
+        const recoilY = recoil + healthdeviation;
+        const recoilX = recoilHorizontal > 0 ? recoilHorizontal + healthdeviation : recoilHorizontal - healthdeviation;
+
+        let backveh = 0;
+        if (GetFollowVehicleCamViewMode() == 4) {
+            const ped = PlayerPedId();
+            const veh = GetVehiclePedIsIn(ped, false);
+            if (veh) {
+                const model = GetEntityModel(veh);
+                if (backVeh.includes(model)) {
+                    if (GetPedInVehicleSeat(veh, VehicleSeat.BackRight) == ped) {
+                        backveh = -90;
+                    } else if (GetPedInVehicleSeat(veh, VehicleSeat.BackLeft) == ped) {
+                        backveh = 90;
+                    }
+                } else if (farBackVeh.includes(model)) {
+                    if (GetPedInVehicleSeat(veh, VehicleSeat.ExtraSeat2) == ped) {
+                        backveh = -90;
+                    } else if (GetPedInVehicleSeat(veh, VehicleSeat.ExtraSeat1) == ped) {
+                        backveh = 90;
+                    }
+                }
+            }
+        }
 
         const pitch = GetGameplayCamRelativePitch();
         const heading = GetGameplayCamRelativeHeading();
 
-        SetPedAccuracy(PlayerPedId(), (weaponHealth / maxWeaponHealth) * 100);
-
-        SetGameplayCamRelativePitch(pitch + recoilY, 1.0);
-        SetGameplayCamRelativeHeading(heading + recoilX);
+        SetGameplayCamRelativeRotation(heading + recoilX + backveh, pitch + recoilY, 1.0);
     }
 
     getWeaponConfig(weaponName: string): WeaponConfig | null {

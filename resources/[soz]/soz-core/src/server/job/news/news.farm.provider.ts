@@ -67,9 +67,13 @@ export class NewsFarmProvider {
         const { success, reason } = this.inventoryManager.addItemToInventory(source, 'newspaper', amount);
 
         if (!success) {
-            this.notifier.error(source, 'Impossible de récupérer les journaux : ' + reason);
-
-            return;
+            if (reason == 'invalid_weight') {
+                this.notifier.notify(source, 'Vos poches sont pleines...', 'error');
+                return false;
+            } else {
+                this.notifier.notify(source, `Il y a eu une erreur: ${reason}`, 'error');
+                return false;
+            }
         }
 
         this.notifier.notify(source, `Vous avez récupéré ~g~${amount} journaux.`);

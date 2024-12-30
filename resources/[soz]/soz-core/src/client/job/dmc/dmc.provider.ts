@@ -16,6 +16,9 @@ import { DMC_CRAFT_ZONES, DmcConverterState } from '@public/shared/job/dmc';
 import { MenuType } from '@public/shared/nui/menu';
 import { RpcServerEvent } from '@public/shared/rpc';
 
+import { BoxZone } from '../../../shared/polyzone/box.zone';
+import { PedFactory } from '../../factory/ped.factory';
+import { PlayerInOutService } from '../../player/player.inout.service';
 import { JobService } from '../job.service';
 
 @Provider()
@@ -43,6 +46,12 @@ export class DmcProvider {
 
     @Inject(CraftService)
     private craftService: CraftService;
+
+    @Inject(PlayerInOutService)
+    private playerInOutService: PlayerInOutService;
+
+    @Inject(PedFactory)
+    private pedFactory: PedFactory;
 
     private blipState = {
         'job:dmc:iron_mine': false,
@@ -197,7 +206,6 @@ export class DmcProvider {
                     action: async () => {
                         const newTemperatureInput = await this.inputService.askInput({
                             title: 'Modifier la température',
-                            defaultValue: '',
                             maxCharacters: 4,
                         });
                         const newTemperature = parseInt(newTemperatureInput);
@@ -220,5 +228,34 @@ export class DmcProvider {
         this.craftService.createBtargetZoneCraft(DMC_CRAFT_ZONES, 'c:/dmc/confection.png', 'Forger', JobType.DMC, {
             weapon: 'weapon_hammer',
         });
+
+        // Resell zone
+        this.pedFactory.createPedOnGrid({
+            model: 's_m_y_dockwork_01',
+            coords: { x: -132.7, y: -2383.92, z: 5.0, w: 174.18 },
+            freeze: true,
+            invincible: true,
+            blockevents: true,
+            scenario: 'WORLD_HUMAN_CLIPBOARD',
+        });
+
+        this.playerInOutService.add(
+            'Resell:LSPort:Dmc',
+            new BoxZone([-132.7, -2383.92, 5.0], 3.0, 3.0, {
+                minZ: 4.0,
+                maxZ: 8.0,
+            }),
+            isInside => {
+                if (isInside) {
+                    TriggerEvent('player/setCurrentResellZone', {
+                        ZoneName: 'Resell:LSPort:Dmc',
+                        SourceAccount: 'farm_dmc',
+                        TargetAccount: 'safe_dmc',
+                    });
+                } else {
+                    TriggerEvent('player/setCurrentResellZone', null);
+                }
+            }
+        );
     }
 }

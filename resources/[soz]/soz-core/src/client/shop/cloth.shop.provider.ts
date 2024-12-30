@@ -2,11 +2,12 @@ import { Logger } from '@core/logger';
 import { Notifier } from '@public/client/notifier';
 import { GloveShopRepository } from '@public/client/repository/glove.shop.repository';
 import { UnderTypesShopRepository } from '@public/client/repository/under_types.shop.repository';
-import { ShopBrand, ShopsConfig, UndershirtCategoryNeedingReplacementTorso } from '@public/config/shops';
+import { ProperTorsos, ShopBrand, ShopsConfig, UndershirtCategoryNeedingReplacementTorso } from '@public/config/shops';
 import { On, OnEvent, OnNuiEvent } from '@public/core/decorators/event';
 import { Exportable } from '@public/core/decorators/exports';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
+import { CAYO } from '@public/shared/cayo';
 import { Component, GlovesItem } from '@public/shared/cloth';
 import { ClientEvent, NuiEvent, ServerEvent } from '@public/shared/event';
 import { MenuType } from '@public/shared/nui/menu';
@@ -86,11 +87,17 @@ export class ClothingShopProvider {
 
             return;
         }
-        const player_data = this.playerService.getPlayer();
+        const isInCayo = CAYO.isPointInside(GetEntityCoords(PlayerPedId(), false) as Vector3);
         const under_types = this.underTypesShopRepository.getAllUnderTypes();
         this.currentShop = shop;
         await this.setupShop();
-        this.nuiMenu.openMenu(MenuType.ClothShop, { brand, shop_content, shop_categories, player_data, under_types });
+        this.nuiMenu.openMenu(MenuType.ClothShop, {
+            brand,
+            shop_content,
+            shop_categories,
+            under_types,
+            isInCayo,
+        });
     }
 
     public async setupShop(skipIntro = false) {
@@ -159,7 +166,8 @@ export class ClothingShopProvider {
         // Adapt the torso to the undershirt if selected
         const playerModel = GetEntityModel(ped);
         const player = this.playerService.getPlayer();
-        const baseTorsoDrawable = player.cloth_config.BaseClothSet.Components[Component.Torso].Drawable;
+        const baseTorsoDrawable =
+            ProperTorsos[playerModel][player.cloth_config.BaseClothSet.Components[Component.Tops].Drawable];
         const nakedTorsoDrawable = player.cloth_config.NakedClothSet.Components[Component.Torso].Drawable;
         if (baseTorsoDrawable == null) {
             return;
@@ -224,6 +232,7 @@ export class ClothingShopProvider {
         const shopName = Object.entries(ClothingShopID)
             .find(([, value]) => value == product.shopId)[0]
             .toLowerCase();
+
         TriggerServerEvent(ServerEvent.SHOP_BUY, product, shopName);
     }
 
@@ -258,10 +267,6 @@ export class ClothingShopProvider {
         ) {
             return;
         }
-
-        // update player data in case the player changed clothes
-        const playerData = this.playerService.getPlayer();
-        this.nuiDispatch.dispatch('cloth_shop', 'SetPlayerData', playerData);
     }
 
     @Exportable('DisplayHairWithMask')

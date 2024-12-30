@@ -80,13 +80,13 @@ export class CallService {
     handleCallAccepted(callData: ActiveCall) {
         this.currentCall = callData.channelId;
         this.currentCallData = callData;
-        emitNet('voip:server:call:start', callData.transmitter, callData.receiver);
+        emitNet('soz-core:server:voip:phone-call-start', callData.transmitter, callData.receiver);
         CallService.sendCallAction<ActiveCall>(CallEvents.SET_CALLER, callData);
     }
 
     handleEndCall() {
         if (this.isCallAccepted()) {
-            emitNet('voip:server:call:end');
+            emitNet('soz-core:server:voip:phone-call-end');
         }
 
         this.currentCall = 0;

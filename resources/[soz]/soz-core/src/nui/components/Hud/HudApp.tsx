@@ -1,5 +1,7 @@
 import { FunctionComponent } from 'react';
 
+import { ColdOverlay } from './ColdIcon';
+import { DebugVoip } from './DebugVoip';
 import { Minimap } from './Minimap';
 import { NewsBanner } from './NewsBanner';
 import { Notifications } from './Notifications';
@@ -20,6 +22,8 @@ export const HudApp: FunctionComponent = () => {
             <SpeedoMeter />
             <TwitchNewsOverlay />
             <ZombieOverlay />
+            <ColdOverlay />
+            <DebugVoip />
         </main>
     );
 };

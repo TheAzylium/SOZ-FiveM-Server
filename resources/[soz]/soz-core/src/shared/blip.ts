@@ -27,6 +27,7 @@ export type QbBlip = {
     coords: { x: number; y: number; z?: number };
     position?: Vector3 | Vector4;
     category?: number;
+    radius?: number;
 };
 
 export type Blip = RequireAtLeastOne<QbBlip, 'coords' | 'position'>;

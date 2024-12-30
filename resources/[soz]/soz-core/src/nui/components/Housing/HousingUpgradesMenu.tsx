@@ -5,6 +5,8 @@ import { HousingTiers } from '@public/shared/housing/upgrades';
 import { MenuType } from '@public/shared/nui/menu';
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -33,6 +35,7 @@ export const HousingUpgradesMenu: FunctionComponent<HousingUpgradesMenuProps> = 
     const lastTier = parseInt(Object.keys(HousingTiers)[Object.keys(HousingTiers).length - 1]);
     const initialTier = Math.min(data.currentTier + 1, lastTier);
 
+    const getPrice = useGetPrice();
     const [tier, setTier] = useState(0);
     const [parking, setParking] = useState(true);
     const [tierPrice, setTierPrice] = useState(0);
@@ -133,7 +136,7 @@ export const HousingUpgradesMenu: FunctionComponent<HousingUpgradesMenuProps> = 
                     <MenuItemButton className="border-t border-white/50" onConfirm={() => onConfirm()}>
                         <div className="flex w-full justify-between items-center">
                             <span>Confirmer</span>
-                            <span>${(tierPrice + parkingPrice).toFixed()}</span>
+                            <span>${getPrice(tierPrice + parkingPrice, TaxType.HOUSING).toFixed()}</span>
                         </div>
                     </MenuItemButton>
                 </MenuContent>

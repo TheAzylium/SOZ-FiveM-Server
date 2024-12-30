@@ -20,6 +20,7 @@ export enum StorageType {
     SawdustStorage = 'sawdust_storage',
     Seizure = 'seizure',
     Stash = 'stash',
+    EvidenceStorage = 'evidence_storage',
     Storage = 'storage',
     StorageTank = 'storage_tank',
     Trunk = 'trunk',

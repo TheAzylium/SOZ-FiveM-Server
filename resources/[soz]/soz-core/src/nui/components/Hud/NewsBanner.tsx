@@ -96,7 +96,7 @@ const Banner: FunctionComponent<BannerProps> = ({ index, news, onDelete }) => {
 
     return (
         <div
-            className="absolute w-full bottom-0 overflow-hidden mb-[.3rem] transition-all text-white bg-no-repeat bg-contain"
+            className="absolute w-[60vh] bottom-0 overflow-hidden mb-[.3rem] transition-all text-white bg-no-repeat bg-contain"
             style={{
                 transform: `translateX(${index * 0.5}rem) translateY(-${index * 0.5}rem)`,
                 opacity: `calc(1.0 - ${index * 0.3})`,
@@ -120,7 +120,7 @@ const Banner: FunctionComponent<BannerProps> = ({ index, news, onDelete }) => {
                     <>
                         {!news.type.includes('reboot') && (
                             <div className="flex flex-col justify-between p-1 h-full">
-                                <p className="max-h-40 overflow-hidden break-words">{news.message}</p>
+                                <p className="max-h-40 overflow-hidden break-words text-[1.35vh]">{news.message}</p>
                                 <p className="text-right pr-4 text-lg">
                                     {authorType} <strong>{news.reporter}</strong>
                                 </p>
@@ -154,7 +154,7 @@ export const NewsBanner: FunctionComponent = () => {
     );
 
     return (
-        <div className="absolute bottom-[1vh] left-[35vw] right-0 w-[30vw] z-20">
+        <div className="absolute bottom-[1vh] w-full flex justify-center z-20">
             {news.map((n, i) => (
                 <Banner key={n.id} index={news.length - 1 - i} news={n} onDelete={() => deleteNews(n.id)} />
             ))}

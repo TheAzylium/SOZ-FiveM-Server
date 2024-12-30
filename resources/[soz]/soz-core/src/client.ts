@@ -9,6 +9,7 @@ import { AnimationModule } from './client/animation/animation.module';
 import { BankModule } from './client/bank/bank.module';
 import { BillboardModule } from './client/billboard/billboard.module';
 import { BinocularsModule } from './client/binoculars/binoculars.module';
+import { ClothingModule } from './client/clothing/clothing.module';
 import { CraftModule } from './client/craft/craft.module';
 import { DrivingSchoolModule } from './client/driving-school/ds.module';
 import { FactoryModule } from './client/factory/factory.module';
@@ -65,6 +66,12 @@ async function bootstrap() {
     setService('MiddlewareFactory', ChainMiddlewareEventClientFactory);
     setService('MiddlewareTickFactory', ChainMiddlewareTickClientFactory);
 
+    try {
+        setMaxEventListeners(20);
+    } catch {
+        /* empty */
+    }
+
     const app = await Application.create(
         ProviderClientLoader,
         StoreModule,
@@ -72,6 +79,7 @@ async function bootstrap() {
         MonitorModule,
         HudModule,
         WorldModule,
+        ClothingModule,
         ObjectModule,
         PlayerModule,
         WeatherModule,

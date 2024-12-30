@@ -25,6 +25,19 @@ export const rotatePoint = (
     return [newX + center[0], newY + center[1]];
 };
 
+export const rotatePoint3D = (center: Point3D | Vector4, point: Point3D, angleInRad: number): Point3D => {
+    const cos = Math.cos(angleInRad);
+    const sin = Math.sin(angleInRad);
+
+    const x = point[0] - center[0];
+    const y = point[1] - center[1];
+
+    const newX = x * cos - y * sin;
+    const newY = x * sin + y * cos;
+
+    return [newX + center[0], newY + center[1], point[2]];
+};
+
 export const transformForwardPoint2D = (point: Point2D, angleInRad: number, distance: number): Point2D => {
     // we move the point only on the y axis (where the angle is 0)
     const newPoint: Point2D = [point[0], point[1] + distance];
@@ -83,14 +96,35 @@ export const multVector3 = (vector: Vector3, value: number): Vector3 => {
     return [vector[0] * value, vector[1] * value, vector[2] * value];
 };
 
-export const mult2Vector3 = (vector1: Vector3, vector2: Vector3): Vector3 => {
-    return [vector1[0] * vector2[0], vector1[1] * vector2[1], vector1[2] * vector2[2]];
-};
-
-export const addVector3 = (vector: Vector3, value: number): Vector3 => {
-    return [vector[0] + value, vector[1] + value, vector[2] + value];
+export const dot2Vector3 = (vector1: Vector3, vector2: Vector3): number => {
+    return vector1[0] * vector2[0] + vector1[1] * vector2[1] + vector1[2] * vector2[2];
 };
 
 export const add2Vector3 = (vector1: Vector3, vector2: Vector3): Vector3 => {
     return [vector1[0] + vector2[0], vector1[1] + vector2[1], vector1[2] + vector2[2]];
+};
+
+export const createVector3FromPoint = (a: Point3D, b: Point3D): Vector3 => {
+    return [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+};
+
+export const sub2Vector3 = (vector1: Vector3, vector2: Vector3): Vector3 => {
+    return [vector1[0] - vector2[0], vector1[1] - vector2[1], vector1[2] - vector2[2]];
+};
+
+export const crossProductVector3 = (vector1: Vector3, vector2: Vector3): Vector3 => {
+    return [
+        vector1[1] * vector2[2] - vector1[2] * vector2[1],
+        vector1[2] * vector2[0] - vector1[0] * vector2[2],
+        vector1[0] * vector2[1] - vector1[1] * vector2[0],
+    ];
+};
+
+export const planeEquationCoeffs = (p1: Point3D, p2: Point3D, p3: Point3D): [number, number, number, number] => {
+    const vector1 = sub2Vector3(p2, p1);
+    const vector2 = sub2Vector3(p3, p1);
+    const normal = crossProductVector3(vector1, vector2);
+    const D = -dot2Vector3(normal, p1);
+
+    return [normal[0], normal[1], normal[2], D];
 };

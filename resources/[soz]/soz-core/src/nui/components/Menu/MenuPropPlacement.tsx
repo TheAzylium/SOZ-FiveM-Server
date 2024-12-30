@@ -42,6 +42,7 @@ export const MenuPropPlacement: FunctionComponent<MenuPropPlacementProps> = ({ d
         size: 0,
         loaded_size: 0,
         props: {},
+        persistant: false,
     });
     const [currentSearch, setCurrentSearch] = useState<string>(null);
     const navigate = useNavigate();
@@ -199,6 +200,29 @@ export const MenuPropPlacement: FunctionComponent<MenuPropPlacementProps> = ({ d
                     >
                         ✎ Renommer la collection
                     </MenuItemButton>
+                    {['staff', 'admin'].includes(player.role) && (
+                        <>
+                            <MenuItemCheckbox
+                                checked={collection.persistant}
+                                onChange={async value => {
+                                    await fetchNui(NuiEvent.RequestPersistPropCollection, {
+                                        name: collection.name,
+                                        persist: value,
+                                    });
+                                }}
+                                description="Charge la collection au démarrage du serveur."
+                            >
+                                💾 Persister la collection
+                            </MenuItemCheckbox>
+                            <MenuItemButton
+                                onConfirm={async () => {
+                                    await fetchNui(NuiEvent.PlacementCollectionTeleport, collection.name);
+                                }}
+                            >
+                                ⛹Téléporter
+                            </MenuItemButton>
+                        </>
+                    )}
                     <MenuItemButton
                         onConfirm={async () => {
                             await fetchNui(NuiEvent.RequestDeletePropCollection, { name: collection.name });

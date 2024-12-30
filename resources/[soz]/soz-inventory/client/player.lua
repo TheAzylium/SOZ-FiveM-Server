@@ -16,7 +16,7 @@ RegisterCommand("inventory", function()
                 return
             end
 
-            inventory = Handle.Functions.handleFish(inventory)
+            inventory = HydrateInventory(inventory)
 
             SendNUIMessage({
                 action = "openPlayerInventory",
@@ -50,7 +50,7 @@ end)
 
 RegisterNUICallback("player/renameItem", function(data, cb)
     SetNuiFocus(false, false)
-    local label = exports["soz-core"]:Input("Étiquette", 20, "")
+    local label = exports["soz-core"]:Input("Étiquette", 40, "")
     TriggerServerEvent("inventory:server:renameItem", label, data)
     cb(true)
 end)
@@ -67,8 +67,13 @@ RegisterNUICallback("player/giveItem", function(data, cb)
         if player ~= -1 and distance < 2.0 then
             local amount = data.amount
 
-            if amount > 1 then
-                amount = exports["soz-core"]:Input("Quantité", 5, data.amount)
+            if tonumber(amount) > 1 then
+                amount = tostring(exports["soz-core"]:Input("Quantité", 5, data.amount))
+                if tonumber(amount, 10) == nil then
+                    exports["soz-core"]:DrawNotification("Vous devez entrer un nombre entier", "error")
+                    cb(true)
+                    return
+                end
             end
 
             if tonumber(amount, 10) == nil then
@@ -83,6 +88,18 @@ RegisterNUICallback("player/giveItem", function(data, cb)
         else
             exports["soz-core"]:DrawNotification("Personne n'est à portée de vous", "error")
         end
+    end
+
+    cb(true)
+end)
+
+RegisterNUICallback("player/throwItem", function(data, cb)
+    local playerState = exports["soz-core"]:GetPlayerState()
+
+    if playerState.isInHub then
+        exports["soz-core"]:DrawNotification("Pas d'échange dans le Hub", "error")
+    else
+        TriggerServerEvent("inventory:server:ThrowItem", data)
     end
 
     cb(true)
@@ -140,14 +157,19 @@ AddEventHandler("player/setCurrentResellZone", function(newValue)
 end)
 
 RegisterNUICallback("player/giveItemToTarget", function(data, cb)
-    local hit, _, _, entityHit, entityType, _ = ScreenToWorld()
+    local hit, endCoords, _, entityHit, entityType, _ = ScreenToWorld()
     SetNuiFocus(false, false)
 
     if hit == 1 and entityType == 1 then
         local amount = data.amount
 
-        if amount > 1 then
-            amount = exports["soz-core"]:Input("Quantité", 5, data.amount)
+        if tonumber(amount) > 1 then
+            amount = tostring(exports["soz-core"]:Input("Quantité", 5, data.amount))
+            if tonumber(amount, 10) == nil then
+                exports["soz-core"]:DrawNotification("Vous devez entrer un nombre entier", "error")
+                cb(true)
+                return
+            end
         end
 
         if amount and tonumber(amount) > 0 then
@@ -169,9 +191,31 @@ RegisterNUICallback("player/giveItemToTarget", function(data, cb)
             end
         end
     else
+        local printers = {
+            [GetHashKey("prop_printer_01")] = true,
+            [GetHashKey("prop_printer_02")] = true,
+            [GetHashKey("v_res_printer")] = true,
+            [GetHashKey("v_med_cor_photocopy")] = true,
+            [GetHashKey("prop_copier_01")] = true,
+        }
+        if printers[GetEntityModel(entityHit)] then
+            TriggerServerEvent("soz-core:server:police:make-copy-detective-board", data)
+            cb(true)
+            return
+        end
+        if data.type == "evidence" and data.name ~= "scientist_photo" then
+            TriggerEvent("soz-core:client:police:analyze-evidence", data, {endCoords.x, endCoords.y, endCoords.z})
+            cb(true)
+            return
+        end
         exports["soz-core"]:DrawNotification("Personne n'est à portée de vous", "error")
     end
 
+    cb(true)
+end)
+
+RegisterNUICallback("player/addPhotoDetectiveBoard", function(data, cb)
+    TriggerServerEvent("soz-core:server:police:add-photo-detective-board", data.detectiveBoard, data.photo)
     cb(true)
 end)
 
@@ -234,4 +278,22 @@ exports("hasPhone", function()
     end
 
     return true;
+end)
+
+RegisterNUICallback("player/openItemStorage", function(data, cb)
+    cb(true)
+    SetNuiFocus(false, false)
+
+    TriggerServerEvent("inventory:server:openItemStorage", data.slot)
+end)
+
+RegisterNUICallback("player/showItem", function(data, cb)
+    cb(true)
+
+    local player, distance = QBCore.Functions.GetClosestPlayer()
+    if player ~= -1 and distance < 2.0 then
+        TriggerServerEvent("soz-core:server:inventory:item-show", GetPlayerServerId(player), data.slot)
+    else
+        exports["soz-core"]:DrawNotification("Personne n'est à portée de vous", "error")
+    end
 end)

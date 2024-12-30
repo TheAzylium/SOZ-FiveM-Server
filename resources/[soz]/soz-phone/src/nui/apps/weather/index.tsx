@@ -11,7 +11,7 @@ import { WeatherList } from './pages/WeatherList';
 export const WeatherApp = () => {
     const { getAlert } = useWeather();
     const alert = getAlert();
-    const alertInProgress = alert && alert.getTime() > Date.now();
+    const alertInProgress = alert > Date.now();
     const time = useTime();
     const hours = parseInt(time.slice(0, 2), 10);
     const isNight = hours >= 21 || hours < 6;

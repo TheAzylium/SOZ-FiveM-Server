@@ -1,14 +1,16 @@
 import { BrandsConfig, ShopBrand, UndershirtDrawablesToExclude } from '@public/config/shops';
+import { usePlayer } from '@public/nui/hook/data';
 import { useNuiEvent } from '@public/nui/hook/nui';
 import { Component } from '@public/shared/cloth';
-import { PlayerData } from '@public/shared/player';
 import { ClothingCategoryID, ClothingShop, ClothingShopCategory } from '@public/shared/shop';
 import { FunctionComponent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -26,16 +28,17 @@ type MenuClothShopStateProps = {
         brand: ShopBrand;
         shop_content: ClothingShop;
         shop_categories: Record<number, ClothingShopCategory>;
-        player_data: PlayerData;
         under_types: Record<number, number[]>;
+        isInCayo: boolean;
     };
 };
 
 export const ClothShopMenu: FunctionComponent<MenuClothShopStateProps> = ({
-    catalog: { brand, shop_content, shop_categories, player_data, under_types },
+    catalog: { brand, shop_content, shop_categories, under_types, isInCayo },
 }: MenuClothShopStateProps) => {
+    const getPrice = useGetPrice();
     const [shopCategories, setShopCategories] = useState<Record<number, ClothingShopCategory>>(shop_categories);
-    const [playerData, setPlayerData] = useState<PlayerData>(player_data);
+    const playerData = usePlayer();
 
     const banner = BrandsConfig[brand].banner || 'https://nui-img/soz/menu_shop_clothe_normal';
     const shopName = BrandsConfig[brand].label || 'Magasin';
@@ -54,10 +57,6 @@ export const ClothShopMenu: FunctionComponent<MenuClothShopStateProps> = ({
 
     useNuiEvent('menu', 'Backspace', () => {
         fetchNui(NuiEvent.ClothingShopBackspace);
-    });
-
-    useNuiEvent('cloth_shop', 'SetPlayerData', data => {
-        setPlayerData(data);
     });
 
     const buyItem = async (_, item) => {
@@ -190,13 +189,21 @@ export const ClothShopMenu: FunctionComponent<MenuClothShopStateProps> = ({
                                         onSelectedValue={async (_, item) =>
                                             await fetchNui(NuiEvent.ClothingShopPreview, item)
                                         }
-                                        descriptionValue={item => `💸 Prix : $${item.price} - 📦 Stock : ${item.stock}`}
+                                        descriptionValue={item =>
+                                            `💸 Prix : $${getPrice(
+                                                item.price,
+                                                isInCayo ? null : TaxType.SUPPLY
+                                            )} - 📦 Stock : ${item.stock}`
+                                        }
                                     >
                                         {items.map(item => (
                                             <MenuItemSelectOption
                                                 key={item.id}
                                                 value={item}
-                                                description={`💸 Prix : $${item.price} - 📦 Stock : ${item.stock}`}
+                                                description={`💸 Prix : $${getPrice(
+                                                    item.price,
+                                                    isInCayo ? null : TaxType.SUPPLY
+                                                )} - 📦 Stock : ${item.stock}`}
                                                 disabled={item.stock == 0}
                                                 onSelected={async () =>
                                                     await fetchNui(NuiEvent.ClothingShopPreview, item)

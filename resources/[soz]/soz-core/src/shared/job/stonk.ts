@@ -75,6 +75,42 @@ const deliveryZones: NamedZone[] = [
         minZ: 28.66,
         maxZ: 32.66,
     },
+    {
+        name: 'NOOSE',
+        center: [2539.98, -335.57, 94.07],
+        length: 0.8,
+        width: 1.6,
+        heading: 205.31,
+        minZ: 93.07,
+        maxZ: 95.67,
+    },
+    {
+        name: 'CASINO',
+        center: [936.25, 47.65, 80.9],
+        length: 1.6,
+        width: 2.8,
+        heading: 148.05,
+        minZ: 79.9,
+        maxZ: 83.3,
+    },
+    {
+        name: 'PALETO BANK',
+        center: [-92.29, 6469.71, 31.44],
+        length: 0.8,
+        width: 3.6,
+        heading: 314.7,
+        minZ: 30.44,
+        maxZ: 33.64,
+    },
+    {
+        name: 'AIRPORT',
+        center: [-1910.37, -2993.2, 13.54],
+        length: 3,
+        width: 3,
+        heading: 59.0,
+        minZ: 12.54,
+        maxZ: 15.54,
+    },
 ];
 
 export const StonkConfig = {
@@ -92,7 +128,7 @@ export const StonkConfig = {
             takeInAvailableIn: ['jewelry'],
         },
         small_moneybag: {
-            refill_value: 3000,
+            refill_value: 9000,
             society_gain: 60,
             timeout: 10 * 60 * 1000,
             takeInAvailableIn: [
@@ -105,7 +141,7 @@ export const StonkConfig = {
             ],
         },
         medium_moneybag: {
-            refill_value: 5000,
+            refill_value: 15000,
             society_gain: 120,
             timeout: 20 * 60 * 1000,
             takeInAvailableIn: [
@@ -117,7 +153,7 @@ export const StonkConfig = {
             ],
         },
         big_moneybag: {
-            refill_value: 8000,
+            refill_value: 24000,
             society_gain: 240,
             timeout: 30 * 60 * 1000,
             takeInAvailableIn: ['ponsonbys'],
@@ -150,14 +186,12 @@ export const StonkCloakroom: WardrobeConfig = {
                     Palette: 0,
                 },
                 [Component.Shoes]: { Drawable: 54, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_m_freemode_01')][Component.Undershirt] + 1,
                     Texture: 0,
                     Palette: 0,
                 },
-                [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_m_freemode_01')][Component.Decals] + 3,
@@ -197,7 +231,6 @@ export const StonkCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 4, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 24, Texture: 3, Palette: 0 },
                 [Component.Shoes]: { Drawable: 20, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 34, Texture: 1, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -214,7 +247,6 @@ export const StonkCloakroom: WardrobeConfig = {
                     Palette: 0,
                 },
                 [Component.Shoes]: { Drawable: 54, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_m_freemode_01')][Component.Undershirt] + 1,
@@ -253,14 +285,12 @@ export const StonkCloakroom: WardrobeConfig = {
                     Palette: 0,
                 },
                 [Component.Shoes]: { Drawable: 55, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_f_freemode_01')][Component.Undershirt] + 1,
                     Texture: 0,
                     Palette: 0,
                 },
-                [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_f_freemode_01')][Component.Decals] + 3,
@@ -300,7 +330,6 @@ export const StonkCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 3, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 37, Texture: 3, Palette: 0 },
                 [Component.Shoes]: { Drawable: 29, Texture: 1, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 40, Texture: 4, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -308,7 +337,7 @@ export const StonkCloakroom: WardrobeConfig = {
             },
             Props: {},
         },
-        ['Tenues Hiver']: {
+        ['Tenue Hiver']: {
             Components: {
                 [Component.Torso]: { Drawable: 5, Texture: 0, Palette: 0 },
                 [Component.Legs]: {
@@ -317,7 +346,6 @@ export const StonkCloakroom: WardrobeConfig = {
                     Palette: 0,
                 },
                 [Component.Shoes]: { Drawable: 55, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: {
                     Drawable:
                         VanillaComponentDrawableIndexMaxValue[GetHashKey('mp_f_freemode_01')][Component.Undershirt] + 1,

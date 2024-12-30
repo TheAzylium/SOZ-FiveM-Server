@@ -3,6 +3,7 @@ import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { ClientEvent } from '../../shared/event';
 import { JobType } from '../../shared/job';
+import { Notifier } from '../notifier';
 import { PlayerService } from '../player/player.service';
 import { ItemService } from './item.service';
 
@@ -14,9 +15,14 @@ export class ItemNewsProvider {
     @Inject(PlayerService)
     private playerService: PlayerService;
 
+    @Inject(Notifier)
+    private notifier: Notifier;
+
     @Once()
     public onStartNewsItem() {
         this.item.setItemUseCallback('newspaper', source => {
+            this.notifier.notify(source, "La vente de journaux n'est plus possible ...", 'error');
+            return;
             const player = this.playerService.getPlayer(source);
 
             if (!player) {

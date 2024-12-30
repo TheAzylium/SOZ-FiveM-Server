@@ -85,6 +85,20 @@ RegisterServerEvent("inventory:server:GiveItem", function(target, item, amount)
     end
 end)
 
+RegisterServerEvent("inventory:server:ThrowItem", function(item)
+    local Player = QBCore.Functions.GetPlayer(source)
+
+    local success = Inventory.RemoveItem(Player.PlayerData.source, item.name, item.amount, item.metadata, item.slot)
+    if success then
+        TriggerClientEvent("soz-core:client:notification:draw", Player.PlayerData.source, string.format("Vous avez jeté ~o~%s ~b~%s", item.amount, item.label))
+
+        giveAnimation(Player.PlayerData.source)
+    else
+        TriggerClientEvent("soz-core:client:notification:draw", Player.PlayerData.source, "Vous n'avez rien jeter", "error")
+        return
+    end
+end)
+
 RegisterServerEvent("inventory:server:forceconsume", function(target, slot)
     local Player = QBCore.Functions.GetPlayer(target)
     local itemData = Player.Functions.GetItemBySlot(slot)

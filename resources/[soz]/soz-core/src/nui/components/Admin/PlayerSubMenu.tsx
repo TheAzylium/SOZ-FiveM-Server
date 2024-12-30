@@ -166,6 +166,18 @@ export const PlayerSubMenu: FunctionComponent<PlayerSubMenuProps> = ({ banner, p
                             ))}
                         </MenuItemSelect>
                         <MenuItemSelect
+                            title={'Debug Vocal'}
+                            onConfirm={async (_, value) => {
+                                await fetchNui(NuiEvent.AdminMenuPlayerSetVoipDebug, {
+                                    player,
+                                    value,
+                                });
+                            }}
+                        >
+                            <MenuItemSelectOption value={true}>Activer</MenuItemSelectOption>
+                            <MenuItemSelectOption value={false}>Désactiver</MenuItemSelectOption>
+                        </MenuItemSelect>
+                        <MenuItemSelect
                             title={'Téléportation'}
                             onConfirm={async selectedIndex => {
                                 await fetchNui(NuiEvent.AdminMenuPlayerHandleTeleportOption, {

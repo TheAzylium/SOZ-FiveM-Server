@@ -3,6 +3,7 @@ import { Tick, TickInterval } from '@public/core/decorators/tick';
 import { emitRpc } from '@public/core/rpc';
 import { wait } from '@public/core/utils';
 import { Control } from '@public/shared/input';
+import { PositiveNumberValidator } from '@public/shared/nui/input';
 import { BoxZone } from '@public/shared/polyzone/box.zone';
 import { CylinderZone } from '@public/shared/polyzone/cylinder.zone';
 import {
@@ -114,7 +115,7 @@ export class RaceProvider {
                 },
                 action: entity => {
                     const race = Object.values(this.raceRepository.get()).find(race => race.npc == entity);
-                    this.startRace(race.id, false);
+                    this.startRace(race.id, false, false);
                 },
             },
             {
@@ -250,38 +251,36 @@ export class RaceProvider {
             {
                 title: 'Nom de la course',
                 maxCharacters: 50,
-                defaultValue: '',
             },
             value => {
                 const locations = this.raceRepository.get();
 
                 if (!value) {
-                    return Ok(true);
+                    return Ok(null);
                 }
 
                 if (Object.values(locations).find(elem => elem.name.toLocaleLowerCase() == value.toLocaleLowerCase())) {
                     return Err('Une course avec ce nom existe déjà');
                 }
 
-                return Ok(true);
+                return Ok(value);
             }
         );
     }
 
     private async askModel() {
-        return this.inputService.askInput(
+        return this.inputService.askInput<string>(
             {
                 title: 'Modèle de voiture',
                 maxCharacters: 50,
-                defaultValue: '',
             },
             value => {
                 if (!value) {
-                    return Ok(true);
+                    return Ok(null);
                 }
 
                 if (value == 'ped') {
-                    return Ok(true);
+                    return Ok(null);
                 }
 
                 const hash = GetHashKey(value);
@@ -292,7 +291,7 @@ export class RaceProvider {
                     return Err("Ce modèle n'est pas un vehicule");
                 }
 
-                return Ok(true);
+                return Ok(value);
             }
         );
     }
@@ -304,16 +303,7 @@ export class RaceProvider {
                 maxCharacters: 3,
                 defaultValue: '5',
             },
-            value => {
-                if (!value) {
-                    return Ok(true);
-                }
-                const int = parseInt(value);
-                if (isNaN(int) || int < 0) {
-                    return Err('Valeur incorrecte');
-                }
-                return Ok(true);
-            }
+            PositiveNumberValidator
         );
     }
 
@@ -421,7 +411,7 @@ export class RaceProvider {
 
     @OnNuiEvent(NuiEvent.RaceMenuLaunch)
     public async onRaceLaunch({ raceId, option }: { option: RaceLaunchMenuOptions; raceId: number }) {
-        this.startRace(raceId, option == RaceLaunchMenuOptions.test);
+        this.startRace(raceId, option == RaceLaunchMenuOptions.test, true);
     }
 
     @OnNuiEvent(NuiEvent.RaceAddCheckpoint)
@@ -436,7 +426,7 @@ export class RaceProvider {
         const coords = GetEntityCoords(playerPed);
 
         const race = this.raceRepository.find(raceId);
-        race.checkpoints.splice(index, 0, [...coords, parseInt(radius)] as Vector4);
+        race.checkpoints.splice(index, 0, [...coords, radius] as Vector4);
 
         TriggerServerEvent(ServerEvent.RACE_UPDATE, race);
     }
@@ -469,7 +459,7 @@ export class RaceProvider {
                     const coords = GetEntityCoords(playerPed);
 
                     const race = this.raceRepository.find(raceId);
-                    race.checkpoints[index] = [...coords, parseInt(radius)] as Vector4;
+                    race.checkpoints[index] = [...coords, radius] as Vector4;
                 }
                 break;
             case RaceCheckpointMenuOptions.goto:
@@ -510,7 +500,7 @@ export class RaceProvider {
         return await emitRpc<RaceRankingInfo>(RpcServerEvent.RACE_GET_RANKING, raceId);
     }
 
-    private async startRace(raceId: number, test: boolean) {
+    private async startRace(raceId: number, test: boolean, admin: boolean) {
         const race = this.raceRepository.find(raceId);
         const start = Date.now();
 
@@ -522,6 +512,8 @@ export class RaceProvider {
         }
 
         const ped = PlayerPedId();
+        const coords = GetEntityCoords(ped);
+        const heading = GetEntityHeading(ped);
 
         const [bestRun, bestSplits] = await emitRpc<[number[], number[]]>(RpcServerEvent.RACE_GET_SPLITS, race.id);
 
@@ -607,7 +599,11 @@ export class RaceProvider {
             DeleteVehicle(vehicle);
         }
 
-        await this.playerPositionProvider.teleportPlayerToPosition(getRacePNJPosID(race));
+        if (admin) {
+            await this.playerPositionProvider.teleportAdminToPosition([...coords, heading] as Vector4);
+        } else {
+            await this.playerPositionProvider.teleportPlayerToPosition(getRacePNJPosID(race));
+        }
 
         this.objectProvider.enable();
 

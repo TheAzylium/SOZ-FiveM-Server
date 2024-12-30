@@ -6,6 +6,8 @@ import { TattooShopCategory, TattooShopItem } from '@public/shared/shop';
 import { FunctionComponent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { TaxType } from '../../../shared/bank';
+import { useGetPrice } from '../../hook/price';
 import { MainMenu, Menu, MenuContent, MenuItemButton, MenuTitle, SubMenu } from '../Styleguide/Menu';
 
 type MenuTattooShopStateProps = {
@@ -20,6 +22,7 @@ export const TattooShopMenu: FunctionComponent<MenuTattooShopStateProps> = ({ da
     const config = BrandsConfig[data.brand] as BrandConfig;
     const navigate = useNavigate();
     const location = useLocation();
+    const getPrice = useGetPrice();
 
     if (!data.products || data.products.length === 0 || !data.brand || !config) {
         return null;
@@ -72,10 +75,11 @@ export const TattooShopMenu: FunctionComponent<MenuTattooShopStateProps> = ({ da
                                     onSelected={async () => {
                                         await fetchNui(NuiEvent.TattoShopPreview, product);
                                     }}
+                                    description="Utilisez Shift pour changer la caméra."
                                 >
                                     <div className="flex justify-between items-center">
                                         <span>{product.Name}</span>
-                                        <span className="mr-1">${product.Price}</span>
+                                        <span className="mr-1">${getPrice(product.Price, TaxType.SUPPLY)}</span>
                                     </div>
                                 </MenuItemButton>
                             ))}

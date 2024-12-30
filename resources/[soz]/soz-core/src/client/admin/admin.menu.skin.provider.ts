@@ -39,15 +39,14 @@ export class AdminMenuSkinProvider {
                 {
                     title: 'Modèle du personnage:',
                     maxCharacters: 32,
-                    defaultValue: '',
                 },
                 input => {
                     if (!input) {
-                        return Ok(true);
+                        return Ok(input);
                     }
                     const hash = GetHashKey(input);
                     if (IsModelInCdimage(hash) && IsModelValid(hash)) {
-                        return Ok(true);
+                        return Ok(input);
                     }
 
                     return Err('Le modèle du personnage est invalide.');
@@ -74,7 +73,7 @@ export class AdminMenuSkinProvider {
         const maxDrawable = isComponent
             ? GetNumberOfPedDrawableVariations(PlayerPedId(), formattedIndex)
             : GetNumberOfPedPropDrawableVariations(PlayerPedId(), formattedIndex);
-        const value = await this.inputService.askInput(
+        const drawable = await this.inputService.askInput<number>(
             {
                 title: `Drawable id [0-${maxDrawable}] :`,
                 defaultValue: '',
@@ -82,7 +81,7 @@ export class AdminMenuSkinProvider {
             },
             value => {
                 if (!value) {
-                    return Ok(true);
+                    return Ok(null);
                 }
                 if (isNaN(Number(value))) {
                     return Err('Le drawable id doit être un nombre.');
@@ -90,14 +89,14 @@ export class AdminMenuSkinProvider {
                 if (Number(value) < 0 || Number(value) > maxDrawable) {
                     return Err(`Le drawable id doit être compris entre 0 et ${maxDrawable}.`);
                 }
-                return Ok(true);
+                return Ok(Number(value));
             }
         );
 
-        if (value !== null) {
+        if (drawable !== null) {
             this.nuiDispatch.dispatch('admin_skin_submenu', 'SetComponentDrawable', {
                 index: index,
-                drawable: Number(value),
+                drawable,
                 isComponent,
             });
         }

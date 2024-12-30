@@ -306,4 +306,9 @@ export class AdminMenuPlayerProvider {
             this.playerZombieProvider.removeZombiePlayer(target);
         }
     }
+
+    @OnEvent(ServerEvent.ADMIN_PLAYER_SET_VOIP_DEBUG)
+    public async onPlayerSetVoipDebug(_source: number, target: number, value: boolean) {
+        TriggerClientEvent(ClientEvent.VOIP_DEBUG, target, value);
+    }
 }

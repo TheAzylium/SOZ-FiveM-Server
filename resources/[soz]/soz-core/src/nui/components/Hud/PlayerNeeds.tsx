@@ -56,8 +56,17 @@ export const PlayerNeeds: FunctionComponent = () => {
         return null;
     }
 
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    const rightOffset = () => {
+        if (aspectRatio > 3.5 && window.innerWidth > 5000) {
+            return 'right-[100vh]';
+        } else {
+            return 'right-[1vh]';
+        }
+    };
+
     return (
-        <div className="absolute w-[12vw] bottom-[2.2rem] right-[0.8vw]">
+        <div className={`absolute w-[21vh] bottom-[2.2rem] ${rightOffset()}`}>
             <StatusBar
                 percent={syringeDelay ? (syringeDelay.delay / syringeDelay.initialDelay) * 100 : 0}
                 backgroundPrimary="rgba(150, 8, 183, 0.6)"

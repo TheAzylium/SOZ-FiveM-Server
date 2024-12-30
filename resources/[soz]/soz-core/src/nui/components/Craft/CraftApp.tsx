@@ -80,53 +80,58 @@ export const CraftApp: FunctionComponent = () => {
     }
 
     return (
-        <div className="absolute flex flex-col px-80 py-40 pb-60 aspect-[16/9] w-full h-full">
-            <div ref={refOutside} className="relative w-full h-full bg-black/80 rounded-lg p-4 flex text-white">
-                <div className="w-1/4 flex flex-col justify-between">
-                    <SelectedItem
-                        isCrafting={isCrafting}
-                        craftList={craftList}
-                        doCraft={doCraft}
-                        selected={selected}
-                        title={title}
-                    />
-                </div>
-                <div className="ml-8 w-3/4 pb-20">
-                    <div className="flex justify-between">
-                        <h2 className="uppercase font-bold mb-4 text-xl">{subtitle}</h2>
-                        <div>
-                            <input
-                                id="showUnavailable"
-                                type={'checkbox'}
-                                checked={showUnavailable}
-                                onChange={() => setShowUnavailable(!showUnavailable)}
-                            />
-                            <label htmlFor="showUnavailable" className="ml-2">
-                                Afficher les objets indisponibles
-                            </label>
+        <div className="absolute flex flex-col w-full h-full items-center">
+            <div className="flex flex-col px-80 py-40 pb-60 aspect-[16/9] w-full h-full max-w-[180vh]">
+                <div ref={refOutside} className="relative w-full h-full bg-black/80 rounded-lg p-4 flex text-white">
+                    <div className="w-1/4 flex flex-col justify-between">
+                        <SelectedItem
+                            isCrafting={isCrafting}
+                            craftList={craftList}
+                            doCraft={doCraft}
+                            selected={selected}
+                            title={title}
+                        />
+                    </div>
+                    <div className="ml-8 w-3/4 pb-20">
+                        <div className="flex justify-between">
+                            <h2 className="uppercase font-bold mb-4 text-xl">{subtitle}</h2>
+                            <div>
+                                <input
+                                    id="showUnavailable"
+                                    type={'checkbox'}
+                                    checked={showUnavailable}
+                                    onChange={() => setShowUnavailable(!showUnavailable)}
+                                />
+                                <label htmlFor="showUnavailable" className="ml-2">
+                                    Afficher les objets indisponibles
+                                </label>
+                            </div>
+                        </div>
+                        <div className="overflow-y-auto h-full pr-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+                            {Object.keys(craftList.categories)
+                                .sort((a, b) => a.localeCompare(b))
+                                .map(item => {
+                                    return (
+                                        <ItemTierList
+                                            craftList={craftList}
+                                            itemIcon={itemIcon}
+                                            selected={selected}
+                                            setSelected={setSelected}
+                                            category={item}
+                                            key={'craft_' + item}
+                                            showUnavailable={showUnavailable}
+                                        />
+                                    );
+                                })}
                         </div>
                     </div>
-                    <div className="overflow-y-auto h-full pr-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-                        {Object.keys(craftList.categories)
-                            .sort((a, b) => a.localeCompare(b))
-                            .map(item => {
-                                return (
-                                    <ItemTierList
-                                        craftList={craftList}
-                                        itemIcon={itemIcon}
-                                        selected={selected}
-                                        setSelected={setSelected}
-                                        category={item}
-                                        key={'craft_' + item}
-                                        showUnavailable={showUnavailable}
-                                    />
-                                );
-                            })}
-                    </div>
+                    <button
+                        onClick={() => setCraftList(null)}
+                        className="absolute bottom-0 right-0 p-4 uppercase text-xl"
+                    >
+                        Fermer
+                    </button>
                 </div>
-                <button onClick={() => setCraftList(null)} className="absolute bottom-0 right-0 p-4 uppercase text-xl">
-                    Fermer
-                </button>
             </div>
         </div>
     );
@@ -189,7 +194,10 @@ const ItemTierList: FunctionComponent<ItemTierListProps> = ({
                                     alt={item.name}
                                     className="h-full w-full object-contain"
                                     src={itemIcon(item)}
-                                    onError={e => (e.currentTarget.src = 'https://placekitten.com/200/200')}
+                                    onError={e =>
+                                        (e.currentTarget.src =
+                                            'https://cfx-nui-soz-core/public/images/default/cat.webp')
+                                    }
                                 />
                             </div>
                         );
@@ -240,7 +248,9 @@ const SelectedItem: FunctionComponent<SelectedItemProps> = ({ selected, craftLis
                             }}
                             className="aspect-square object-contain"
                             src={itemIcon(selectedItem)}
-                            onError={e => (e.currentTarget.src = 'https://placekitten.com/300/200')}
+                            onError={e =>
+                                (e.currentTarget.src = 'https://cfx-nui-soz-core/public/images/default/cat.webp')
+                            }
                         />
                     </div>
                 </div>
@@ -283,7 +293,10 @@ const SelectedItem: FunctionComponent<SelectedItemProps> = ({ selected, craftLis
                                             alt={requiredItem.label}
                                             className="h-8 w-8"
                                             src={itemIcon(requiredItem)}
-                                            onError={e => (e.currentTarget.src = 'https://placekitten.com/300/200')}
+                                            onError={e =>
+                                                (e.currentTarget.src =
+                                                    'https://cfx-nui-soz-core/public/images/default/cat.webp')
+                                            }
                                         />
                                         <span className="ml-4">
                                             {input.count}x {requiredItem.label}

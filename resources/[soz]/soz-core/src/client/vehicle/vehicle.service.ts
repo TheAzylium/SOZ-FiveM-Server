@@ -54,11 +54,14 @@ const applyVehicleTire = (
 const VehicleConditionHelpers: Partial<VehicleConditionHelper<keyof VehicleCondition>> = {
     bodyHealth: {
         apply: (vehicle, value: number, condition) => {
-            SetVehicleBodyHealth(vehicle, value);
+            if (GetVehicleBodyHealth(vehicle) != value) {
+                //avoid uneeded update as SetVehicleFixed closes doors
+                SetVehicleBodyHealth(vehicle, value);
 
-            if (value > 999.99) {
-                SetVehicleDeformationFixed(vehicle);
-                SetVehicleFixed(vehicle);
+                if (value > 999.99) {
+                    SetVehicleDeformationFixed(vehicle);
+                    SetVehicleFixed(vehicle);
+                }
             }
 
             SetVehicleEngineHealth(vehicle, Math.max(condition.engineHealth, 0));
@@ -180,6 +183,7 @@ const VehicleConditionHelpers: Partial<VehicleConditionHelper<keyof VehicleCondi
                 if (value[i]) {
                     SmashVehicleWindow(vehicle, i);
                 } else {
+                    FixVehicleWindow(vehicle, i);
                     RollUpWindow(vehicle, i);
                 }
             }
@@ -187,6 +191,10 @@ const VehicleConditionHelpers: Partial<VehicleConditionHelper<keyof VehicleCondi
         get: (vehicle, state) => {
             const windowNumber = 8;
             const result: { [key: number]: boolean } = {};
+
+            if (AreAllVehicleWindowsIntact(vehicle)) {
+                return result;
+            }
 
             for (let i = 0; i < windowNumber; i++) {
                 if (state.openWindows && (i === 0 || i === 1)) {
@@ -219,6 +227,10 @@ const VehicleConditionHelpers: Partial<VehicleConditionHelper<keyof VehicleCondi
             for (let i = 0; i < doorNumber; i++) {
                 if (value[i]) {
                     SetVehicleDoorBroken(vehicle, i, true);
+                } else if (IsVehicleDoorDamaged(vehicle, i)) {
+                    //Cannot fix doors one by one
+                    SetVehicleDeformationFixed(vehicle);
+                    SetVehicleFixed(vehicle);
                 }
             }
         },

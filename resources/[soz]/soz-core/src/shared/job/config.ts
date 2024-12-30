@@ -1,3 +1,5 @@
+import { ClientEvent } from '@public/shared/event/client';
+
 import { Job, JobPermission, JobPermissionData, JobType } from '../job';
 import { BoxZone } from '../polyzone/box.zone';
 
@@ -56,7 +58,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.FBI]: {
         label: 'Federal Bureau of Investigation',
         platePrefix: 'FBI ',
-        menuCallback: 'soz-jobs:client:police:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_POLICE_OPEN_SOCIETY_MENU,
         permissions: {
             [JobPermission.SocietyDealershipVehicle]: { label: 'Accès aux concessionnaires de véhicules' },
         },
@@ -66,7 +68,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.LSPD]: {
         label: 'Los Santos Police Department',
         platePrefix: 'LSPD',
-        menuCallback: 'soz-jobs:client:police:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_POLICE_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -95,7 +97,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.BCSO]: {
         label: 'Blaine County Sheriff Office',
         platePrefix: 'BCSO',
-        menuCallback: 'soz-jobs:client:police:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_POLICE_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -121,13 +123,51 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         phone: '555-BCSO',
         canReceiveSocietyInvoice: true,
     },
-    [JobType.LSMC]: {
-        label: 'Los Santos Medical Center',
-        platePrefix: 'LSMC',
-        menuCallback: 'soz-jobs:client:lsmc:OpenSocietyMenu',
+    [JobType.LSCS]: {
+        label: 'Los Santos County Sheriff',
+        platePrefix: 'LSCS',
+        menuCallback: 'soz-jobs:client:police:OpenSocietyMenu',
         canInvoice: true,
         permissions: {
             ...BasePermissions,
+            [JobPermission.CriminalRecord]: { label: 'Accès aux casiers judiciaires' },
+            [JobPermission.VehicleRegistrar]: { label: 'Accès au registre des véhicules' },
+            [JobPermission.Investigation]: { label: 'Accès aux enquêtes' },
+            [JobPermission.ManageInvestigation]: { label: 'Gérer les enquêtes' },
+            [JobPermission.AssignCertification]: { label: 'Assigner des certifications aux agents' },
+            [JobPermission.ManageCertification]: { label: 'Gérer les certifications' },
+            [JobPermission.ManageRoster]: { label: 'Gérer les photos/matricules dans les effectifs panel' },
+            [JobPermission.FDOFedPound]: { label: 'Mise en fourrière fédérale' },
+        },
+        bossZones: [
+            {
+                center: [447.71, -977.18, 30.69],
+                length: 12.4,
+                width: 10.0,
+                heading: 89.94,
+                minZ: 29.69,
+                maxZ: 31.69,
+            },
+        ],
+        phone: '555-LCCS',
+        canReceiveSocietyInvoice: true,
+    },
+    [JobType.LSMC]: {
+        label: 'Los Santos Medical Center',
+        platePrefix: 'LSMC',
+        menuCallback: ClientEvent.JOBS_LSMC_OPEN_SOCIETY_MENU,
+        canInvoice: true,
+        permissions: {
+            ...BasePermissions,
+            [JobPermission.ManageRoster]: { label: 'Gérer les photos/matricules dans les effectifs panel' },
+            [JobPermission.AssignCertification]: { label: 'Assigner des certifications aux médecins' },
+            [JobPermission.ManageCertification]: { label: 'Gérer les certifications' },
+            [JobPermission.MedicalPatientAccess]: { label: 'Accéder aux dossiers patients panel' },
+            [JobPermission.MedicalPatientEdit]: { label: 'Editer les dossiers patients panel' },
+            [JobPermission.MedicalPatientDelete]: { label: 'Supprimer les dossiers patients panel' },
+            [JobPermission.MedicalPatientHistoryEdit]: { label: 'Créer / Editer une intervention panel' },
+            [JobPermission.MedicalPatientHistoryDelete]: { label: 'Supprimer une intervention panel' },
+            [JobPermission.MedicalPatientHistoryAccess]: { label: 'Accéder à la liste des interventions panel' },
         },
         bossZones: [
             new BoxZone([383.87, -1411.63, 37.99], 21.0, 25.6, {
@@ -142,7 +182,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.Taxi]: {
         label: 'Carl Jr Services',
         platePrefix: 'CARL',
-        menuCallback: 'soz-jobs:client:taxi:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_TAXI_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -159,16 +199,17 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-CARLJR',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['taxi', 'safe_taxi'],
     },
     [JobType.Food]: {
         label: 'Château Marius',
         platePrefix: 'CHAT',
-        menuCallback: 'jobs:client:food:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_FOOD_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
-            [JobPermission.Food_Harvest]: { label: 'Récolter des ingrédients' },
-            [JobPermission.Food_Craft]: { label: 'Cuisiner' },
+            [JobPermission.FoodHarvest]: { label: 'Récolter des ingrédients' },
+            [JobPermission.FoodCraft]: { label: 'Cuisiner' },
         },
         resell: {
             coords: [-57.01, -2448.4, 7.24, 145.77],
@@ -189,11 +230,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-MARIUS',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['food', 'safe_food'],
     },
     [JobType.News]: {
         label: 'Twitch News',
         platePrefix: 'NEWS',
-        menuCallback: 'soz-jobs:client:twitch-news:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_TWITCH_NEWS_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -216,7 +258,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.YouNews]: {
         label: 'You News',
         platePrefix: 'YOUN',
-        menuCallback: 'soz-jobs:client:you-news:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_YOU_NEWS_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -232,7 +274,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.Garbage]: {
         label: 'BlueBird',
         platePrefix: 'BLUE',
-        menuCallback: 'jobs:client:garbage:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_GARBAGE_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -250,11 +292,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-BLUEBIRD',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['garbage', 'safe_garbage'],
     },
     [JobType.Oil]: {
         label: 'Michel Transport Petrol',
         platePrefix: 'MITP',
-        menuCallback: 'jobs:client:fueler:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_OIL_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -273,11 +316,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-MTP',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['oil', 'safe_oil'],
     },
     [JobType.CashTransfer]: {
         label: 'STONK Security',
         platePrefix: 'STNK',
-        menuCallback: 'stonk:client:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_STONK_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -321,9 +365,15 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 37.89,
                 debugPoly: false,
             },
+            new BoxZone([1908.1, 3086.76, 51.75], 18.4, 9.2, {
+                heading: 61.21,
+                minZ: 50.75,
+                maxZ: 52.75,
+            }),
         ],
         phone: '555-NEWGAHRAY',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['bennys', 'safe_bennys'],
     },
     [JobType.Upw]: {
         label: 'Unexpected Power & Water',
@@ -346,6 +396,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-UPW',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['upw', 'safe_upw'],
     },
     [JobType.Pawl]: {
         label: 'Pipe And Wooden Leg',
@@ -377,11 +428,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-PAWL',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['pawl', 'safe_pawl'],
     },
     [JobType.Baun]: {
         label: 'Bahama Unicorn',
         platePrefix: 'BAUN',
-        menuCallback: 'soz-jobs:client:baun:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_BAUN_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -409,11 +461,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-BAUN',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['baun', 'safe_baun'],
     },
     [JobType.Ffs]: {
         label: 'Fight For Style',
         platePrefix: 'FFS',
-        menuCallback: 'soz-jobs:client:ffs:OpenSocietyMenu',
+        menuCallback: ClientEvent.JOBS_FFS_OPEN_SOCIETY_MENU,
         canInvoice: true,
         permissions: {
             ...BasePermissions,
@@ -433,10 +486,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
         ],
         phone: '555-FFS',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['ffs', 'safe_ffs'],
     },
     [JobType.MDR]: {
         label: 'Mandatory',
         platePrefix: 'MDR',
+        menuCallback: ClientEvent.JOBS_MDR_OPEN_SOCIETY_MENU,
         permissions: {
             ...BasePermissions,
             [JobPermission.VehicleRegistrar]: { label: 'Accès aux registre des véhicules' },
@@ -444,6 +499,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
             [JobPermission.ManageInvestigation]: { label: 'Gérer les enquêtes' },
             [JobPermission.MdrViewCitizenData]: { label: 'Accès aux casiers judiciaires' },
             [JobPermission.InvestigationLawyer]: { label: 'Avocat dans les enquêtes' },
+            [JobPermission.InvestigationProsecutor]: { label: 'Prosecutor dans les enquètes' },
             [JobPermission.MdrViewOtherJobs]: { label: 'Accès aux infos des entreprises' },
             [JobPermission.MdrMarkedMoneyCleaning]: { label: 'Accès à la réhabilitation des billets' },
         },
@@ -457,7 +513,6 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 49.66,
             },
         ],
-        menuCallback: 'soz-jobs:client:mdr:OpenSocietyMenu',
         canInvoice: true,
         phone: '555-MDR',
         canReceiveSocietyInvoice: true,
@@ -465,8 +520,12 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.Gouv]: {
         label: 'Gouvernement',
         platePrefix: 'GOUV',
+        menuCallback: ClientEvent.JOBS_GOUV_OPEN_SOCIETY_MENU,
         permissions: {
             ...BasePermissions,
+            [JobPermission.GouvUpdateTax]: { label: 'Mettre à jour les taxes' },
+            [JobPermission.GouvManageRadar]: { label: 'Permet de gérer les radars' },
+            [JobPermission.GouvManageFine]: { label: 'Ajouter, mettre à jour et supprimer les amendes' },
         },
         bossZones: [
             {
@@ -478,7 +537,6 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 35.68,
             },
         ],
-        menuCallback: 'soz-jobs:client:gouv:OpenSocietyMenu',
         canInvoice: true,
         phone: '555-GOUV',
         canReceiveSocietyInvoice: true,
@@ -486,6 +544,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.SASP]: {
         label: 'San Andreas State Police',
         platePrefix: 'SASP',
+        menuCallback: ClientEvent.JOBS_POLICE_OPEN_SOCIETY_MENU,
         permissions: {
             ...BasePermissions,
             [JobPermission.CriminalRecord]: { label: 'Accès aux casiers judiciaires' },
@@ -506,7 +565,6 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 35.68,
             },
         ],
-        menuCallback: 'soz-jobs:client:police:OpenSocietyMenu',
         canInvoice: true,
         phone: '555-SASP',
         canReceiveSocietyInvoice: true,
@@ -514,6 +572,7 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
     [JobType.FDF]: {
         label: 'Ferme de Fou',
         platePrefix: 'FDF',
+        menuCallback: ClientEvent.JOBS_FDF_OPEN_SOCIETY_MENU,
         permissions: {
             ...BasePermissions,
         },
@@ -527,14 +586,15 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 55.39,
             },
         ],
-        menuCallback: 'soz-jobs:client:fdf:OpenSocietyMenu',
         canInvoice: true,
         phone: '555-FDF',
         canReceiveSocietyInvoice: true,
+        taxCollectAccounts: ['fdf', 'safe_fdf'],
     },
     [JobType.DMC]: {
         label: 'DeMetal Company',
         platePrefix: 'DMC',
+        menuCallback: ClientEvent.JOBS_DMC_OPEN_SOCIETY_MENU,
         permissions: {
             ...BasePermissions,
         },
@@ -548,7 +608,6 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
                 maxZ: 32.97,
             },
         ],
-        menuCallback: 'soz-jobs:client:dmc:OpenSocietyMenu',
         canInvoice: true,
         phone: '555-DMC',
         canReceiveSocietyInvoice: true,
@@ -561,5 +620,6 @@ export const JobRegistry: Record<JobType, Omit<Job, 'id'>> = {
             },
             secondary: { ZoneName: 'Resell:LSCustom', SourceAccount: 'farm_dmc', TargetAccount: 'safe_dmc' },
         },
+        taxCollectAccounts: ['dmc', 'safe_dmc'],
     },
 };

@@ -1,10 +1,17 @@
 import cn from 'classnames';
 import { FunctionComponent } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
-import { Vehicle, VehicleCategory, VehicleDealershipMenuData } from '../../../shared/vehicle/vehicle';
+import {
+    isVehicleModelElectric,
+    Vehicle,
+    VehicleCategory,
+    VehicleDealershipMenuData,
+} from '../../../shared/vehicle/vehicle';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -107,6 +114,8 @@ type MenuVehicleListProps = {
 };
 
 const MenuVehicleList: FunctionComponent<MenuVehicleListProps> = ({ vehicles, onConfirm, onChange }) => {
+    const getPrice = useGetPrice();
+
     vehicles.sort((a, b) => {
         if (a.price < b.price) {
             return -1;
@@ -150,7 +159,13 @@ const MenuVehicleList: FunctionComponent<MenuVehicleListProps> = ({ vehicles, on
                     >
                         <div className="pr-2 flex items-center justify-between">
                             <span className={classNameText}>{vehicle.name} </span>
-                            <span>💸 ${vehicle.price}</span>
+                            <span>
+                                💸 $
+                                {getPrice(
+                                    vehicle.price,
+                                    isVehicleModelElectric(vehicle.hash) ? TaxType.GREEN : TaxType.VEHICLE
+                                )}
+                            </span>
                         </div>
                     </MenuItemButton>
                 );

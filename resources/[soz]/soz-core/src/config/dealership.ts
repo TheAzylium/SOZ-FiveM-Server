@@ -1,3 +1,5 @@
+import { WeaponName } from '@public/shared/weapons/weapon';
+
 import { BoxZone } from '../shared/polyzone/box.zone';
 import { Vector3, Vector4 } from '../shared/polyzone/vector';
 
@@ -175,3 +177,94 @@ export const AuctionZones = [
         }),
     },
 ];
+
+export const luxuryStaticGuard = [
+    {
+        model: 's_m_m_armoured_02',
+        invincible: true,
+        freeze: true,
+        blockevents: true,
+        coords: {
+            x: -779.65,
+            y: -246.56,
+            z: 36.058,
+            w: 209.22,
+        },
+        animDict: 'anim@heists@heist_corona@single_team',
+        anim: 'single_team_loop_boss',
+        animprops: [
+            {
+                bone: 24816,
+                model: 'w_sb_smg',
+                position: [0.173, -0.18, 0.05] as Vector3,
+                rotation: [10, 45, 10] as Vector3,
+            },
+        ],
+    },
+    {
+        model: 's_m_m_armoured_01',
+        invincible: true,
+        freeze: true,
+        blockevents: true,
+        coords: {
+            x: -788.39,
+            y: -249.7,
+            z: 36.056,
+            w: 161.58,
+        },
+        animDict: 'anim@heists@heist_corona@single_team',
+        anim: 'single_team_loop_boss',
+        animprops: [
+            {
+                bone: 24816,
+                model: 'w_sb_smg',
+                position: [0.173, -0.18, 0.05] as Vector3,
+                rotation: [10, 45, 10] as Vector3,
+            },
+        ],
+    },
+    {
+        model: 's_m_m_armoured_02',
+        invincible: true,
+        freeze: true,
+        blockevents: true,
+        coords: {
+            x: -797.95,
+            y: -234.86,
+            z: 36.132,
+            w: 123.3,
+        },
+        animDict: 'anim@heists@heist_corona@single_team',
+        anim: 'single_team_loop_boss',
+        animprops: [
+            {
+                bone: 24816,
+                model: 'w_sb_smg',
+                position: [0.173, -0.18, 0.05] as Vector3,
+                rotation: [10, 45, 10] as Vector3,
+            },
+        ],
+    },
+];
+
+export const luxuryFightingGuard = {
+    possiblePedModel: ['s_m_m_armoured_01', 's_m_m_armoured_02'],
+    possibleSpawnPosition: [
+        {
+            x: -802.98,
+            y: -223.93,
+            z: 36.132,
+            w: 160.49,
+        },
+        {
+            x: -776.36,
+            y: -245.28,
+            z: 36.058,
+            w: 127.82,
+        },
+    ],
+    possibleWeapon: [WeaponName.SMG_MK2],
+    detectionZoneCenter: [-789.22, -244.73, 37.0] as Vector3,
+    triggerDistance: 30,
+    triggerTime: 4, //seconds
+};

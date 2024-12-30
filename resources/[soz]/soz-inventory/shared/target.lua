@@ -8,7 +8,7 @@ function getCloakroomTargetOptions(job, storage, event)
             storage = storage,
             job = job,
             canInteract = function()
-                return PlayerData.job.onduty
+                return true
             end,
             action = function()
                 TriggerEvent(event or "soz-core:client:job::OpenCloakroomMenu", storage, job)

@@ -33,34 +33,50 @@ QBShared.Trunks = {
     [GetHashKey('moonbeam2')] = { slot = 10, weight = 200000 },
 
     --- LSPD
+    [GetHashKey('police')] = { slot = 5, weight = 60000 },
+    [GetHashKey('police2')] = { slot = 5, weight = 60000 },
+    [GetHashKey('police3')] = { slot = 5, weight = 60000 },
+    [GetHashKey('police4')] = { slot = 5, weight = 60000 },
     [GetHashKey('police5')] = { slot = 5, weight = 80000 },
-    [GetHashKey('police6')] = { slot = 5, weight = 80000 },
-    [GetHashKey('policeb2')] = { slot = 5, weight = 30000 },
+    [GetHashKey('lspd10')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd11')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd12')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd20')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd21')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd30')] = { slot = 5, weight = 30000 },
+    [GetHashKey('lspd40')] = { slot = 5, weight = 40000 },
+    [GetHashKey('lspd41')] = { slot = 5, weight = 40000 },
+    [GetHashKey('lspd50')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lspd51')] = { slot = 5, weight = 80000 },
     [GetHashKey('polmav')] = { slot = 5, weight = 200000 },
-    [GetHashKey('lspdbana1')] = { slot = 5, weight = 80000 },
-    [GetHashKey('lspdbana2')] = { slot = 5, weight = 80000 },
-    [GetHashKey('lspdgallardo')] = { slot = 5, weight = 40000 },
 
     --- BCSO
-    [GetHashKey('sheriff3')] = { slot = 5, weight = 60000 },
-    [GetHashKey('sheriff4')] = { slot = 5, weight = 80000 },
+    [GetHashKey('sheriff')] = { slot = 5, weight = 60000 },
+    [GetHashKey('sheriff2')] = { slot = 5, weight = 100000 },
     [GetHashKey('sheriffb')] = { slot = 5, weight = 30000 },
+    [GetHashKey('bcso10')] = { slot = 5, weight = 60000 },
+    [GetHashKey('bcso11')] = { slot = 5, weight = 60000 },
+    [GetHashKey('bcso12')] = { slot = 5, weight = 60000 },
+    [GetHashKey('bcso20')] = { slot = 15, weight = 100000 },
+    [GetHashKey('bcso21')] = { slot = 15, weight = 100000 },
+    [GetHashKey('bcso30')] = { slot = 5, weight = 30000 },
+    [GetHashKey('bcso40')] = { slot = 5, weight = 40000 },
+    [GetHashKey('bcso41')] = { slot = 5, weight = 40000 },
+    [GetHashKey('bcso50')] = { slot = 5, weight = 80000 },
+    [GetHashKey('bcso51')] = { slot = 5, weight = 80000 },
     [GetHashKey('maverick2')] = { slot = 5, weight = 200000 },
-    [GetHashKey('sheriffdodge')] = { slot = 5, weight = 60000 },
-    [GetHashKey('sheriffcara')] = { slot = 15, weight = 100000 },
-    [GetHashKey('bcsobana1')] = { slot = 5, weight = 80000 },
-    [GetHashKey('bcsobana2')] = { slot = 5, weight = 80000 },
-    [GetHashKey('bcsoc7')] = { slot = 5, weight = 40000 },
 
     --- LSMC
     [GetHashKey('ambulance')] = { slot = 5, weight = 100000 },
+    [GetHashKey('ambulance2')] = { slot = 5, weight = 100000 },
     [GetHashKey('ambcar')] = { slot = 5, weight = 80000 },
+    [GetHashKey('lguard')] = { slot = 5, weight = 80000 },
     [GetHashKey('firetruk')] = { slot = 5, weight = 80000 },
     [GetHashKey('polmav')] = { slot = 5, weight = 200000 },
 
     -- STONKS
     [GetHashKey('stockade')] = { slot = 10, weight = 600000 },
-    [GetHashKey('baller8')] = { slot = 10, weight = 80000 },
+    [GetHashKey('baller9')] = { slot = 10, weight = 80000 },
 
     -- Twitch News
     [GetHashKey('newsvan')] = { slot = 10, weight = 100000 },
@@ -101,6 +117,9 @@ QBShared.Trunks = {
 
     -- BAUN
     [GetHashKey('youga3')] = { slot = 10, weight = 200000 },
+
+    -- FBI
+    [GetHashKey('polgauntlet')] = { slot = 5, weight = 80000 },
 
     -- FFS
     [GetHashKey('rumpo4')] = { slot = 10, weight = 200000 },

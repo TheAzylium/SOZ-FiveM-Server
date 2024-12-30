@@ -3,14 +3,15 @@ import { PedFactory } from '@public/client/factory/ped.factory';
 import { InventoryManager } from '@public/client/inventory/inventory.manager';
 import { NuiDispatch } from '@public/client/nui/nui.dispatch';
 import { NuiMenu } from '@public/client/nui/nui.menu';
+import { AttachedObjectService } from '@public/client/object/attached.object.service';
 import { PlayerService } from '@public/client/player/player.service';
 import { ResourceLoader } from '@public/client/repository/resource.loader';
 import { VehicleRadarProvider } from '@public/client/vehicle/vehicle.radar.provider';
-import { Once, OnceStep, OnEvent, OnNuiEvent } from '@public/core/decorators/event';
+import { Once, OnceStep, OnEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
 import { wait } from '@public/core/utils';
-import { ClientEvent, NuiEvent, ServerEvent } from '@public/shared/event';
+import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { FDO } from '@public/shared/job';
 import { MenuType } from '@public/shared/nui/menu';
 import { BoxZone } from '@public/shared/polyzone/box.zone';
@@ -59,8 +60,10 @@ export class PoliceProvider {
     @Inject(PedFactory)
     private pedFactory: PedFactory;
 
+    @Inject(AttachedObjectService)
+    private attachedObjectService: AttachedObjectService;
+
     private radarEnabled = false;
-    private displayRadar = false;
 
     private inTakeDown = false;
 
@@ -98,6 +101,13 @@ export class PoliceProvider {
             freeze: true,
             invincible: true,
             blockevents: true,
+        });
+
+        this.blipFactory.create('fbi', {
+            name: 'FBI',
+            position: [112.25, -749.32, 46.05],
+            sprite: 421,
+            scale: 0.9,
         });
     }
 
@@ -272,81 +282,27 @@ export class PoliceProvider {
 
     @OnEvent(ClientEvent.POLICE_BREATHANALYZER_TARGET)
     public async breathanalyzerTarget() {
-        const playerPed = PlayerPedId();
+        const object = await this.attachedObjectService.attachObjectToPlayer({
+            bone: 28422,
+            model: 'prop_cs_walkie_talkie',
+            position: [0.0, 0.0, 0.0],
+            rotation: [0.0, 90.0, 0.0],
+        });
 
-        const pCoords = GetEntityCoords(playerPed);
-        const object = CreateObject(
-            GetHashKey('prop_cs_walkie_talkie'),
-            pCoords[0] + 1,
-            pCoords[1],
-            pCoords[2],
-            true,
-            true,
-            true
-        );
+        await this.animationService.playAnimation({
+            base: {
+                dictionary: 'amb@code_human_in_car_mp_actions@first_person@smoke@std@ds@base',
+                name: 'enter',
+            },
+        });
 
-        const netId = ObjToNet(object);
-        SetNetworkIdCanMigrate(netId, false);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-
-        SetEntityAsMissionEntity(object, true, true);
-        AttachEntityToEntity(
-            object,
-            playerPed,
-            GetPedBoneIndex(playerPed, 28422),
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            90.0,
-            0.0,
-            true,
-            true,
-            false,
-            true,
-            1,
-            true
-        );
-
-        await this.resourceLoader.loadAnimationDictionary(
-            'amb@code_human_in_car_mp_actions@first_person@smoke@std@ds@base'
-        );
-        await this.resourceLoader.loadAnimationDictionary(
-            'amb@code_human_in_car_mp_actions@first_person@smoke@std@rps@base'
-        );
-        TaskPlayAnim(
-            playerPed,
-            'amb@code_human_in_car_mp_actions@first_person@smoke@std@ds@base',
-            'enter',
-            8.0,
-            8.0,
-            -1,
-            0,
-            0.0,
-            false,
-            false,
-            false
-        );
-        let animDuration = GetAnimDuration('amb@code_human_in_car_mp_actions@first_person@smoke@std@ds@base', 'enter');
-        await wait(animDuration * 1000);
-        TaskPlayAnim(
-            playerPed,
-            'amb@code_human_in_car_mp_actions@first_person@smoke@std@rps@base',
-            'exit',
-            8.0,
-            8.0,
-            -1,
-            0,
-            0.0,
-            false,
-            false,
-            false
-        );
-
-        animDuration = GetAnimDuration('amb@code_human_in_car_mp_actions@first_person@smoke@std@rps@base', 'exit');
-        await wait(animDuration * 1000);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(object));
-        DeleteEntity(object);
+        await this.animationService.playAnimation({
+            base: {
+                dictionary: 'amb@code_human_in_car_mp_actions@first_person@smoke@std@rps@base',
+                name: 'exit',
+            },
+        });
+        this.attachedObjectService.detachObjectToPlayer(object);
     }
 
     @OnEvent(ClientEvent.JOBS_POLICE_OPEN_SOCIETY_MENU)
@@ -359,14 +315,7 @@ export class PoliceProvider {
         this.nuiMenu.openMenu(MenuType.PoliceJobMenu, {
             onDuty: this.playerService.isOnDuty(),
             job: this.playerService.getPlayer().job.id,
-            displayRadar: this.displayRadar,
+            displayRadar: this.vehicleRadarProvider.displayRadar,
         });
-    }
-
-    @OnNuiEvent(NuiEvent.ToggleRadar)
-    public toogleRadar(value: boolean): Promise<void> {
-        this.displayRadar = value;
-        this.vehicleRadarProvider.toggleBlip(value);
-        return;
     }
 }

@@ -16,9 +16,7 @@ import {
 type MandatoryStateProps = {
     data: {
         onDuty: boolean;
-        state: {
-            radar: boolean;
-        };
+        displayRadar: boolean;
     };
 };
 
@@ -44,9 +42,9 @@ export const MandatoryJobMenu: FunctionComponent<MandatoryStateProps> = ({ data 
                 <MenuTitle banner={banner}></MenuTitle>
                 <MenuContent>
                     <MenuItemCheckbox
-                        checked={data.state.radar}
+                        checked={data.displayRadar}
                         onChange={async value => {
-                            await fetchNui(NuiEvent.ToggleRadarMendatory, value);
+                            await fetchNui(NuiEvent.ToggleRadar, value);
                         }}
                     >
                         Afficher les radars sur le GPS

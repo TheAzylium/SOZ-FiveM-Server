@@ -1,9 +1,9 @@
-import { Once } from '@core/decorators/event';
+import { Once, OnEvent } from '@core/decorators/event';
 import { Provider } from '@core/decorators/provider';
 import { Inject } from '@public/core/decorators/injectable';
 import { Tick, TickInterval } from '@public/core/decorators/tick';
 import { uuidv4 } from '@public/core/utils';
-import { ServerEvent } from '@public/shared/event';
+import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
 import { TowRope } from '@public/shared/vehicle/tow.rope';
 import { VehicleClass, VehicleSeat } from '@public/shared/vehicle/vehicle';
@@ -14,7 +14,7 @@ import { TowRopeRepository } from '../repository/tow.rope.repository';
 import { RopeService } from '../rope.service';
 import { TargetFactory } from '../target/target.factory';
 
-const MAX_LENGTH_ROPE = 30;
+const MAX_LENGTH_ROPE = 3;
 
 @Provider()
 export class VehicleTowProvider {
@@ -37,7 +37,7 @@ export class VehicleTowProvider {
                 label: 'Attacher cable de remorquage',
                 icon: 'c:mechanic/Attacher.png',
                 canInteract: entity => entity != this.from,
-                action: entity => {
+                action: async entity => {
                     if (!this.from) {
                         if (GetVehicleClass(entity) == VehicleClass.Helicopters) {
                             this.fromOffset = 0.0;
@@ -51,16 +51,15 @@ export class VehicleTowProvider {
                             this.fromOffset,
                             0.0
                         ) as Vector3;
-                        if (
-                            !this.ropeService.createNewRope(
-                                ropePosition,
-                                entity,
-                                6,
-                                MAX_LENGTH_ROPE,
-                                'prop_v_hook_s',
-                                'ropeFamily3'
-                            )
-                        ) {
+                        const hook = await this.ropeService.createNewRope(
+                            ropePosition,
+                            entity,
+                            6,
+                            MAX_LENGTH_ROPE,
+                            'prop_v_hook_s',
+                            'ropeFamily3'
+                        );
+                        if (!hook) {
                             return;
                         }
                         this.from = entity;
@@ -106,6 +105,13 @@ export class VehicleTowProvider {
                 },
             },
         ]);
+    }
+
+    @OnEvent(ClientEvent.BASE_ENTERING_VEHICLE, false)
+    public async onEnteringVehicle() {
+        if (this.from) {
+            this.ropeService.deleteRope();
+        }
     }
 
     private getOffset(entity: number) {
@@ -216,7 +222,7 @@ export class VehicleTowProvider {
     }
 
     @RepositoryDelete(RepositoryType.TowRope)
-    public onTowRopeDelete(rope: TowRope) {
+    public async onTowRopeDelete(rope: TowRope) {
         if (rope && rope.ropeClientId) {
             DeleteRope(rope.ropeClientId);
         }

@@ -46,10 +46,15 @@ export class AnimationRagdollProvider {
         }
 
         this.ragdoll = true;
+        SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, false, false, false);
 
         while (this.ragdoll) {
-            SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, false, false, false);
+            ResetPedRagdollTimer(PlayerPedId());
             await wait(100);
         }
+    }
+
+    public stopRagdoll() {
+        this.ragdoll = false;
     }
 }

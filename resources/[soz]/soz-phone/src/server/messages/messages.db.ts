@@ -20,8 +20,13 @@ export class _MessagesDB {
         );
 
         await exports.oxmysql.update_async(
-            'UPDATE phone_messages_conversations SET masked = 0, updatedAt = current_timestamp(), unread = unread + 1 WHERE conversation_id = ? AND participant_identifier = ?',
+            'UPDATE phone_messages_conversations SET masked = 0, unread = unread + 1 WHERE conversation_id = ? AND participant_identifier = ?',
             [conversationId, author]
+        );
+
+        await exports.oxmysql.update_async(
+            'UPDATE phone_messages_conversations SET masked = 0, updatedAt = current_timestamp() WHERE conversation_id = ?',
+            [conversationId]
         );
 
         return id;

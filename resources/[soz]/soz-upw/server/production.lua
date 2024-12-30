@@ -159,7 +159,7 @@ QBCore.Functions.CreateCallback("soz-upw:server:Harvest", function(source, cb, i
     local facilityData = GetFacilityData(harvestType)
     local facility = facilityData.getFacility(identifier)
     if not facility then
-        cb(false, "invalid facility")
+        cb({false, "invalid facility"})
         return
     end
 
@@ -187,10 +187,8 @@ QBCore.Functions.CreateCallback("soz-upw:server:Harvest", function(source, cb, i
                          Config.Upw.Resale.EnergyCellPriceGlobal[firstItem.item.name] or 0)
         end
 
-        TriggerEvent("soz-core:server:monitor:add-event", "job_upw_energy_restock", {
-            item_id = item,
-            player_citizen_id = Player.PlayerData.citizenid,
-        }, {
+        TriggerEvent("soz-core:server:monitor:add-event", "job_upw_energy_restock",
+                     {item_id = item, player_citizen_id = Player.PlayerData.citizenid, facility_job = facility.job}, {
             item_label = item.label,
             quantity = 1,
             resale_price = Config.Upw.Resale.EnergyCellPriceGlobal[item] or 0,
@@ -222,7 +220,7 @@ QBCore.Functions.CreateCallback("soz-upw:server:Harvest", function(source, cb, i
     local success, reason = Citizen.Await(p)
 
     if not success then
-        cb(false, reason)
+        cb({false, reason})
         return
     end
 

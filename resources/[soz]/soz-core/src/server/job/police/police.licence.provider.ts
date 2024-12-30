@@ -1,13 +1,15 @@
 import { OnEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
+import { Rpc } from '@public/core/decorators/rpc';
 import { PlayerService } from '@public/server/player/player.service';
 import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { PlayerLicenceLabels, PlayerLicenceType } from '@public/shared/player';
 import { getDistance, Vector3 } from '@public/shared/polyzone/vector';
+import { RpcServerEvent } from '@public/shared/rpc';
 
-const jobAllowed = [JobType.FBI, JobType.LSPD, JobType.BCSO, JobType.FBI];
+const jobAllowed = [JobType.FBI, JobType.LSMC, JobType.LSPD, JobType.BCSO, JobType.FBI, JobType.LSCS];
 
 @Provider()
 export class PoliceLicenceProvider {
@@ -118,5 +120,16 @@ export class PoliceLicenceProvider {
                 this.playerService.setPlayerMetadata(target.source, 'licences', licences);
             }
         }
+    }
+
+    @Rpc(RpcServerEvent.POLICE_LICENSE_HAS_RECUER)
+    public hasRescuerLicence(source: number, targetId: number) {
+        const target = this.playerService.getPlayer(targetId);
+
+        if (!target) {
+            return false;
+        }
+
+        return target.metadata.licences[PlayerLicenceType.Rescuer];
     }
 }

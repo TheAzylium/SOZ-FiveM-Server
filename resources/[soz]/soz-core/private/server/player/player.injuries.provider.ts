@@ -5,4 +5,8 @@ export class PlayerInjuryProvider {
     public remainingForcedITT(target: number): number {
         return 0;
     }
+
+    public handleInjuryRevive(source: number, targetid: number) {
+        return false;
+    }
 }

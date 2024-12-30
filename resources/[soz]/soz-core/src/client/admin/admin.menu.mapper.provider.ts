@@ -11,17 +11,17 @@ import { NuiEvent, ServerEvent } from '../../shared/event';
 import { Property } from '../../shared/housing/housing';
 import { Font } from '../../shared/hud';
 import { JobType } from '../../shared/job';
+import { NotEmptyStringValidator, PositiveNumberValidator } from '../../shared/nui/input';
 import { MenuType } from '../../shared/nui/menu';
 import { BoxZone, Zone, ZoneType, ZoneTyped } from '../../shared/polyzone/box.zone';
 import { toVector4Object, Vector3 } from '../../shared/polyzone/vector';
-import { Err, Ok } from '../../shared/result';
 import { RpcServerEvent } from '../../shared/rpc';
 import { DrawService } from '../draw.service';
 import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
 import { NuiMenu } from '../nui/nui.menu';
-import { NuiObjectProvider } from '../nui/nui.object.provider';
 import { NuiZoneProvider } from '../nui/nui.zone.provider';
+import { ObjectEditorProvider } from '../object/object.editor.provider';
 import { HousingRepository } from '../repository/housing.repository';
 import { SenateRepository } from '../repository/senate.repository';
 import { ZoneRepository } from '../repository/zone.repository';
@@ -61,8 +61,8 @@ export class AdminMenuMapperProvider {
     @Inject(NuiZoneProvider)
     private nuiZoneProvider: NuiZoneProvider;
 
-    @Inject(NuiObjectProvider)
-    private nuiObjectProvider: NuiObjectProvider;
+    @Inject(ObjectEditorProvider)
+    private readonly objectEditorProvider: ObjectEditorProvider;
 
     @Inject(DrawService)
     private drawService: DrawService;
@@ -297,13 +297,7 @@ export class AdminMenuMapperProvider {
                 title: "Identifiant de l'interieur",
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!apartmentIdentifier) {
@@ -317,13 +311,7 @@ export class AdminMenuMapperProvider {
                 title: "Nom de l'intérieur",
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!apartmentName) {
@@ -345,13 +333,7 @@ export class AdminMenuMapperProvider {
                 title: 'Identifiant de la propriété',
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!propertyName) {
@@ -368,13 +350,7 @@ export class AdminMenuMapperProvider {
                 title: "Nom de l'interieur",
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!apartmentName) {
@@ -398,17 +374,7 @@ export class AdminMenuMapperProvider {
                     title: "Prix de l'intérieur",
                     defaultValue: '',
                 },
-                value => {
-                    if (!value) {
-                        return Err('Le nom ne peut pas être vide');
-                    }
-
-                    if (isNaN(Number(value))) {
-                        return Err('Le prix doit être un nombre');
-                    }
-
-                    return Ok(value);
-                }
+                PositiveNumberValidator
             );
 
             if (!apartmentPrice) {
@@ -428,13 +394,7 @@ export class AdminMenuMapperProvider {
                 title: "Identifiant de l'interieur",
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!apartmentIdentifier) {
@@ -530,7 +490,9 @@ export class AdminMenuMapperProvider {
         event: string | null;
     }): Promise<void> {
         const model = GetHashKey(object);
-        const createdObject = await this.nuiObjectProvider.askObject(model);
+        const createdObject = await this.objectEditorProvider.createOrUpdateObject(model, {
+            context: 'admin',
+        });
 
         if (null === createdObject) {
             return;
@@ -561,13 +523,7 @@ export class AdminMenuMapperProvider {
                 title: 'Nom de la zone',
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le nom ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         const newZone = await this.nuiZoneProvider.askZone(null);
@@ -627,13 +583,7 @@ export class AdminMenuMapperProvider {
                 title: 'Hash du batiment',
                 defaultValue: '',
             },
-            value => {
-                if (!value) {
-                    return Err('Le hash ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         const culling = Number(cullingString);
@@ -686,13 +636,7 @@ export class AdminMenuMapperProvider {
             {
                 title: 'Citizen ID',
             },
-            value => {
-                if (!value) {
-                    return Err('Le Citizen ID ne peut pas être vide');
-                }
-
-                return Ok(value);
-            }
+            NotEmptyStringValidator
         );
 
         if (!citizenId) {

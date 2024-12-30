@@ -1,21 +1,35 @@
-import { Tick } from '@public/core/decorators/tick';
+import { AnimationService } from '@public/client/animation/animation.service';
+import { Monitor } from '@public/client/monitor/monitor';
+import { Tick, TickInterval } from '@public/core/decorators/tick';
 import { wait } from '@public/core/utils';
+import { ServerEvent } from '@public/shared/event';
+import { PUBLIC_SERVICES } from '@public/shared/job';
 
-import { DealershipConfig, DealershipConfigItem, DealershipJob, DealershipType } from '../../config/dealership';
-import { Once, OnceStep, OnEvent, OnNuiEvent } from '../../core/decorators/event';
+import { getRandomInt } from '../../../src/shared/random';
+import {
+    DealershipConfig,
+    DealershipConfigItem,
+    DealershipJob,
+    DealershipType,
+    luxuryFightingGuard,
+    luxuryStaticGuard,
+} from '../../config/dealership';
+import { Once, OnceStep, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
-import { ClientEvent, NuiEvent } from '../../shared/event';
+import { NuiEvent } from '../../shared/event';
 import { Feature, isFeatureEnabled } from '../../shared/features';
 import { JobPermission } from '../../shared/job';
 import { MenuType } from '../../shared/nui/menu';
+import { getDistance, Vector3 } from '../../shared/polyzone/vector';
 import { getRandomItem } from '../../shared/random';
 import { Err, Ok } from '../../shared/result';
 import { RpcServerEvent } from '../../shared/rpc';
 import { AuctionVehicle, ShowVehicle } from '../../shared/vehicle/auction';
 import { Vehicle, VehicleDealershipMenuData } from '../../shared/vehicle/vehicle';
 import { BlipFactory } from '../blip';
+import { PedFactory } from '../factory/ped.factory';
 import { JobService } from '../job/job.service';
 import { Notifier } from '../notifier';
 import { InputService } from '../nui/input.service';
@@ -29,6 +43,9 @@ import { VehicleService } from './vehicle.service';
 export class VehicleDealershipProvider {
     @Inject(TargetFactory)
     private targetFactory: TargetFactory;
+
+    @Inject(PedFactory)
+    private pedFactory: PedFactory;
 
     @Inject(BlipFactory)
     private blipFactory: BlipFactory;
@@ -54,9 +71,17 @@ export class VehicleDealershipProvider {
     @Inject(Notifier)
     private notifier: Notifier;
 
+    @Inject(AnimationService)
+    private animationService: AnimationService;
+
+    @Inject(Monitor)
+    public monitor: Monitor;
+
     private lastVehicleShowroom: number | null = null;
 
-    private auctionVehicles: Record<string, AuctionVehicle> = {};
+    private secondPastInZone = -1;
+
+    private currentGuardNet: number;
 
     private electricShowVehicles: Record<number, ShowVehicle> = {
         [1]: {
@@ -175,6 +200,10 @@ export class VehicleDealershipProvider {
             },
         });
 
+        AddRelationshipGroup('GUARD');
+        SetRelationshipBetweenGroups(0, 'GUARD', 'GUARD');
+        await this.spwanStaticsGuard();
+
         this.blipFactory.create(`dealership_luxury`, {
             name: 'Concessionnaire Auto Sportive',
             coords: { x: -795.77, y: -243.88, z: 37.07 },
@@ -182,11 +211,11 @@ export class VehicleDealershipProvider {
             color: 46,
         });
 
-        this.auctionVehicles = await emitRpc<Record<string, AuctionVehicle>>(
+        const [auctionVehicles] = await emitRpc<[Record<string, AuctionVehicle>, boolean]>(
             RpcServerEvent.VEHICLE_DEALERSHIP_GET_AUCTIONS
         );
 
-        for (const [name, auction] of Object.entries(this.auctionVehicles)) {
+        for (const [name, auction] of Object.entries(auctionVehicles)) {
             if (!(await this.resourceLoader.loadModel(auction.vehicle.hash))) {
                 continue;
             }
@@ -246,15 +275,8 @@ export class VehicleDealershipProvider {
         }
     }
 
-    @OnEvent(ClientEvent.VEHICLE_DEALERSHIP_AUCTION_UPDATE)
-    public onAuctionUpdate(auctionVehicles: Record<string, AuctionVehicle>) {
-        this.auctionVehicles = auctionVehicles;
-    }
-
     @OnNuiEvent<{ name: string }>(NuiEvent.VehicleAuctionBid)
-    public async onAuctionBid({ name }: { name: string }) {
-        const auction = this.auctionVehicles[name];
-
+    public async onAuctionBid({ name, auction }: { name: string; auction: AuctionVehicle }) {
         if (!auction) {
             this.notifier.notify(`Cette enchère n'existe plus.`, 'error');
             this.nuiMenu.closeMenu();
@@ -262,10 +284,10 @@ export class VehicleDealershipProvider {
             return;
         }
 
-        const input = await this.inputService.askInput(
+        const amount = await this.inputService.askInput<number>(
             {
                 title: "Montant de l'enchère",
-                defaultValue: auction.bestBid ? auction.bestBid.price.toString() : auction.vehicle.price.toString(),
+                defaultValue: auction.nextMinBid.toString(),
             },
             (input: string) => {
                 const amount = parseInt(input);
@@ -274,19 +296,18 @@ export class VehicleDealershipProvider {
                     return Err('Montant invalide.');
                 }
 
-                if (amount <= auction.vehicle.price) {
-                    return Err('Le montant doit être supérieur au prix de base.');
-                }
-
-                if (auction.bestBid && amount <= auction.bestBid?.price) {
-                    return Err("Le montant doit être supérieur à l'enchère actuelle.");
+                if (amount < auction.nextMinBid) {
+                    return Err("Le montant doit être supérieur au prix d'enchère minimum.");
                 }
 
                 return Ok(amount);
             }
         );
 
-        const amount = parseInt(input);
+        if (!amount) {
+            return;
+        }
+
         const hasBid = await emitRpc<boolean>(RpcServerEvent.VEHICLE_DEALERSHIP_AUCTION_BID, name, amount);
 
         if (hasBid) {
@@ -524,7 +545,10 @@ export class VehicleDealershipProvider {
             return;
         }
 
-        const auction = this.auctionVehicles[name] || null;
+        const [auctionVehicles, isAuctionDisable] = await emitRpc<[Record<string, AuctionVehicle>, boolean]>(
+            RpcServerEvent.VEHICLE_DEALERSHIP_GET_AUCTIONS
+        );
+        const auction = auctionVehicles[name] || null;
 
         if (!auction) {
             this.notifier.notify(`Cette enchère n'existe plus.`, 'error');
@@ -548,6 +572,7 @@ export class VehicleDealershipProvider {
             {
                 name,
                 auction,
+                isAuctionDisable,
             },
             {
                 position: {
@@ -556,5 +581,132 @@ export class VehicleDealershipProvider {
                 },
             }
         );
+    }
+
+    async spwanStaticsGuard() {
+        for (const guard of luxuryStaticGuard) {
+            await this.pedFactory.createPed(guard);
+        }
+    }
+
+    async spawnFightingGuard() {
+        const playerPed = PlayerPedId();
+
+        if (!playerPed) {
+            return;
+        }
+
+        if (this.currentGuardNet !== undefined) {
+            return;
+        }
+
+        const guardNPC = await this.pedFactory.createPed({
+            model: luxuryFightingGuard.possiblePedModel[
+                getRandomInt(0, luxuryFightingGuard.possiblePedModel.length - 1)
+            ],
+            coords: luxuryFightingGuard.possibleSpawnPosition[
+                getRandomInt(0, luxuryFightingGuard.possibleSpawnPosition.length - 1)
+            ],
+            blockevents: true,
+            network: true,
+        });
+        SetPedArmour(guardNPC, 100);
+        SetPedRelationshipGroupHash(guardNPC, GetHashKey('GUARD'));
+        GiveWeaponToPed(
+            guardNPC,
+            luxuryFightingGuard.possibleWeapon[getRandomInt(0, luxuryFightingGuard.possibleWeapon.length - 1)],
+            0,
+            false,
+            true
+        );
+
+        SetPedDropsWeaponsWhenDead(guardNPC, false);
+        SetPedCombatAttributes(guardNPC, 46, true);
+        SetPedCombatAttributes(guardNPC, 5, true);
+
+        TaskCombatPed(guardNPC, playerPed, 0, 16);
+
+        this.currentGuardNet = PedToNet(guardNPC);
+        this.monitor.publish('luxury_guard_spawn', {}, {});
+        TriggerServerEvent(ServerEvent.LUXURY_CREATED_GUARD, this.currentGuardNet);
+    }
+
+    @Tick(TickInterval.EVERY_SECOND)
+    public async shouldSpawnGuard() {
+        const playerPed = PlayerPedId();
+        const pedCoords = GetEntityCoords(playerPed, false);
+
+        let resetTimer = true;
+        if (
+            getDistance(pedCoords as Vector3, luxuryFightingGuard.detectionZoneCenter) <=
+            luxuryFightingGuard.triggerDistance
+        ) {
+            if (IsPedArmed(playerPed, 1 | 2 | 4)) {
+                const player = this.playerService.getPlayer();
+                if (player && !(PUBLIC_SERVICES.includes(player.job.id) && this.playerService.isOnDuty())) {
+                    this.secondPastInZone++;
+                    resetTimer = false;
+                }
+            }
+        }
+
+        if (resetTimer) {
+            this.secondPastInZone = -1;
+        }
+
+        if (this.secondPastInZone === luxuryFightingGuard.triggerTime) {
+            this.spawnFightingGuard();
+        }
+    }
+
+    @Tick(5 * TickInterval.EVERY_SECOND)
+    public async shouldRemoveGuard() {
+        if (!this.currentGuardNet) {
+            return;
+        }
+
+        const guardNPC = NetToPed(this.currentGuardNet);
+        if (!guardNPC || !DoesEntityExist(guardNPC) || !IsEntityAPed(guardNPC)) {
+            this.deleteGuard(this.currentGuardNet);
+            this.currentGuardNet = undefined;
+            return;
+        }
+
+        const playerPed = PlayerPedId();
+        const pCoords = GetEntityCoords(playerPed);
+        const dist = getDistance(luxuryFightingGuard.detectionZoneCenter, pCoords as Vector3);
+
+        const playerState = this.playerService.getState();
+        if (dist > luxuryFightingGuard.triggerDistance * 5 || playerState.isDead) {
+            this.moveAndDeleteGuard(guardNPC, this.currentGuardNet);
+            this.currentGuardNet = undefined;
+            return;
+        }
+
+        if (IsPedDeadOrDying(guardNPC, true)) {
+            SetPedAsNoLongerNeeded(guardNPC);
+            this.currentGuardNet = undefined;
+            return;
+        }
+    }
+
+    async moveAndDeleteGuard(guardNPC: number, guardNPCNet: number) {
+        const spawnCoord =
+            luxuryFightingGuard.possibleSpawnPosition[
+                getRandomInt(0, luxuryFightingGuard.possibleSpawnPosition.length - 1)
+            ];
+        await this.animationService.goToCoordsAvoidObstaclesForPed(
+            guardNPC,
+            [spawnCoord.x, spawnCoord.y, spawnCoord.z] as Vector3,
+            30000,
+            2.0
+        );
+
+        SetEntityAsMissionEntity(guardNPC, true, true);
+        this.deleteGuard(guardNPCNet);
+    }
+
+    async deleteGuard(guardNPCNet: number) {
+        TriggerServerEvent(ServerEvent.LUXURY_DELETE_GUARD, guardNPCNet);
     }
 }

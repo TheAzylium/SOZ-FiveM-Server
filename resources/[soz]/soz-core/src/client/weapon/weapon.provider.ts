@@ -4,7 +4,10 @@ import { Provider } from '@core/decorators/provider';
 import { Tick, TickInterval } from '@core/decorators/tick';
 import { emitRpc } from '@core/rpc';
 import { uuidv4, wait } from '@public/core/utils';
+import { FuelStationType } from '@public/shared/fuel';
 import { Control } from '@public/shared/input';
+import { PlasterConfigs } from '@public/shared/job/lsmc';
+import { BoxZone } from '@public/shared/polyzone/box.zone';
 import { Vector3 } from '@public/shared/polyzone/vector';
 import { getRandomItem } from '@public/shared/random';
 
@@ -12,11 +15,19 @@ import { ClientEvent, GameEvent, ServerEvent } from '../../shared/event';
 import { InventoryItem } from '../../shared/item';
 import { RpcServerEvent } from '../../shared/rpc';
 import { VehicleSeat } from '../../shared/vehicle/vehicle';
-import { ExplosionMessage, GlobalWeaponConfig, GunShotMessage, WeaponName } from '../../shared/weapons/weapon';
+import {
+    ExplosionMessage,
+    ExplosionType,
+    GlobalWeaponConfig,
+    GunShotMessage,
+    WeaponName,
+} from '../../shared/weapons/weapon';
+import { ClothingService } from '../clothing/clothing.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { PhoneService } from '../phone/phone.service';
 import { PlayerService } from '../player/player.service';
 import { ProgressService } from '../progress.service';
+import { FuelStationRepository } from '../repository/fuel.station.repository';
 import { VoipRadioProvider } from '../voip/voip.radio.provider';
 import { WeaponDrawingProvider } from './weapon.drawing.provider';
 import { WeaponHolsterProvider } from './weapon.holster.provider';
@@ -31,8 +42,16 @@ const messageExcludeGroups = [
 const weaponUnarmed = GetHashKey('WEAPON_UNARMED');
 const weaponPetrolCan = GetHashKey('WEAPON_PETROLCAN');
 
-const messageExclude = [GetHashKey('weapon_musket'), GetHashKey('weapon_raypistol'), GetHashKey('weapon_pumpshotgun')];
-const NonLethalWeapons = [GetHashKey('weapon_pumpshotgun')];
+const messageExclude = [
+    GetHashKey('weapon_musket'),
+    GetHashKey('weapon_raypistol'),
+    GetHashKey('weapon_pumpshotgun'),
+    GetHashKey('weapon_flaregun'),
+];
+const NonLethalWeapons = {
+    [GetHashKey('weapon_pumpshotgun')]: 10,
+    [GetHashKey('WEAPON_SNOWBALL')]: 2,
+};
 
 @Provider()
 export class WeaponProvider {
@@ -60,6 +79,12 @@ export class WeaponProvider {
     @Inject(PlayerService)
     private playerService: PlayerService;
 
+    @Inject(ClothingService)
+    private clothingService: ClothingService;
+
+    @Inject(FuelStationRepository)
+    private fuelStationRepository: FuelStationRepository;
+
     private lastPoliceCall = 0;
 
     @Once(OnceStep.PlayerLoaded)
@@ -79,12 +104,12 @@ export class WeaponProvider {
         SetWeaponDamageModifier(WeaponName.KNUCKLE, 0.2);
         SetWeaponDamageModifier(WeaponName.POOLCUE, 0.2);
 
-        SetWeaponDamageModifier('AMMO_SNOWBALL', 0.0);
         SetWeaponDamageModifier('AMMO_FIREWORK', 0.0);
         SetWeaponDamageModifier(WeaponName.SMOKEGRENADE, 0.0);
         SetWeaponDamageModifier(WeaponName.BZGAS, 0.1);
 
         SetWeaponDamageModifier(WeaponName.MUSKET, 0.5);
+        SetWeaponDamageModifier(WeaponName.REVOLVER_MK2, 0.66); //0.45 for not OS
     }
 
     @OnEvent(ClientEvent.PLAYER_ON_DEATH)
@@ -106,6 +131,16 @@ export class WeaponProvider {
             await this.weapon.clear();
             return;
         }
+
+        if (
+            this.playerService.getState().isInHub ||
+            this.playerService
+                .getPlayer()
+                ?.metadata?.plaster.find(item => PlasterConfigs[item].blockedAction.includes(Control.Attack))
+        ) {
+            return;
+        }
+
         await this.weapon.set(weapon);
     }
 
@@ -215,7 +250,14 @@ export class WeaponProvider {
         }
 
         const weaponGroup = GetWeapontypeGroup(weapon.name);
-        emitNet(ServerEvent.WEAPON_SHOOTING, weapon.slot, weaponGroup, GetAmmoInClip(player, weapon.name)[1]);
+        const isWearingGloves = this.clothingService.checkWearingGloves();
+        emitNet(
+            ServerEvent.WEAPON_SHOOTING,
+            weapon.slot,
+            weaponGroup,
+            GetAmmoInClip(player, weapon.name)[1],
+            isWearingGloves
+        );
 
         if (
             !messageExclude.includes(GetHashKey(weapon.name)) &&
@@ -242,17 +284,22 @@ export class WeaponProvider {
 
                 const message = getRandomItem(GunShotMessage);
 
-                const alertMessage = `${zone}: ${message.replace('${0}', name)}`;
-                const htmlMessage = `${zone}: ${message.replace('${0}', nameHtml)}`;
-
-                TriggerServerEvent(ServerEvent.WEAPON_SHOOTING_ALERT, alertMessage, htmlMessage, zoneID);
+                TriggerServerEvent('phone:sendSocietyMessage', 'phone:sendSocietyMessage:' + uuidv4(), {
+                    anonymous: true,
+                    number: '555-POLICE',
+                    message: `${zone}: ${message.replace('${0}', name)}`,
+                    htmlMessage: `${zone}: ${message.replace('${0}', nameHtml)}`,
+                    position: true,
+                    info: { type: 'shooting' },
+                    overrideIdentifier: 'System',
+                });
             }
         }
         await this.weapon.recoil();
     }
 
     @OnEvent(ClientEvent.WEAPON_EXPLOSION)
-    async onExplosion(x: number, y: number, z: number) {
+    async onExplosion(x: number, y: number, z: number, type: number) {
         const zoneID = GetNameOfZone(x, y, z);
         if (zoneID == 'ISHEIST') {
             return;
@@ -271,6 +318,26 @@ export class WeaponProvider {
             overrideIdentifier: 'System',
             pedPosition: JSON.stringify({ x: x, y: y, z: z }),
         });
+
+        if (type == ExplosionType.PETROL_PUMP) {
+            const stations = this.fuelStationRepository.get();
+            for (const stationName in stations) {
+                const station = stations[stationName];
+                if (station.type == FuelStationType.Private) {
+                    continue;
+                }
+
+                if (BoxZone.fromZone(station.zone).isPointInside([x, y, z])) {
+                    TriggerServerEvent(
+                        ServerEvent.VANDALISM_STATION_EXPLOSION,
+                        station.objectId ? station.objectId : station.id.toString(),
+                        zone
+                    );
+
+                    break;
+                }
+            }
+        }
     }
 
     @Tick(TickInterval.EVERY_SECOND)
@@ -330,9 +397,16 @@ export class WeaponProvider {
         weaponHash: number
     ) {
         const playerPed = PlayerPedId();
-        if (playerPed == victim && NonLethalWeapons.includes(weaponHash) && !IsPedRagdoll(playerPed)) {
-            this.weapon.clear();
-            SetPedToRagdoll(playerPed, 10000, 10000, 0, false, false, false);
+        if (
+            (playerPed == victim || (IsEntityAPed(victim) && NetworkHasControlOfEntity(victim))) &&
+            Object.keys(NonLethalWeapons).find(weap => Number(weap) == weaponHash) &&
+            !IsPedRagdoll(playerPed)
+        ) {
+            if (playerPed == victim) {
+                this.weapon.clear();
+            }
+            const duration = NonLethalWeapons[weaponHash];
+            SetPedToRagdoll(victim, duration * 1000, duration * 1000, 0, false, false, false);
             const attackerCoords = GetEntityCoords(attacker);
             const victimCoords = GetEntityCoords(victim);
             const vec = [
@@ -341,7 +415,7 @@ export class WeaponProvider {
                 victimCoords[2] - attackerCoords[2],
             ] as Vector3;
             const magnitude = Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-            SetEntityVelocity(playerPed, (2 * vec[0]) / magnitude, (2 * vec[1]) / magnitude, (2 * vec[2]) / magnitude);
+            SetEntityVelocity(victim, (2 * vec[0]) / magnitude, (2 * vec[1]) / magnitude, (2 * vec[2]) / magnitude);
         }
     }
 
@@ -373,6 +447,37 @@ export class WeaponProvider {
             }
         } else {
             await wait(500);
+        }
+    }
+
+    @OnEvent(ClientEvent.WEAPON_PICK_SNOWBALL, false)
+    public async onSnowPickup() {
+        const playerPedId = PlayerPedId();
+        const playerId = PlayerId();
+        if (
+            IsPedInAnyVehicle(playerPedId, true) ||
+            IsPlayerFreeAiming(playerId) ||
+            IsPedSwimming(playerPedId) ||
+            IsPedSwimmingUnderWater(playerPedId) ||
+            IsPedRagdoll(playerPedId) ||
+            IsPedFalling(playerPedId) ||
+            IsPedRunning(playerPedId) ||
+            IsPedSprinting(playerPedId) ||
+            GetInteriorFromEntity(playerPedId) ||
+            IsPedShooting(playerPedId) ||
+            IsPedUsingAnyScenario(playerPedId) ||
+            IsPedInCover(playerPedId, false)
+        ) {
+            return;
+        }
+
+        const { completed } = await this.progressService.progress('snow', 'Ramassage de neige...', 2000, {
+            dictionary: 'anim@mp_snowball',
+            name: 'pickup_snowball',
+        });
+
+        if (completed) {
+            TriggerServerEvent(ServerEvent.WEAPON_GET_SNOW);
         }
     }
 }

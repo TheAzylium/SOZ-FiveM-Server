@@ -179,16 +179,10 @@ export class TattooShopProvider {
 
     @OnNuiEvent(NuiEvent.TattooShopResetTattos)
     public async onResetTattoos() {
-        const value = await this.inputService.askInput(
-            {
-                title: 'Voulez-vous vraiment retirer tout vos tatouages ? (Tapez "oui" pour confirmer)',
-                defaultValue: '',
-                maxCharacters: 3,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const value = await this.inputService.askInput({
+            title: 'Voulez-vous vraiment retirer tout vos tatouages ? (Tapez "oui" pour confirmer)',
+            maxCharacters: 3,
+        });
         if (value && value.toLowerCase() === 'oui') {
             TriggerServerEvent(ServerEvent.SHOP_TATTOO_RESET);
         } else {
@@ -198,16 +192,10 @@ export class TattooShopProvider {
 
     @OnNuiEvent(NuiEvent.TattooShopBuy)
     public async onBuyTattoo(product: TattooShopItem) {
-        const value = await this.inputService.askInput(
-            {
-                title: 'Voulez-vous vraiment ce tatouages ? (Tapez "oui" pour confirmer)',
-                defaultValue: '',
-                maxCharacters: 3,
-            },
-            () => {
-                return Ok(true);
-            }
-        );
+        const value = await this.inputService.askInput({
+            title: 'Voulez-vous vraiment ce tatouages ? (Tapez "oui" pour confirmer)',
+            maxCharacters: 3,
+        });
         if (value && value.toLowerCase() === 'oui') {
             TriggerServerEvent(ServerEvent.SHOP_BUY, product, ShopBrand.Tattoo);
         } else {

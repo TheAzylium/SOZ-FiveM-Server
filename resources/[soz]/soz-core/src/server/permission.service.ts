@@ -1,13 +1,9 @@
 import { Inject, Injectable } from '../core/decorators/injectable';
 import { SozRole } from '../core/permissions';
-import { PlayerService } from './player/player.service';
 import { QBCore } from './qbcore';
 
 @Injectable()
 export class PermissionService {
-    @Inject(PlayerService)
-    private playerService: PlayerService;
-
     @Inject(QBCore)
     private QBCore: QBCore;
 

@@ -71,7 +71,7 @@ export const MenuNews: FunctionComponent<MenuNewsProps> = ({ data }) => {
                     <MenuItemSelect
                         title="Poser un objet"
                         onConfirm={(i, value) => {
-                            fetchNui(NuiEvent.NewsPlaceObject, value);
+                            fetchNui(NuiEvent.ObjectPlace, value);
                         }}
                     >
                         <MenuItemSelectOption value={{ item: 'n_fix_greenscreen', props: 'prop_ld_greenscreen_01' }}>

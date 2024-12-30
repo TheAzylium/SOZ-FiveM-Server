@@ -20,6 +20,32 @@ RegisterServerEvent("inventory:server:openInventory", function(storageType, invI
     end
 end)
 
+RegisterServerEvent("inventory:server:openItemStorage", function(slot)
+    local Player = QBCore.Functions.GetPlayer(source)
+    local sourceInv = Inventory(source)
+
+    local item = sourceInv.items[slot];
+    local itemDef = QBCore.Shared.Items[item.name]
+
+    if _G.Container[itemDef.storageItemType] == nil then
+        _G.Container[itemDef.storageItemType] = InventoryItemStorage:new({
+            type = itemDef.storageItemType,
+            allowedTypes = {itemDef.storageItemType},
+        })
+    end
+
+    local targetInv = Inventory(item.metadata.id)
+    if not targetInv then
+        targetInv = Inventory.Create(item.metadata.id, itemDef.label, itemDef.storageItemType, 1000, 1000000, source,
+                                     table.deepclone(item.metadata.storageElements))
+    end
+    targetInv.slot = slot
+    targetInv.owner = source
+
+    TriggerClientEvent("inventory:client:openInventory", Player.PlayerData.source, Inventory.FilterItems(sourceInv, targetInv.type),
+                       Inventory.FilterItems(targetInv, sourceInv.type), nil)
+end)
+
 RegisterServerEvent("inventory:server:bin-vandalism", function(invID, ctx)
     local storageType = "bin"
     local binInv = GetOrCreateInventory(storageType, invID, ctx)

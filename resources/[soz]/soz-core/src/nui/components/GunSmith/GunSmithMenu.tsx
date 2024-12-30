@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { InventoryItem } from '../../../shared/item';
 import { MenuType } from '../../../shared/nui/menu';
@@ -8,6 +9,7 @@ import { WEAPON_CUSTOM_PRICE, WeaponAttachment, WeaponComponentType } from '../.
 import { WeaponTintColor, WeaponTintColorChoiceItem } from '../../../shared/weapons/tint';
 import { WeaponConfiguration, WeaponsMenuData } from '../../../shared/weapons/weapon';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import { RootState } from '../../store';
 import {
     MainMenu,
@@ -35,6 +37,7 @@ const GunSmithWeaponSubMenu: FunctionComponent<{
     attachments: WeaponAttachment[];
 }> = ({ submenu_id, banner, weapon, tint, attachments }) => {
     const [configuration, setConfiguration] = useState<WeaponConfiguration>({});
+    const getPrice = useGetPrice();
 
     const price = useMemo(() => {
         let price = 0;
@@ -162,7 +165,7 @@ const GunSmithWeaponSubMenu: FunctionComponent<{
                 >
                     <div className="flex w-full justify-between items-center">
                         <span>Confirmer les changements</span>
-                        <span>${price.toFixed(0)}</span>
+                        <span>${getPrice(price, TaxType.WEAPON).toFixed(0)}</span>
                     </div>
                 </MenuItemButton>
             </MenuContent>

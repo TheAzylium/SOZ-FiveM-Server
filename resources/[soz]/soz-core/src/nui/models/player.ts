@@ -1,3 +1,4 @@
+import { Vector3 } from '@public/shared/polyzone/vector';
 import { createModel } from '@rematch/core';
 
 import { PlayerData } from '../../shared/player';
@@ -18,6 +19,16 @@ export const playerStats = createModel<RootModel>()({
     reducers: {
         update(state, health: [number, number]) {
             return health;
+        },
+    },
+    effects: () => ({}),
+});
+
+export const playerPosition = createModel<RootModel>()({
+    state: [0, 0, 0] as Vector3,
+    reducers: {
+        update(state, position: Vector3) {
+            return position;
         },
     },
     effects: () => ({}),

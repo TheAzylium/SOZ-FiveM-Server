@@ -1,13 +1,13 @@
-import { Radio } from '../voip';
+import { RadioWithVolumeClick } from '../voip';
 
 export interface NuiRadioMethodMap {
-    Open: Radio;
-    Update: Radio;
+    Open: RadioWithVolumeClick;
+    Update: RadioWithVolumeClick;
     Close: never;
 }
 
 export interface NuiRadioVehicleMethodMap {
-    Open: Radio;
-    Update: Radio;
+    Open: RadioWithVolumeClick;
+    Update: RadioWithVolumeClick;
     Close: never;
 }

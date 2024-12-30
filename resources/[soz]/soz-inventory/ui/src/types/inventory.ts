@@ -35,6 +35,10 @@ export type InventoryItem = {
     illustrator?: Record<string, string> | string;
     disabled?: boolean; // added by inventory on the fly
     shortcut?: string | null; // added by inventory on the fly
+    storageItemType?: string | null;
+    openStorageLabel?: string | null;
+    canShow?: boolean;
+    throwable?: boolean;
 };
 
 export type ItemType =
@@ -63,7 +67,8 @@ export type ItemType =
     | 'fish'
     | 'fishing_garbage'
     | 'tool'
-    | 'card';
+    | 'card'
+    | 'evidence';
 
 export type MealMetadata = {
         name: string;
@@ -78,10 +83,21 @@ export type BaitMetadata = {
     metadata: InventoryItemMetadata;
     label: string;
 };
-    
+
+export type EvidenceMetadata = {
+    type: string;
+    generalInfo: string;
+    quantity?: number;
+    zone?: string;
+    support?: string;
+    isAnalyzed?: boolean;
+    dateAnalyzed?: string;
+};
+
 export type InventoryItemMetadata = {
     label?: string;
     type?: string;
+    creation?: string;
     expiration?: string;
     player?: number;
     tier?: number;
@@ -99,6 +115,11 @@ export type InventoryItemMetadata = {
     weight?: number;
     length?:number;
     iban?: string;
+    serializedDetectiveBoard?: any;
+    originalDetectiveBoard?: boolean;
+    photosInDetectiveBoard?: string[];
+    evidenceInfos?: EvidenceMetadata;
+    photoUrl?: string;
 };
 
 

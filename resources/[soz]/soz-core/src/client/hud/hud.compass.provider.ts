@@ -1,8 +1,8 @@
-import { OnEvent } from '../../core/decorators/event';
+import { PlayerUpdate } from '@public/core/decorators/player';
+
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Tick } from '../../core/decorators/tick';
-import { ClientEvent } from '../../shared/event';
 import { Vector3 } from '../../shared/polyzone/vector';
 import { DrawService } from '../draw.service';
 import { InventoryManager } from '../inventory/inventory.manager';
@@ -38,7 +38,7 @@ export class HudCompassProvider {
         return this._haveCompass;
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     async onPlayerUpdate(): Promise<void> {
         this._haveCompass =
             this.inventoryManager.hasEnoughItem('compass', 1, true) ||

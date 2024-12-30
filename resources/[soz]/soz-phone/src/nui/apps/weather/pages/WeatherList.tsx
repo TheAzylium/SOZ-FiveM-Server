@@ -30,12 +30,12 @@ export const WeatherList = memo(() => {
     const { getForecasts, getAlert } = useWeather();
     const time = useTime();
     const forecasts = getForecasts();
-    const alertDate: Date = getAlert();
+    const alertDate = getAlert();
     const [alertMessage, setAlertMessage] = useState<string>();
     const config = useConfig();
     const checkAlert = () => {
-        if (alertDate && alertDate.getTime() > Date.now()) {
-            const remainingTime = alertDate.getTime() - Date.now();
+        if (alertDate > Date.now()) {
+            const remainingTime = alertDate - Date.now();
             const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60)).toString(10);
             const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000).toString(10);
             setAlertMessage(`${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`);

@@ -1,3 +1,5 @@
+import { getDefaultVehicleCondition, VehicleClassFuelStorageMultiplier } from '@public/shared/vehicle/vehicle';
+
 import { OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
@@ -8,6 +10,7 @@ import { Notifier } from '../notifier';
 import { PlayerMoneyService } from '../player/player.money.service';
 import { PlayerService } from '../player/player.service';
 import { ProgressService } from '../player/progress.service';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { VehicleStateService } from './vehicle.state.service';
 
 @Provider()
@@ -33,6 +36,9 @@ export class VehicleFuelProvider {
     @Inject(PlayerMoneyService)
     private playerMoneyService: PlayerMoneyService;
 
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
+
     private currentFilling = new Set<number>();
 
     @OnEvent(ServerEvent.VEHICLE_FUEL_START)
@@ -51,8 +57,13 @@ export class VehicleFuelProvider {
 
         this.currentFilling.add(vehicleNetworkId);
         try {
+            const vehicle = NetworkGetEntityFromNetworkId(vehicleNetworkId);
+            const vehDef = await this.vehicleRepository.findByHash(GetEntityModel(vehicle));
+            const storageMultiplier = VehicleClassFuelStorageMultiplier[vehDef?.requiredLicence] || 1.0;
             const vehicleState = this.vehicleStateService.getVehicleState(vehicleNetworkId);
-            const fuelToFill = Math.floor(100 - vehicleState.condition.fuelLevel);
+            const fuelToFill = Math.floor(
+                getDefaultVehicleCondition().fuelLevel * storageMultiplier - vehicleState.condition.fuelLevel
+            );
 
             const [reservedFuel, station, maxFuelMoney] = await this.lockService.lock(
                 `fuel_station_${stationId}`,

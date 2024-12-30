@@ -7,7 +7,8 @@ export const taxi = createModel<RootModel>()({
     state: {
         horodateurStarted: false,
         horodateurDisplayed: false,
-        missionInprogress: false,
+        taxiMissionInProgress: false,
+        busMissionInProgress: false,
     } as TaxiStatus,
     reducers: {
         update(state, taxi: Partial<TaxiStatus>) {

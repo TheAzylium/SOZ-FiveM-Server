@@ -57,24 +57,8 @@ export class NewsProvider {
             [
                 {
                     label: 'Récupérer',
-                    color: 'news',
                     icon: 'c:jobs/recuperer.png',
-                    job: JobType.News,
-                    action: object => {
-                        this.objectProvider.collectObject(object);
-                    },
-                },
-            ]
-        );
-
-        this.targetFactory.createForModel(
-            ['prop_ld_greenscreen_01', 'prop_tv_cam_02', 'prop_kino_light_01', 'v_ilev_fos_mic'],
-            [
-                {
-                    label: 'Récupérer',
-                    color: 'you-news',
-                    icon: 'c:jobs/recuperer.png',
-                    job: JobType.YouNews,
+                    job: { [JobType.News]: 0, [JobType.YouNews]: 0 },
                     action: object => {
                         this.objectProvider.collectObject(object);
                     },
@@ -101,7 +85,8 @@ export class NewsProvider {
                     },
                     job: JobType.News,
                     canInteract: () => {
-                        return this.playerService.isOnDuty();
+                        return false;
+                        //return this.playerService.isOnDuty();
                     },
                 },
             ]
@@ -127,7 +112,8 @@ export class NewsProvider {
                     },
                     job: JobType.YouNews,
                     canInteract: () => {
-                        return this.playerService.isOnDuty();
+                        return false;
+                        //return this.playerService.isOnDuty();
                     },
                 },
             ]

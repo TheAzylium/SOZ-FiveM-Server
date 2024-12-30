@@ -38,12 +38,18 @@ export enum ServerEvent {
     ADMIN_ADD_VEHICLE = 'soz-core:server:admin:add-vehicle',
     ADMIN_PLAYER_SET_ZOMBIE = 'soz-core:server:admin:player:set-zombie',
     ADMIN_PLAYER_SET_SENATE_PARTY = 'soz-core:server:admin:player:set-senate-party',
+    ADMIN_PLAYER_SET_VOIP_DEBUG = 'soz-core:server:admin:player:set-voip-debug',
 
     BASE_ENTERED_VEHICLE = 'baseevents:enteredVehicle',
     BASE_LEFT_VEHICLE = 'baseevents:leftVehicle',
     BASE_CHANGE_VEHICLE_SEAT = 'baseevents:changeVehicleSeat',
 
+    BAUN_CREATE_COCKTAIL_BOX = 'soz-core:server:job:baun:create-cocktail-box',
+    BAUN_CREATE_ICE_CUBES = 'soz-core:server:job:baun:create-ice-cubes',
+    BAUN_HARVEST = 'soz-core:server:job:baun:harvest',
     BAUN_RESELL = 'soz-core:server:job:baun:resell',
+    BAUN_ICE_CUBE = 'soz-core:server:job:baun:ice-cube',
+    BAUN_RESTOCK = 'soz-core:server:job:baun:restock',
 
     BENNYS_ESTIMATE_VEHICLE = 'soz-core:server:job:bennys:estimate-vehicle',
     BENNYS_SELL_VEHICLE = 'soz-core:server:job:bennys:sell-vehicle',
@@ -69,11 +75,18 @@ export enum ServerEvent {
     DMC_RESTOCK = 'soz-core:server:job:dmc:restock',
 
     FIVEM_PLAYER_CONNECTING = 'playerConnecting',
+    FIVEM_WEAPON_DAMAGE_EVENT = 'weaponDamageEvent',
 
     FOOD_ORDER_MEALS = 'soz-core:server:job:food:order-meals',
     FOOD_RETRIEVE_ORDER = 'soz-core:server:job:food:retrieve-order',
     FOOD_RETRIEVE_STATE = 'soz-core:server:job:food:retrieve-state',
     FOOD_EASTER_HARVEST = 'soz-core:server:job:food:easter-harvest',
+    FOOD_HUNT = 'soz-core:client:food:hunt',
+    FOOD_HUNT_RESPAWN = 'soz-core:server:food:hunt-respawn',
+    FOOD_COLLECT = 'soz-core:server:job:food:collect',
+    FOOD_MILK_COLLECT = 'soz-core:server:job:food:milk-collect',
+
+    EASTER_HUNT = 'soz-core:server:easter:hunt',
 
     FFS_HARVEST = 'soz-core:server:job:ffs:harvest',
     FFS_RESTOCK = 'soz-core:server:job:ffs:restock',
@@ -110,6 +123,7 @@ export enum ServerEvent {
     JOB_GRADE_SET_DEFAULT = 'soz-core:server:job:grade:set-default',
     JOB_GRADE_SET_SALARY = 'soz-core:server:job:grade:set-salary',
     JOB_GRADE_SET_WEIGHT = 'soz-core:server:job:grade:set-weight',
+    JOB_GRADE_SET_NAME = 'soz-core:server:job:grade:set-name',
     JOB_GRADE_SET_PERMISSION = 'soz-core:server:job:grade:set-permission',
 
     LSMC_BLOOD_FILL_FLASK = 'soz-core:server:job:lsmc:blood-fill-flask',
@@ -124,6 +138,18 @@ export enum ServerEvent {
     LSMC_SET_HAZMAT = 'soz-core:server:job:lsmc:set-hazmat',
     LSMC_SET_CURRENT_ORGAN = 'soz-core:server:job:lsmc:set-organ',
     LSMC_SET_PATIENT_OUTFIT = 'soz-core:server:job:lsmc:set-patient-outfit',
+    LSMC_DAMAGE_ADD = 'soz-core:server:job:lsmc:add-damage',
+    LSMC_STRETCHER_RETRIEVE = 'soz-core:server:job:lsmc:stretcher-retrieve',
+    LSMC_STRETCHER_PUT_ON = 'soz-core:server:job:lsmc:stretcher-put-on',
+    LSMC_STRETCHER_ON_AMBULANCE = 'soz-core:server:job:lsmc:stretcher-ambulance-put',
+    LSMC_STRETCHER_RETRIEVE_AMBULANCE = 'soz-core:server:job:lsmc:stretcher-ambulance-retrieve',
+    LSMC_WHEELCHAIR_RETRIEVE = 'soz-core:server:job:lsmc:wheelchair-retrieve',
+    LSMC_SCAN = 'soz-core:server:job:lsmc:scan',
+    LSMC_PLASTER = 'soz-core:server:job:lsmc:plaster',
+    LSMC_NALOXONE = 'soz-core:server:job:lsmc:nolaxone',
+    LSMC_MORPHINE = 'soz-core:server:job:lsmc:morphine',
+    LSMC_BED_PUT_ON = 'soz-core:server:job:lsmc:bed-put-on',
+    LSMC_VEH_PUT_ON = 'soz-core:server:job:lsmc:veh-put-on',
 
     LSC_CHECK_STOCK = 'soz-core:server:job:lsc:check-stock',
 
@@ -137,16 +163,24 @@ export enum ServerEvent {
     NEWS_ADD_FLASH = 'soz-core:server:news:add-flash',
     NEWS_NEWSPAPER_SOLD = 'soz-core:server:job:news:newspaper-sold',
     NEWS_NEWSPAPER_FARM = 'soz-core:server:job:news:newspaper-farm',
-    NEWS_PLACE_OBJECT = 'soz-core:server:job:news:place-object',
 
+    OBJECT_PLACE = 'soz-core:server:object:place',
     OBJECT_COLLECT = 'soz-core:server:object:collect',
     OBJECT_ATTACHED_REGISTER = 'soz-core:client:object:attached:register',
     OBJECT_ATTACHED_UNREGISTER = 'soz-core:client:object:attached:unregister',
 
+    OIL_CRAFT_ESSENCE = 'soz-core:server:oil:craft-essence',
+    OIL_CRAFT_ESSENCE_JERRYCAN = 'soz-core:server:oil:craft-essence-jerrycan',
+    OIL_CRAFT_KEROSENE = 'soz-core:server:oil:craft-kerosene',
+    OIL_CRAFT_KEROSENE_JERRYCAN = 'soz-core:server:oil:craft-kerosene-jerrycan',
     OIL_REFILL_ESSENCE_STATION = 'soz-core:server:oil:refill-essence-station',
     OIL_REFILL_KEROSENE_STATION = 'soz-core:server:oil:refill-kerosene-station',
     OIL_SET_STATION_PRICE = 'soz-core:server:oil:set-station-price',
     OIL_DECREMENT_STATION = 'soz-core:server:oil:decrement',
+    OIL_REFILL_TANKER = 'soz-core:server:oil:refill-tanker',
+    OIL_REFINE_TANKER = 'soz-core:server:oil:refine-tanker',
+    OIL_RESELL_TANKER = 'soz-core:server:oil:resell-tanker',
+    OIL_UNLOCK_TANKER = 'soz-core:server:oil:unlock-tanker',
 
     PLAYER_LOADED = 'soz-core:server:player:loaded',
     PLAYER_INCREASE_STRESS = 'soz-core:server:player:increase-stress',
@@ -187,7 +221,7 @@ export enum ServerEvent {
     STORY_HALLOWEEN_2023_SCENARIO_4 = 'soz-core:server:halloween:scenario4',
 
     STORAGE_REMOVE_ITEM = 'soz-core:server:storage:remove-item',
-    SHOP_BOSS_BUY = 'soz-core:server:shop:boss:buy',
+    SHOP_BOSS_ORDER = 'soz-core:server:shop:boss:order',
     SHOP_EASTER_BUY = 'soz-core:server:shop:easter:buy',
     SHOP_VALIDATE_CART = 'soz-core:server:shop:validate-cart',
 
@@ -205,7 +239,6 @@ export enum ServerEvent {
     AFK_KICK = 'soz-core:server:afk:kick',
 
     // not core
-
     BANKING_TRANSFER_MONEY = 'banking:server:TransferMoney',
     CHARACTER_SET_JOB_CLOTHES = 'soz-character:server:SetPlayerJobClothes',
     CHARACTER_SET_CLOTHES = 'soz-character:server:SetPlayerClothes',
@@ -217,7 +250,6 @@ export enum ServerEvent {
     LSMC_CLEAR_DISEASE = 'lsmc:maladie:ClearDisease',
     LSMC_SET_CURRENT_DISEASE = 'lsmc:maladie:server:SetCurrentDisease',
     LSMC_REVIVE = 'soz-core:lsmc:server:revive',
-    LSMC_REVIVE2 = 'soz-core:lsmc:server:revive2',
     LSMC_FREE_BED = 'soz-core:lsmc:server:free-bed',
     LSMC_ON_DEATH = 'soz-core:lsmc:server:on-death',
     LSMC_ON_DEATH2 = 'soz-core:lsmc:server:on-death2',
@@ -230,13 +262,16 @@ export enum ServerEvent {
 
     REPOSITORY_REFRESH_DATA = 'soz-core:server:repository:refresh-data',
 
-    TAXI_NPC_PAY = 'soz-core:server:taxi:npc-pay',
+    TAXI_NPC_PAY = 'soz-core:server:taxi:taxi-npc-pay',
+    BUS_NPC_PAY = 'soz-core:server:taxi:bus-npc-pay',
 
     VEHICLE_USE_REPAIR_KIT = 'soz-core:server:vehicle:use-repair-kit',
     VEHICLE_USE_BODY_REPAIR_KIT = 'soz-core:server:vehicle:use-body-repair-kit',
     VEHICLE_USE_CLEANING_KIT = 'soz-core:server:vehicle:use-cleaning-kit',
     VEHICLE_USE_WHEEL_KIT = 'soz-core:server:vehicle:use-wheel-kit',
     VEHICLE_FORCE_OPEN = 'soz-core:server:vehicle:force-open',
+    VEHICLE_COLLECT_FINGERPRINT = 'soz-core:server:vehicle:collect-fingerprint',
+    VEHICLE_COLLECT_DRUG = 'soz-core:server:vehicle:collect-drug',
     VEHICLE_SET_CLOSEST = 'soz-core:server:vehicle:set-closest',
     VEHICLE_DELETED = 'soz-core:server:vehicle:deleted',
     VEHICLE_GARAGE_STORE = 'soz-core:server:vehicle:garage:store',
@@ -262,12 +297,16 @@ export enum ServerEvent {
     VEHICLE_TOW_ROPE_DELETE = 'soz-core:server:vehicle:tow-rope-delete',
     VEHICLE_DAMAGE_BLUR = 'soz-core:server:vehicle:damage-blur',
     VEHICLE_LOCKPICK = 'soz-core:server:vehicle:lockpick',
+    VEHICLE_BREAK_DOOR = 'soz-core:server:vehicle:break-door',
+    VEHICLE_RESET_SURFACE_STATE_TO_OWNER = 'soz-core:server:vehicle:reset-surface-effect-to-owner',
 
-    VOIP_IS_MUTED = 'voip:server:player:isMuted',
-    VOIP_MUTE = 'voip:server:player:mute',
     VOIP_SET_MEGAPHONE = 'soz-core:server:voip:set-megaphone',
     VOIP_RADIO_VEHICLE_ENABLE = 'soz-core:server:voip:radio-vehicle-enable',
     VOIP_RADIO_VEHICLE_UPDATE = 'soz-core:server:voip:radio-vehicle-update',
+    VOIP_PHONE_CALL_START = 'soz-core:server:voip:phone-call-start',
+    VOIP_PHONE_CALL_END = 'soz-core:server:voip:phone-call-end',
+    VOIP_RADIO_JOIN_CHANNEL = 'soz-core:server:voip:radio-join-channel',
+    VOIP_RADIO_LEAVE_CHANNEL = 'soz-core:server:voip:radio-leave-channel',
 
     HALLOWEEN2022_HUNT = 'halloween2022:server:hunt',
     LSMC_HALLOWEEN_LOOT_PLAYER = 'lsmc:halloween:lootPlayer',
@@ -275,12 +314,15 @@ export enum ServerEvent {
 
     INVENTORY_USE_ITEM = 'inventory:server:UseItemSlot',
     INVENTORY_SET_ITEM_SHORTCUT = 'soz-core:server:inventory:set-item-usage',
+    INVENTORY_ITEM_SHOW = 'soz-core:server:inventory:item-show',
 
     WEAPON_SHOOTING = 'soz-core:server:weapon:shooting',
     WEAPON_SHOOTING_ALERT = 'soz-core:server:weapon:shooting-alert',
+    WEAPON_GET_SNOW = 'soz-core:server:weapon:get-dnow',
 
     VANDALISM_ABORT = 'soz-core:server:vandalism:abort',
     VANDALISM_REPAIR = 'soz-core:server:vandalism:repair',
+    VANDALISM_STATION_EXPLOSION = 'soz-core:server:vandalism:station-explosion',
 
     MDR_SHOW_TICKET = 'soz-core:server:mdr:show-ticket',
     MDR_MONEY_CLEANING = 'soz-core:server:mdr:money-cleaning',
@@ -311,6 +353,22 @@ export enum ServerEvent {
     POLICE_ADD_SPIKE = 'soz-core:server:police:add-spike',
     POLICE_REMOVE_SPIKE = 'soz-core:server:police:remove-spike',
     POLICE_INIT_SPIKE = 'soz-core:server:police:init-spike',
+    POLICE_PLACE_SPEEDZONE = 'soz-core:server:police:place-speedzone',
+    POLICE_ADD_SPEEDZONE = 'soz-core:server:police:add-speedzone',
+    POLICE_REMOVE_SPEEDZONE = 'soz-core:server:police:remove-speedzone',
+    POLICE_INIT_SPEEDZONE = 'soz-core:server:police:init-speedzone',
+    POLICE_IDENTIFY_CLUE = 'soz-core:server:police:identify',
+    POLICE_GATHER_CLUE = 'soz-core:server:police:clean',
+    POLICE_GATHER_DRUG_ON_PERSON = 'soz-core:server:police:clean-drug-on-person',
+    POLICE_GATHER_FINGERPRINT_ON_PERSON = 'soz-core:server:police:clean-fingerprint-on-person',
+    POLICE_GATHER_POWDER_ON_PERSON = 'soz-core:server:police:clean-powder-on-person',
+    POLICE_ANALYZE_EVIDENCE = 'soz-core:server:police:analyze-evidence',
+    POLICE_EDIT_DETECTIVE_BOARD = 'soz-core:server:police:edit-detective-board',
+    POLICE_COPY_DETECTIVE_BOARD = 'soz-core:server:police:make-copy-detective-board',
+    POLICE_CREATE_PHOTO = 'soz-core:server:police:create-photo',
+    POLICE_ADD_PHOTO_DETECTIVE_BOARD = 'soz-core:server:police:add-photo-detective-board',
+    POLICE_DESTROY_CLUE = 'soz-core:server:police:destroy-clue',
+    POLICE_DRUG_IN_TRUNK = 'soz-core:server:police:drug-in-trunk',
 
     ESCORT_PLAYER = 'soz-core:server:escort',
     REMOVE_ESCORT_PLAYER = 'soz-core:server:remove-escort',
@@ -348,6 +406,7 @@ export enum ServerEvent {
     ALERT_MESSAGE = 'phone:createSocietyMessagesBroadcast',
 
     FISHING_SUCCESS = 'soz-core:server:fishing:success',
+    FISHING_ROTTEN = 'soz-core:server:fishing:rotten',
     FISHING_GARBAGE = 'soz-core:server:fishing:garbage',
     FISHING_RESELL = 'soz-core:server:fishing:resell',
     FISHING_RENT_BOAT = 'soz-core:server:fishing:rent-boat',
@@ -371,6 +430,7 @@ export enum ServerEvent {
     DRUGS_ZONE_ADD = 'soz-core:server:drugs:zone-add',
     DRUGS_ZONE_DELETE = 'soz-core:server:drugs:zone-delete',
     DRUGS_ZONE_UPDATE = 'soz-core:server:drugs:zone-update',
+    DRUGS_SEARCH_FINGERPRINT = 'soz-core:server:drugs:search-fingerprint',
 
     RACE_ADD = 'soz-core:server:race:add',
     RACE_UPDATE = 'soz-core:server:race:update',
@@ -392,4 +452,20 @@ export enum ServerEvent {
     ANIMATION_FX = 'soz-core:server:animation:fx',
 
     DISPENSER_BUY = 'soz-core:server:dispenser:buy',
+
+    GOUV_UPDATE_TAX = 'soz-core:server:gouv:update-tax',
+    GOUV_UPDATE_JOB_TIER_TAX = 'soz-core:server:gouv:update-job-tier-tax',
+    GOUV_UPDATE_JOB_TIER_TAX_PERCENTAGE = 'soz-core:server:gouv:update-job-tier-tax-percentage',
+    GOUV_FINE_ADD = 'soz-core:server:gouv:fine-add',
+    GOUV_FINE_SET_MIN_PRICE = 'soz-core:server:gouv:fine-set-min-price',
+    GOUV_FINE_SET_MAX_PRICE = 'soz-core:server:gouv:fine-set-max-price',
+    GOUV_FINE_SET_LABEL = 'soz-core:server:gouv:fine-set-label',
+    GOUV_FINE_REMOVE = 'soz-core:server:gouv:fine-remove',
+    GOUV_RADAR_ADD = 'soz-core:server:gouv:radar-add',
+    GOUV_RADAR_SET_SPEED = 'soz-core:server:gouv:radar-set-speed',
+    GOUV_RADAR_SET_DISABLED = 'soz-core:server:gouv:radar-set-disabled',
+    GOUV_RADAR_REMOVE = 'soz-core:server:gouv:radar-remove',
+
+    LUXURY_DELETE_GUARD = 'soz-core:server:luxury:delete-guard',
+    LUXURY_CREATED_GUARD = 'soz-core:server:luxury:created-guard',
 }

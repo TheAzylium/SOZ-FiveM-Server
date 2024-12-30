@@ -9,20 +9,12 @@ import { Provider } from '../../../core/decorators/provider';
 import { ClientEvent, NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import { BlipFactory } from '../../blip';
-import { InventoryManager } from '../../inventory/inventory.manager';
-import { ItemService } from '../../item/item.service';
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
 import { TargetFactory } from '../../target/target.factory';
 
 @Provider()
 export class BaunProvider {
-    @Inject(InventoryManager)
-    private inventoryManager: InventoryManager;
-
-    @Inject(ItemService)
-    private itemService: ItemService;
-
     @Inject(BlipFactory)
     private blipFactory: BlipFactory;
 
@@ -115,5 +107,26 @@ export class BaunProvider {
             scale: 0.9,
         });
         this.blipFactory.hide('displayResellBlip', true);
+
+        this.blipFactory.create('jobs:baun:bahama', {
+            name: 'Bahama Unicorn',
+            position: [-1393.49, -598.06, 0],
+            sprite: 806,
+            scale: 0.9,
+        });
+
+        this.blipFactory.create('jobs:baun:unicorn', {
+            name: 'Bahama Unicorn',
+            position: [127.57, -1288.96, 0],
+            sprite: 806,
+            scale: 0.9,
+        });
+
+        this.blipFactory.create('jobs:baun:yellowjack', {
+            name: 'Bahama Unicorn',
+            position: [1987.18, 3049.03, 0],
+            sprite: 806,
+            scale: 0.9,
+        });
     }
 }

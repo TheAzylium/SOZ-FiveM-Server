@@ -16,6 +16,14 @@ export const RadarApp: FunctionComponent = () => {
         return;
     }
 
+    let rightOffset = 'right-8';
+    if (
+        (window.innerWidth > 5000 && window.innerHeight < 1500) ||
+        (window.innerWidth > 3079 && window.innerHeight < 1200)
+    ) {
+        rightOffset = 'right-[94vh]';
+    }
+
     return (
         <div
             style={{
@@ -23,10 +31,9 @@ export const RadarApp: FunctionComponent = () => {
                 width: '342px',
                 height: '418px',
                 top: '50px',
-                right: '20px',
                 position: 'absolute',
             }}
-            className="font-mono font-thin tracking-tight text-lg relative bg-contain bg-no-repeat"
+            className={`${rightOffset} font-mono font-thin tracking-tight text-lg relative bg-contain bg-no-repeat`}
         >
             <div
                 style={{

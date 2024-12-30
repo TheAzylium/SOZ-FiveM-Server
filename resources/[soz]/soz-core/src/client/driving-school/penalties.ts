@@ -121,9 +121,9 @@ class OutOfVehiclePenalty extends Penalty {
     protected failMsg = 'Pour passer le permis, il faut être DANS le véhicule !';
 
     public isValid(): boolean {
-        const playerPed = GetPlayerPed(-1);
+        const playerPed = PlayerPedId();
 
-        return IsPedInAnyVehicle(playerPed, true) ? GetVehiclePedIsIn(playerPed, false) == this.context.vehicle : false;
+        return GetVehiclePedIsIn(playerPed, false) == this.context.vehicle;
     }
 }
 

@@ -9,7 +9,7 @@ import { RootModel } from '../index';
 
 export const appWeather = createModel<RootModel>()({
     state: {
-        alert: null,
+        alert: 0,
         forecasts: [] as WeatherForecast[],
     },
     reducers: {
@@ -24,7 +24,7 @@ export const appWeather = createModel<RootModel>()({
         async updateForecasts(payload: WeatherForecast[]) {
             dispatch.appWeather.setForecasts(payload);
         },
-        async updateStormAlert(payload: Date) {
+        async updateStormAlert(payload: number) {
             dispatch.appWeather.setStormAlert(payload);
         },
         async refreshForecasts() {
@@ -39,9 +39,9 @@ export const appWeather = createModel<RootModel>()({
                 .catch(() => console.error('Failed to load weather forecast'));
         },
         async refreshStormAlert() {
-            fetchNui<ServerPromiseResp<Date>>(WeatherEvents.FETCH_STORM_ALERT, undefined, buildRespObj(MockAlertData))
+            fetchNui<ServerPromiseResp<number>>(WeatherEvents.FETCH_STORM_ALERT, undefined, buildRespObj(MockAlertData))
                 .then(response => {
-                    dispatch.appWeather.updateStormAlert(response.data || null);
+                    dispatch.appWeather.updateStormAlert(response.data);
                 })
                 .catch(() => console.error('Failed to load weather alert'));
         },

@@ -1,3 +1,5 @@
+import { PlayerUpdate } from '@public/core/decorators/player';
+
 import { Once, OnceStep, OnEvent } from '../../core/decorators/event';
 import { Exportable } from '../../core/decorators/exports';
 import { Inject } from '../../core/decorators/injectable';
@@ -125,7 +127,7 @@ export class HousingPropertyZoneProvider {
         this.updateBlips();
     }
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     public updateBlips() {
         const player = this.playerService.getPlayer();
 
@@ -190,14 +192,14 @@ export class HousingPropertyZoneProvider {
     }
 
     @RepositoryDelete(RepositoryType.Housing)
-    public removePropertyZone(property: Property) {
+    public async removePropertyZone(property: Property) {
         this.targetFactory.removeBoxZone(`housing:property:${property.id}`);
         this.updateBlips();
     }
 
     @RepositoryInsert(RepositoryType.Housing)
     @RepositoryUpdate(RepositoryType.Housing)
-    public loadPropertyZone(property: Property) {
+    public async loadPropertyZone(property: Property) {
         this.targetFactory.removeBoxZone(`housing:property:${property.id}`);
         this.updateBlips();
 

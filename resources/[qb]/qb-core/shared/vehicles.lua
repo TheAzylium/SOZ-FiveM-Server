@@ -212,22 +212,22 @@ QBShared.Vehicles = {
         ['shop']     = 'na',
         ['size']     = 3,
     },
-    ['police5']      = {
+    ['lspd10']      = {
         ['name']     = 'STX',
         ['brand']    = 'Bravado',
-        ['model']    = 'police5',
+        ['model']    = 'lspd10',
         ['price']    = 35000,
         ['category'] = 'Muscle',
-        ['hash']     = GetHashKey('police5'),
+        ['hash']     = GetHashKey('lspd10'),
         ['shop']     = 'na',
     },
-    ['police6']      = {
+    ['lspd20']      = {
         ['name']     = 'Scout',
         ['brand']    = 'Vapid',
-        ['model']    = 'police6',
+        ['model']    = 'lspd20',
         ['price']    = 45000,
         ['category'] = 'suvs',
-        ['hash']     = GetHashKey('police6'),
+        ['hash']     = GetHashKey('lspd20'),
         ['shop']     = 'na',
     },
     ['sheriff3']     = {
@@ -293,13 +293,13 @@ QBShared.Vehicles = {
         ['hash']     = GetHashKey('burrito6'),
         ['shop']     = 'na',
     },
-    ['baller8']      = {
+    ['baller9']      = {
         ['name']     = 'Baller ST',
         ['brand']    = 'Gallivanter',
-        ['model']    = 'baller8',
+        ['model']    = 'baller9',
         ['price']    = 45000,
         ['category'] = 'Sedans',
-        ['hash']     = GetHashKey('baller8'),
+        ['hash']     = GetHashKey('baller9'),
         ['shop']     = 'na',
     },
     ['flatbed']      = {
@@ -421,13 +421,13 @@ QBShared.Vehicles = {
             ['bcso'] = 'Police Maverick',
         }
     },
-    ['policeb2']      = {
+    ['lspd30']      = {
         ['name']     = 'Moto de police',
         ['brand']    = 'Los Santos',
-        ['model']    = 'policeb2',
+        ['model']    = 'lspd30',
         ['price']    = 25000,
         ['category'] = 'Emergency',
-        ['hash']     = GetHashKey('policeb2'),
+        ['hash']     = GetHashKey('lspd30'),
         ['shop']     = 'na',
     },
     ['buzzard2']      = {

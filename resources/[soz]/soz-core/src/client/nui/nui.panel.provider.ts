@@ -1,9 +1,9 @@
 import { OnEvent, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
-import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
-import { Vector3 } from '../../shared/polyzone/vector';
+import { ClientEvent, NuiEvent } from '../../shared/event';
 import { AnimationService } from '../animation/animation.service';
+import { AnimationRunner } from '@public/client/animation/animation.factory';
 import { NuiDispatch } from './nui.dispatch';
 
 @Provider()
@@ -14,13 +14,13 @@ export class NuiPanelProvider {
     @Inject(AnimationService)
     private animationService: AnimationService;
 
-    private tablet = null;
+    private anim: AnimationRunner = null;
 
     @OnEvent(ClientEvent.NUI_SHOW_PANEL)
     public showPanel(url: string) {
         this.nuiDispatch.dispatch('panel', 'ShowPanel', url);
 
-        this.animationService.playAnimation({
+        this.anim = this.animationService.playAnimation({
             base: {
                 name: 'idle_a',
                 dictionary: 'amb@code_human_in_bus_passenger_idles@female@tablet@idle_a',
@@ -29,54 +29,24 @@ export class NuiPanelProvider {
                     onlyUpperBody: true,
                 },
             },
+            props: [
+                {
+                    bone: 28422,
+                    model: 'prop_cs_tablet',
+                    position: [-0.05, 0.0, 0.0],
+                    rotation: [0.0, 0.0, 0.0],
+                },
+            ],
         });
-
-        const ped = PlayerPedId();
-        const playerPosition = GetEntityCoords(ped, true) as Vector3;
-
-        this.tablet = CreateObject(
-            GetHashKey('prop_cs_tablet'),
-            playerPosition[0],
-            playerPosition[1],
-            playerPosition[2],
-            true,
-            true,
-            true
-        );
-
-        const netId = ObjToNet(this.tablet);
-        SetNetworkIdCanMigrate(netId, false);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-
-        AttachEntityToEntity(
-            this.tablet,
-            ped,
-            GetPedBoneIndex(PlayerPedId(), 28422),
-            -0.05,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            true,
-            true,
-            false,
-            true,
-            0,
-            true
-        );
     }
 
     @OnNuiEvent(NuiEvent.PanelClosed)
     public async onPanelClosed() {
-        if (!this.tablet) {
+        if (!this.anim) {
             return;
         }
-
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(this.tablet));
-        DeleteEntity(this.tablet);
-        this.tablet = null;
-        this.animationService.stop();
+        this.anim.cancel();
+        this.anim = null;
     }
 
     @OnEvent(ClientEvent.NUI_HIDE_PANEL)

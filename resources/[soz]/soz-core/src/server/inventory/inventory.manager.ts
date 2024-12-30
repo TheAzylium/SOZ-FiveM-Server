@@ -1,10 +1,17 @@
 import { PrismaService } from '@public/server/database/prisma.service';
 import { ItemService } from '@public/server/item/item.service';
 import { Storage, StorageType } from '@public/shared/inventory';
+import { VehicleClass } from '@public/shared/vehicle/vehicle';
 
 import { Inject, Injectable } from '../../core/decorators/injectable';
-import { InventoryItem, InventoryItemMetadata } from '../../shared/item';
+import { Inventory, InventoryItem, InventoryItemMetadata, Item } from '../../shared/item';
 import { PlayerService } from '../player/player.service';
+
+type AllItemItem = {
+    amount: number;
+    metadata: InventoryItemMetadata;
+    item: Item;
+};
 
 @Injectable()
 export class InventoryManager {
@@ -84,8 +91,8 @@ export class InventoryManager {
     public getOrCreateInventory(
         trunkType: string,
         plate: string,
-        context: { model: string; class: string; entity: number }
-    ) {
+        context: { model: string | number; class: VehicleClass; entity?: number }
+    ): Inventory | null {
         return this.sozInventory.GetOrCreateInventory(trunkType, plate, context);
     }
 
@@ -127,7 +134,7 @@ export class InventoryManager {
         return this.sozInventory.GetItem(inventory, itemId, metadata);
     }
 
-    public getAllItems(inventory: string): InventoryItem[] {
+    public getAllItems(inventory: string): AllItemItem[] {
         return this.sozInventory.GetAllItems(inventory);
     }
 
@@ -218,7 +225,7 @@ export class InventoryManager {
     }
 
     public addItemToInventory(
-        source: number,
+        source: number | string,
         itemId: string,
         amount = 1,
         metadata?: InventoryItemMetadata,
@@ -251,12 +258,17 @@ export class InventoryManager {
         return { success, reason };
     }
 
-    public canCarryItem(source: number, itemId: string, amount: number, metadata?: InventoryItemMetadata): boolean {
+    public canCarryItem(
+        source: number | string,
+        itemId: string,
+        amount: number,
+        metadata?: InventoryItemMetadata
+    ): boolean {
         return this.sozInventory.CanCarryItem(source, itemId, amount, metadata);
     }
 
     public canCarryItems(
-        source: number,
+        source: number | string,
         items: { name: string; amount: number }[],
         metadata?: InventoryItemMetadata
     ): boolean {
@@ -264,7 +276,7 @@ export class InventoryManager {
     }
 
     public canSwapItem(
-        source: number,
+        source: number | string,
         firstItemId: string,
         firstItemAmount: number,
         secondItemId: string,
@@ -274,7 +286,7 @@ export class InventoryManager {
     }
 
     public canSwapItems(
-        source: number,
+        source: number | string,
         outItems: { name: string; amount: number; metadata: InventoryItemMetadata }[],
         inItems: { name: string; amount: number; metadata: InventoryItemMetadata }[]
     ): boolean {
@@ -332,6 +344,14 @@ export class InventoryManager {
 
     public setHouseStashMaxWeightFromTier(apartmentIdentifier: string, tier: number): void {
         this.sozInventory.SetHouseStashMaxWeightFromTier(apartmentIdentifier, tier);
+    }
+
+    public clear(id: string): void {
+        this.sozInventory.Clear(id);
+    }
+
+    public errorMessage(reason: string) {
+        return this.sozInventory.ErrorMessage(reason);
     }
 
     // TODO: Implement the following method in soz core directly

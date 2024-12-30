@@ -28,7 +28,7 @@ export const BookApp = () => {
                         <TransformComponent>
                             <div
                                 style={{ height: '90vh', width: '100vw' }}
-                                className="flex justify-center align-center"
+                                className="flex justify-center align-center items-center"
                             >
                                 <img
                                     src={`/public/images/book/${book.images[imageIndex]}`}
@@ -36,6 +36,7 @@ export const BookApp = () => {
                                     style={{
                                         height: '90vh',
                                         width: 'auto',
+                                        maxHeight: '95%',
                                     }}
                                 />
                             </div>

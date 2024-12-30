@@ -59,6 +59,11 @@ export class VehicleSpawnProvider {
         TriggerServerEvent(ServerEvent.VEHICLE_SET_CLOSEST, responseId, vehicleNetworkId, distance, isInside);
     }
 
+    @Rpc(RpcClientEvent.VEHICLE_GET_NAME)
+    async getVehicleName(modelHash: number): Promise<string> {
+        return GetDisplayNameFromVehicleModel(modelHash);
+    }
+
     @Rpc(RpcClientEvent.VEHICLE_GET_TYPE)
     async getVehicleType(modelHash: number): Promise<VehicleType> {
         const vehicleClass = GetVehicleClassFromName(modelHash) as VehicleClass;

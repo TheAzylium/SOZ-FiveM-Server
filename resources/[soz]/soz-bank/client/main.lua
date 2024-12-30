@@ -74,10 +74,9 @@ CreateThread(function()
                 end
             end,
             action = function()
-                local currentMoney = QBCore.Functions.TriggerRpc("banking:server:getBankMoney", currentBank.bank)
                 local maxMoney = Config.BankAtmDefault[currentBank.type].maxMoney
 
-                TriggerServerEvent("soz-core:server:job:stonk:fill-in", currentBank.bank, item, currentMoney, maxMoney)
+                TriggerServerEvent("soz-core:server:job:stonk:fill-in", "bank_" .. currentBank.bank, item, maxMoney)
             end,
             item = item,
         })
@@ -131,11 +130,10 @@ CreateThread(function()
                 return false
             end,
             action = function(entity)
-                local currentMoney = QBCore.Functions.TriggerRpc("banking:server:getAtmMoney", atmType, GetEntityCoords(entity))
                 local atm = QBCore.Functions.TriggerRpc("banking:server:getAtmAccount", atmType, GetEntityCoords(entity))
                 local maxMoney = Config.BankAtmDefault[atmType].maxMoney
 
-                TriggerServerEvent("soz-core:server:job:stonk:fill-in", atm.account, item, currentMoney, maxMoney)
+                TriggerServerEvent("soz-core:server:job:stonk:fill-in", atm.account, item, maxMoney)
             end,
             item = item,
         }

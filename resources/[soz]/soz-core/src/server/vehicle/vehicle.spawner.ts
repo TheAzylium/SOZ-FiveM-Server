@@ -18,6 +18,7 @@ import { ClientEvent, ServerEvent } from '../../shared/event';
 import { Vector3, Vector4 } from '../../shared/polyzone/vector';
 import { getDefaultVehicleConfiguration, VehicleColor, VehicleConfiguration } from '../../shared/vehicle/modification';
 import {
+    DisableNPCBike,
     getDefaultVehicleCondition,
     getDefaultVehicleVolatileState,
     VehicleCategory,
@@ -39,15 +40,20 @@ type ClosestVehicle = {
 
 const VEHICLE_HAS_RADIO = [
     'ambulance',
+    'ambulance2',
     'ambcar',
+    'lguard',
+    'seashark2',
+    'blazer2',
     'firetruk',
+    'lsmcheli',
     'mule6',
     'taco1',
     'dynasty2',
     'tropic3',
     'trash',
     'stockade',
-    'baller8',
+    'baller9',
     'packer2',
     'utillitruck4',
     'flatbed3',
@@ -60,19 +66,31 @@ const VEHICLE_HAS_RADIO = [
     'police3',
     'police4',
     'police5',
-    'police6',
-    'policeb2',
-    'lspdbana1',
-    'lspdbana2',
+    'lspd10',
+    'lspd11',
+    'lspd12',
+    'lspd20',
+    'lspd21',
+    'lspd30',
+    'lspd40',
+    'lspd41',
+    'lspd50',
+    'lspd51',
     'sheriff',
     'sheriff2',
     'sheriff3',
     'sheriff4',
     'sheriffb',
-    'sheriffdodge',
-    'sheriffcara',
-    'bcsobana1',
-    'bcsobana2',
+    'bcso10',
+    'bcso11',
+    'bcso12',
+    'bcso20',
+    'bcso21',
+    'bcso30',
+    'bcso40',
+    'bcso41',
+    'bcso50',
+    'bcso51',
     'maverick2',
     'pbus',
     'polmav',
@@ -81,15 +99,13 @@ const VEHICLE_HAS_RADIO = [
     'cogfbi',
     'paragonfbi',
     'dodgebana',
+    'polgauntlet',
     'sadler1',
     'hauler1',
     'brickade1',
     'boxville',
     'youga3',
     'rumpo4',
-    'bcsoc7',
-    'lspdgallardo',
-    'bcsomanchez',
     'predator',
     'sasp1',
     'xls2',
@@ -98,15 +114,20 @@ const VEHICLE_HAS_RADIO = [
     'benson',
     'tiptruck2',
     'rubble',
+    'supervolito1',
+    'coach',
+    'coach2',
 ];
 
-const DISALLOWED_VEHICLE_MODELS = { [GetHashKey('dune2')]: true };
+const DISALLOWED_VEHICLE_MODELS = {
+    [GetHashKey('dune2')]: true,
+    [GetHashKey('besra')]: true,
+};
 
-//Prevent police bike to spawn inside custom BCSO mapping
-const frontBCSO = new BoxZone([1865.68, 3682.6, 33.57], 10.0, 6.4, {
-    heading: 300.0,
-    minZ: 32.57,
-    maxZ: 35.57,
+const frontBCSO = new BoxZone([1844.67, 3688.55, 33.75], 44.4, 93.2, {
+    heading: 210.06,
+    minZ: 32.75,
+    maxZ: 38.75,
 });
 
 const lsmcParking = new BoxZone([427.27, -1325.76, 39.02], 78.8, 111.0, {
@@ -175,6 +196,12 @@ export class VehicleSpawner {
         }
 
         if (scriptType === 7) {
+            return;
+        }
+
+        if (DisableNPCBike && GetVehicleType(entity) == VehicleType.Bike) {
+            CancelEvent();
+
             return;
         }
 
@@ -295,6 +322,7 @@ export class VehicleSpawner {
             locatorEndJam: this.vehicleStateService.getJamLocator(vehicle.plate),
             model: vehicle.vehicle,
             label: vehicle.label,
+            lastDrugTrace: this.vehicleStateService.getDrugTrace(vehicle.plate),
         };
 
         const hash = parseInt(vehicle.hash || '0', 10);
@@ -425,6 +453,10 @@ export class VehicleSpawner {
                 );
 
                 return null;
+            }
+
+            if (!volatile.plate) {
+                volatile.plate = GetVehicleNumberPlateText(entityId).trim();
             }
 
             this.vehicleStateService.register(

@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import { VehicleMenuData } from '../../../shared/vehicle/vehicle';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -31,6 +33,8 @@ const DoorLabel: Record<number, string> = {
 };
 
 export const MenuVehicle: FunctionComponent<MenuVehicleProps> = ({ data }) => {
+    const getPrice = useGetPrice();
+
     if (!data) {
         return null;
     }
@@ -116,7 +120,7 @@ export const MenuVehicle: FunctionComponent<MenuVehicleProps> = ({ data }) => {
                             {data.insideLSCustom && !data.onDutyNg && (
                                 <MenuItemButton
                                     onConfirm={() => onPitStop(data.pitstopPrice)}
-                                    description={`Prix: ${data.pitstopPrice} $`}
+                                    description={`Prix: ${getPrice(data.pitstopPrice, TaxType.SERVICE)} $`}
                                 >
                                     Pit Stop
                                 </MenuItemButton>

@@ -74,6 +74,7 @@ end, 'helper')
 QBCore.Commands.Add('tpm', 'TP To Marker (Admin Only)', {}, false, function(source)
     local src = source
     TriggerClientEvent('QBCore:Command:GoToMarker', src)
+    TriggerClientEvent('soz-core:client:offroad:setTpm', src)
 end, 'helper')
 
 
@@ -104,6 +105,17 @@ QBCore.Commands.Add('setmoney', 'Set Players Money Amount (Admin Only)', { { nam
     else
         TriggerClientEvent('soz-core:client:notification:draw', src, 'Joueur non trouvé', "error")
     end
+end, 'admin')
+
+QBCore.Commands.Add('transfermoney', 'transfer Money between accoun (Admin Only)', { { name = 'src', help = 'Source ID' }, { name = 'dst', help = 'target ID' }, { name = 'amount', help = 'Amount of money' } }, true, function(source, args)
+    local src = source
+    exports["soz-bank"]:TransferMoney(args[1], args[2], tonumber(args[3]), function (success, reason)
+        if success then
+            TriggerClientEvent('soz-core:client:notification:draw', src, "Transfert réussi", "success")
+        else
+            TriggerClientEvent('soz-core:client:notification:draw', src, reason, "error")
+        end
+    end)
 end, 'admin')
 
 -- Job

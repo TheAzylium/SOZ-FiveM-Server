@@ -11,8 +11,10 @@ import {
     PlayOptions,
     Scenario,
 } from '../../shared/animation';
-import { getDistance, transformForwardPoint2D, Vector2, Vector3 } from '../../shared/polyzone/vector';
+import { transformForwardPoint2D, Vector2, Vector3 } from '../../shared/polyzone/vector';
 import { WeaponName } from '../../shared/weapons/weapon';
+import { AttachedObjectService } from '../object/attached.object.service';
+import { PlayerService } from '../player/player.service';
 import { ResourceLoader } from '../repository/resource.loader';
 
 const defaultPlayOptions: PlayOptions = {
@@ -140,7 +142,7 @@ const doAnimation = async (
     await waitUntil(async () => IsEntityPlayingAnim(ped, animation.dictionary, animation.name, 3), 1000);
 
     const waitUntilPromise = waitUntil(async () => {
-        return !IsEntityPlayingAnim(ped, animation.dictionary, animation.name, 3);
+        return !IsEntityPlayingAnim(ped, animation.dictionary, animation.name, 3) || IsPedRagdoll(ped);
     });
 
     return new Promise<AnimationStopReason>(resolve => {
@@ -177,8 +179,18 @@ export class AnimationFactory {
     @Inject(ResourceLoader)
     private resourceLoader: ResourceLoader;
 
+    @Inject(PlayerService)
+    private playerService: PlayerService;
+
+    @Inject(AttachedObjectService)
+    private attachedObjectService: AttachedObjectService;
+
     public createAnimation(animation: Animation, options: Partial<PlayOptions> = {}): AnimationRunner {
         return this.createFromCallback(async (animationCanceller, ped) => {
+            if (IsPedRagdoll(ped)) {
+                return AnimationStopReason.Aborted;
+            }
+
             if (animation.enter?.dictionary) {
                 await this.resourceLoader.loadAnimationDictionary(animation.enter.dictionary);
             }
@@ -195,45 +207,12 @@ export class AnimationFactory {
 
             if (animation.props) {
                 for (const prop of animation.props) {
-                    if (!(await this.resourceLoader.loadModel(prop.model))) {
-                        continue;
-                    }
-
-                    const playerOffset = GetOffsetFromEntityInWorldCoords(ped, 0.0, 0.0, 0.0) as Vector3;
-                    const propId = CreateObject(
-                        GetHashKey(prop.model),
-                        playerOffset[0],
-                        playerOffset[1],
-                        playerOffset[2],
-                        true,
-                        true,
-                        false
-                    );
-
-                    this.resourceLoader.unloadModel(prop.model);
-
-                    SetEntityAsMissionEntity(propId, true, true);
-                    const netId = ObjToNet(propId);
-                    SetNetworkIdCanMigrate(netId, false);
-                    TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
-
-                    AttachEntityToEntity(
-                        propId,
-                        ped,
-                        GetPedBoneIndex(ped, prop.bone),
-                        prop.position[0],
-                        prop.position[1],
-                        prop.position[2],
-                        prop.rotation[0],
-                        prop.rotation[1],
-                        prop.rotation[2],
-                        true,
-                        true,
-                        false,
-                        true,
-                        0,
-                        true
-                    );
+                    const propId = await this.attachedObjectService.attachObjectToPlayer({
+                        bone: prop.bone,
+                        model: prop.model,
+                        position: prop.position,
+                        rotation: prop.rotation,
+                    });
 
                     if (prop.fx) {
                         this.fxLoop(propId, prop);
@@ -280,9 +259,7 @@ export class AnimationFactory {
                     }
 
                     RemoveParticleFxFromEntity(prop);
-                    DetachEntity(prop, false, false);
-                    TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(prop));
-                    DeleteEntity(prop);
+                    this.attachedObjectService.detachObjectToPlayer(prop);
                 }
             }
         }, options);
@@ -311,25 +288,17 @@ export class AnimationFactory {
             );
 
             if (prop.fx.net) {
-                const playerId = PlayerId();
                 const playerPedId = PlayerPedId();
                 const coords = GetEntityCoords(playerPedId) as Vector3;
-                const playersInrange = [];
-                for (const player of GetActivePlayers()) {
-                    if (playerId == player) {
-                        continue;
-                    }
-
-                    if (getDistance(coords, GetEntityCoords(GetPlayerPed(playerId)) as Vector3) < 100.0) {
-                        playersInrange.push(GetPlayerServerId(player));
-                    }
-                }
+                const playersInrange = this.playerService.getPlayersAround(coords, 100.0, true);
                 if (playersInrange.length) {
                     TriggerServerEvent(ServerEvent.ANIMATION_FX, ObjToNet(entity), prop.fx, playersInrange);
                 }
             }
 
-            await wait(prop.fx.duration[index++ % prop.fx.duration.length]);
+            if (prop.fx.manualLoop && prop.fx.duration) {
+                await wait(prop.fx.duration[index++ % prop.fx.duration.length]);
+            }
         } while (prop.fx.manualLoop && DoesEntityExist(entity));
     }
 

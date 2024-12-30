@@ -12,16 +12,24 @@ import { Organ } from '@public/shared/disease';
 import { ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { BoxZone } from '@public/shared/polyzone/box.zone';
+import { MultiZone } from '@public/shared/polyzone/multi.zone';
 import { Vector3 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
 
 import { LSMCDeathProvider } from './lsmc.death.provider';
 
-const surgery = new BoxZone([329.04, -1437.38, 32.51], 19.6, 32.0, {
-    heading: 319.73,
-    minZ: 31.51,
-    maxZ: 33.51,
-});
+const surgery = new MultiZone([
+    new BoxZone([329.04, -1437.38, 32.51], 19.6, 32.0, {
+        heading: 319.73,
+        minZ: 31.51,
+        maxZ: 33.51,
+    }),
+    new BoxZone([1822.36, 3682.07, 34.28], 13.0, 7.8, {
+        heading: 119.52,
+        minZ: 33.28,
+        maxZ: 35.28,
+    }),
+]);
 
 @Provider()
 export class LSMCSurgeryProvider {

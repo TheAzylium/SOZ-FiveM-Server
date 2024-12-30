@@ -16,6 +16,7 @@ import { SoundService } from '../../sound.service';
 import { TargetFactory } from '../../target/target.factory';
 import { VehicleService } from '../../vehicle/vehicle.service';
 import { VehicleStateService } from '../../vehicle/vehicle.state.service';
+import { VehicleOffroadProvider } from '../../vehicle/vehicule.offroad.provider';
 
 const FLATBED_OFFSET = [0.0, -2.2, 1.1] as Vector3;
 
@@ -50,6 +51,9 @@ export class BennysFlatbedProvider {
 
     @Inject(RopeService)
     private ropeService: RopeService;
+
+    @Inject(VehicleOffroadProvider)
+    public vehicleOffroadProvider: VehicleOffroadProvider;
 
     private currentFlatbedAttach: FlatbedAttach = null;
 
@@ -176,6 +180,13 @@ export class BennysFlatbedProvider {
         }
     }
 
+    @OnEvent(ClientEvent.BASE_ENTERING_VEHICLE, false)
+    public async onEnteringVehicle() {
+        if (this.currentFlatbedAttach) {
+            await this.disableFlatbedAttach();
+        }
+    }
+
     private async disableFlatbedAttach() {
         if (!this.currentFlatbedAttach) {
             return;
@@ -214,7 +225,15 @@ export class BennysFlatbedProvider {
         }
 
         const ropePosition = GetOffsetFromEntityInWorldCoords(entity, 0.0, 0.0, 1.0) as Vector3;
-        if (!this.ropeService.createNewRope(ropePosition, entity, 6, MAX_LENGTH_ROPE, 'prop_v_hook_s', 'ropeFamily3')) {
+        const hook = await this.ropeService.createNewRope(
+            ropePosition,
+            entity,
+            6,
+            MAX_LENGTH_ROPE,
+            'prop_v_hook_s',
+            'ropeFamily3'
+        );
+        if (!hook) {
             return;
         }
 
@@ -413,6 +432,7 @@ export class BennysFlatbedProvider {
             return;
         }
 
+        await this.vehicleOffroadProvider.resetVehSurfaceEffect(vehicle);
         const attached = await this.attachVehicleToFlatbed(this.currentFlatbedAttach.entity, vehicle, height);
 
         if (!attached) {

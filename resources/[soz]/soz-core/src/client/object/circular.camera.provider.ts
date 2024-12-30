@@ -1,6 +1,7 @@
 import { Provider } from '@public/core/decorators/provider';
 import { Tick, TickInterval } from '@public/core/decorators/tick';
 import { wait } from '@public/core/utils';
+import { Control } from '@public/shared/input';
 
 import { getDistance, Vector3 } from '../../shared/polyzone/vector';
 
@@ -84,10 +85,10 @@ export class CircularCameraProvider {
     // Handlers
 
     public async handleZoom() {
-        if (IsDisabledControlJustPressed(0, 241)) {
+        if (IsDisabledControlJustPressed(0, Control.CursorScrollUp)) {
             this.cameraState.radius = Math.max(this.cameraState.radius - 1.0, 1);
         }
-        if (IsDisabledControlJustPressed(0, 242)) {
+        if (IsDisabledControlJustPressed(0, Control.CursorScrollDown)) {
             this.cameraState.radius = Math.min(this.cameraState.radius + 1.0, 20);
         }
     }
@@ -133,8 +134,8 @@ export class CircularCameraProvider {
     }
 
     public async handleRotation() {
-        const xMagnitude = GetDisabledControlNormal(0, 220);
-        const yMagnitude = GetDisabledControlNormal(0, 221);
+        const xMagnitude = GetDisabledControlNormal(0, Control.ScriptRightAxisX);
+        const yMagnitude = GetDisabledControlNormal(0, Control.ScriptRightAxisY);
 
         this.cameraState.polarAngleDeg += xMagnitude * 10;
 

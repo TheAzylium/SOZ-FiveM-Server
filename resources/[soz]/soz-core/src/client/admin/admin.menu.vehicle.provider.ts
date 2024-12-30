@@ -1,8 +1,9 @@
-import { OnNuiEvent } from '../../core/decorators/event';
+import { OnEvent, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
-import { NuiEvent, ServerEvent } from '../../shared/event';
+import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
+import { PositiveNumberValidator } from '../../shared/nui/input';
 import { Err, Ok } from '../../shared/result';
 import { RpcServerEvent } from '../../shared/rpc';
 import { groupBy } from '../../shared/utils/array';
@@ -27,6 +28,8 @@ export class AdminMenuVehicleProvider {
     @Inject(VehicleDamageProvider)
     private vehicleDamageProvider: VehicleDamageProvider;
 
+    private noBurstTyre = false;
+
     @OnNuiEvent(NuiEvent.AdminGetVehicles)
     public async getVehicles() {
         const vehicles = await emitRpc<any[]>(RpcServerEvent.ADMIN_GET_VEHICLES);
@@ -48,11 +51,10 @@ export class AdminMenuVehicleProvider {
                 {
                     title: 'Modèle du véhicule',
                     maxCharacters: 32,
-                    defaultValue: '',
                 },
                 model => {
                     if (!model || IsModelInCdimage(model) || IsModelValid(model)) {
-                        return Ok(true);
+                        return Ok(model);
                     }
                     return Err('Le modèle du véhicule est invalide');
                 }
@@ -165,16 +167,10 @@ export class AdminMenuVehicleProvider {
                 maxCharacters: 10,
                 defaultValue: '',
             },
-            value => {
-                const number = Number(value);
-                if (isNaN(number)) {
-                    return Err('Valeur incorrecte');
-                }
-                return Ok(true);
-            }
+            PositiveNumberValidator
         );
         if (newPrice !== null) {
-            TriggerServerEvent(ServerEvent.ADMIN_VEHICLE_CHANGE_CAR_PRICE, vehicleModel, Number(newPrice));
+            TriggerServerEvent(ServerEvent.ADMIN_VEHICLE_CHANGE_CAR_PRICE, vehicleModel, newPrice);
         }
         return Ok(true);
     }
@@ -187,5 +183,40 @@ export class AdminMenuVehicleProvider {
     @OnNuiEvent(NuiEvent.AdminToggleNoStall)
     public async setNoStall(value: boolean): Promise<void> {
         this.vehicleDamageProvider.setAdminNoStall(value);
+    }
+
+    @OnNuiEvent(NuiEvent.AdminToggleBurstTyres)
+    public async setNoBurstTyres(value: boolean): Promise<void> {
+        this.noBurstTyre = value;
+        const veh = GetVehiclePedIsIn(PlayerPedId(), false);
+        if (veh) {
+            SetVehicleTyresCanBurst(veh, !this.noBurstTyre);
+        }
+    }
+
+    @OnEvent(ClientEvent.BASE_ENTERED_VEHICLE)
+    public onPlayerEnteredVehicle(veh: number) {
+        if (!veh) {
+            return;
+        }
+
+        if (this.noBurstTyre) {
+            SetVehicleTyresCanBurst(veh, false);
+        }
+    }
+
+    @OnEvent(ClientEvent.BASE_LEFT_VEHICLE)
+    public onPlayerLeftVehicle(veh: number) {
+        if (!veh) {
+            return;
+        }
+
+        if (this.noBurstTyre) {
+            SetVehicleTyresCanBurst(veh, true);
+        }
+    }
+
+    public getNoBurstTyres(): boolean {
+        return this.noBurstTyre;
     }
 }

@@ -1,3 +1,5 @@
+import { OilTankerProvider } from '@public/client/job/oil/oil.tanker.provider';
+
 import { Once, OnceStep, OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
@@ -10,7 +12,13 @@ import { FuelStation, FuelStationType, FuelType } from '../../shared/fuel';
 import { JobType } from '../../shared/job';
 import { Vector3 } from '../../shared/polyzone/vector';
 import { RpcServerEvent } from '../../shared/rpc';
-import { isVehicleModelElectric, VehicleClass, VehicleCondition, VehicleSeat } from '../../shared/vehicle/vehicle';
+import {
+    isVehicleModelElectric,
+    VehicleClass,
+    VehicleClassFuelStorageMultiplier,
+    VehicleCondition,
+    VehicleSeat,
+} from '../../shared/vehicle/vehicle';
 import { AnimationService } from '../animation/animation.service';
 import { BlipFactory } from '../blip';
 import { Notifier } from '../notifier';
@@ -19,6 +27,7 @@ import { ObjectProvider } from '../object/object.provider';
 import { PlayerService } from '../player/player.service';
 import { ProgressService } from '../progress.service';
 import { FuelStationRepository } from '../repository/fuel.station.repository';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { RopeService } from '../rope.service';
 import { SoundService } from '../sound.service';
 import { TargetFactory } from '../target/target.factory';
@@ -77,6 +86,12 @@ export class VehicleFuelProvider {
 
     @Inject(RopeService)
     private ropeService: RopeService;
+
+    @Inject(OilTankerProvider)
+    private oilTankerProvider: OilTankerProvider;
+
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
 
     private currentStationPistol: CurrentStationPistol | null = null;
 
@@ -142,7 +157,7 @@ export class VehicleFuelProvider {
                         return false;
                     }
 
-                    if (!this.playerService.getState().tankerEntity || !player.job.onduty) {
+                    if (!this.oilTankerProvider.currentTankerAttached || !player.job.onduty) {
                         return false;
                     }
 
@@ -387,6 +402,13 @@ export class VehicleFuelProvider {
         this.ready = true;
     }
 
+    @OnEvent(ClientEvent.BASE_ENTERING_VEHICLE, false)
+    public async onEnteringVehicle() {
+        if (this.currentStationPistol !== null) {
+            await this.disableStationPistol();
+        }
+    }
+
     public isReady() {
         return this.ready;
     }
@@ -461,9 +483,11 @@ export class VehicleFuelProvider {
             return;
         }
 
+        const vehDef = this.vehicleRepository.getByModelHash(GetEntityModel(vehicle));
+        const storageMultiplier = VehicleClassFuelStorageMultiplier[vehDef?.requiredLicence] || 1.0;
         const condition = await this.vehicleStateService.getVehicleCondition(vehicle);
 
-        if (condition.fuelLevel > 99.0) {
+        if (condition.fuelLevel > 99.0 * storageMultiplier) {
             this.notifier.notify('Le véhicule est déjà plein.', 'error');
             await this.disableStationPistol();
 
@@ -562,7 +586,14 @@ export class VehicleFuelProvider {
         this.soundService.playAround('fuel/start_fuel', 5, 0.3);
 
         const ropePosition = GetOffsetFromEntityInWorldCoords(entity, 0.0, 0.0, 1.0) as Vector3;
-        if (!this.ropeService.createNewRope(ropePosition, entity, 1, MAX_LENGTH_ROPE, 'prop_cs_fuel_nozle')) {
+        const nozle = await this.ropeService.createNewRope(
+            ropePosition,
+            entity,
+            1,
+            MAX_LENGTH_ROPE,
+            'prop_cs_fuel_nozle'
+        );
+        if (!nozle) {
             return;
         }
 
@@ -659,6 +690,9 @@ export class VehicleFuelProvider {
 
         const newOil = Math.max(0, oilLevel - consumedOil);
         const newFuel = Math.max(0, fuelLevel - consumedFuel);
+
+        SetVehicleFuelLevel(vehicleEntityId, newFuel);
+        SetVehicleOilLevel(vehicleEntityId, newOil);
 
         if (newFuel <= 0.1) {
             SetVehicleEngineOn(vehicleEntityId, false, true, true);

@@ -51,6 +51,7 @@ Container["trunk"] = InventoryContainer:new({
         "weapon_attachment",
         "weapon_ammo",
         "item",
+        "evidence",
         "fishing_rod",
         "fishing_garbage",
         "fishing_bait",
@@ -84,6 +85,7 @@ Container["temporary_trunk"] = InventoryDatastore:new({
         "fishing_bait",
         "fish",
         "item",
+        "evidence",
         "drug",
         "drink",
         "cocktail",
@@ -110,6 +112,7 @@ Container["trash"] = InventoryContainer:new({
     type = "trunk",
     allowedTypes = {
         "item",
+        "evidence",
         "fishing_rod",
         "fishing_garbage",
         "fishing_bait",
@@ -136,9 +139,18 @@ Container["trash"] = InventoryContainer:new({
 
 Container["storage"] = InventoryContainer:new({
     type = "storage",
-    allowedTypes = {"item", "oil_and_item", "outfit", "crate", "drug_pot"},
+    allowedItems = {"weapon_uvflashlight"},
+    allowedTypes = {"item", "oil_and_item", "outfit", "crate", "drug_pot", "evidence"},
     inventoryPermissionCallback = playerHaveJobAndDuty,
 })
+
+Container["evidence_storage"] = InventoryContainer:new({
+    type = "evidence_storage",
+    allowedTypes = {"evidence"},
+    allowedItems = {"detective_board"},
+    inventoryPermissionCallback = playerHaveJobAndDuty,
+})
+
 --- Todo: convert to storage type : storage
 Container["storage_tank"] = InventoryContainer:new({
     type = "storage_tank",
@@ -148,13 +160,23 @@ Container["storage_tank"] = InventoryContainer:new({
 --- Todo: convert to storage type : storage
 Container["seizure"] = InventoryContainer:new({
     type = "seizure",
-    allowedTypes = {"weapon", "weapon_attachment", "weapon_ammo", "drug", "item", "item_illegal", "drug_pot", "tool"},
+    allowedTypes = {
+        "weapon",
+        "weapon_attachment",
+        "weapon_ammo",
+        "drug",
+        "item",
+        "item_illegal",
+        "drug_pot",
+        "tool",
+        "evidence",
+    },
     inventoryPermissionCallback = playerHaveJobAndDuty,
 })
 --- Todo: convert to storage type : storage
 Container["boss_storage"] = InventoryContainer:new({
     type = "boss_storage",
-    allowedTypes = {"weapon", "weapon_ammo", "item", "oil_and_item", "tool"},
+    allowedTypes = {"weapon", "weapon_ammo", "item", "oil_and_item", "tool", "evidence"},
     inventoryPermissionCallback = function(player, owner)
         return exports["soz-core"]:HasJobPermission(owner, player.PlayerData.job.id, player.PlayerData.job.grade, "society-private-storage")
     end,
@@ -175,7 +197,7 @@ Container["organ"] = InventoryContainer:new({
 
 Container["stash"] = InventoryContainer:new({
     type = "stash",
-    allowedTypes = {"item"},
+    allowedTypes = {"item", "evidence"},
     inventoryPermissionCallback = playerHaveStashAccess,
 })
 
@@ -183,6 +205,7 @@ Container["bin"] = InventoryDatastore:new({
     type = "bin",
     allowedTypes = {
         "item",
+        "evidence",
         "fishing_rod",
         "fishing_garbage",
         "fishing_bait",
@@ -205,6 +228,7 @@ Container["bin"] = InventoryDatastore:new({
         "crate",
         "drug_pot",
         "tool",
+        "metal",
     },
     populateDatastoreCallback = function()
         local inventory = {}
@@ -257,6 +281,7 @@ Container["house_stash"] = InventoryContainer:new({
         "fish",
         "drug_pot",
         "tool",
+        "edvidence",
     },
 })
 Container["house_fridge"] = InventoryContainer:new({
@@ -357,6 +382,7 @@ Container["smuggling_box"] = InventoryDatastore:new({
         "metal",
         "weapon",
         "weapon_ammo",
+        "evidence",
     },
 })
 
@@ -438,6 +464,7 @@ Container["recycler_processing"] = InventoryContainer:new({
         "fishing_rod",
         "fishing_garbage",
         "fishing_bait",
+        "evidence",
         "drug_pot",
     },
     inventoryPermissionCallback = playerHaveJobAndDuty,

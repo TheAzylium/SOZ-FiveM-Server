@@ -8,6 +8,7 @@ import { PoliceMoneyCheckerProvider } from './police.moneychecker.provider';
 import { PolicePlayerProvider } from './police.player.provider';
 import { PoliceProvider } from './police.provider';
 import { PoliceSirenProvider } from './police.siren.provider';
+import { PoliceSpeedZoneProvider } from './police.speedzone.provider';
 import { PoliceSpikeProvider } from './police.spike.provider';
 import { PoliceVehicleProvider } from './police.vehicle.provider';
 
@@ -24,6 +25,7 @@ import { PoliceVehicleProvider } from './police.vehicle.provider';
         PoliceSirenProvider,
         PoliceSpikeProvider,
         PoliceAnimationProvider,
+        PoliceSpeedZoneProvider,
     ],
 })
 export class PoliceModule {}

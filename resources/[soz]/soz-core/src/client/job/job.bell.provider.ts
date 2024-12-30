@@ -10,6 +10,7 @@ import { TargetFactory } from '../target/target.factory';
 type BellProps = {
     job: JobType;
     number: string;
+    location?: string;
 };
 
 const BELL_ZONES: Zone<BellProps>[] = [
@@ -107,6 +108,20 @@ const BELL_ZONES: Zone<BellProps>[] = [
         data: {
             job: JobType.LSMC,
             number: '555-LSMC',
+            location: 'Hopital',
+        },
+    },
+    {
+        center: [1829.47, 3674.55, 34.28],
+        length: 0.25,
+        width: 0.35,
+        heading: 16.44,
+        minZ: 34.48,
+        maxZ: 34.68,
+        data: {
+            job: JobType.LSMC,
+            number: '555-LSMC',
+            location: 'Clinique',
         },
     },
     {
@@ -155,6 +170,7 @@ const BELL_ZONES: Zone<BellProps>[] = [
         data: {
             job: JobType.Baun,
             number: '555-BAUN',
+            location: 'Bahama',
         },
     },
     {
@@ -167,6 +183,7 @@ const BELL_ZONES: Zone<BellProps>[] = [
         data: {
             job: JobType.Baun,
             number: '555-BAUN',
+            location: 'Unicorn',
         },
     },
     {
@@ -206,12 +223,12 @@ const BELL_ZONES: Zone<BellProps>[] = [
         },
     },
     {
-        center: [-555.61, -602.12, 34.68],
-        length: 0.4,
+        center: [-549.67, -611.97, 34.78],
+        length: 0.2,
         width: 0.4,
-        heading: 80,
-        minZ: 34.38,
-        maxZ: 34.68,
+        heading: 160,
+        minZ: 34.58,
+        maxZ: 34.98,
         data: {
             job: JobType.Gouv,
             number: '555-GOUV',
@@ -267,14 +284,14 @@ export class JobBellProvider {
                         return GetGameTimer() - this.lastCall > 15000;
                     },
                     action: () => {
-                        this.callSociety(zone.data.number);
+                        this.callSociety(zone.data.number, zone.data?.location);
                     },
                 },
             ]);
         }
     }
 
-    private callSociety(number: string) {
+    private callSociety(number: string, location: string = undefined) {
         this.lastCall = GetGameTimer();
         this.animationService.playAnimation({
             base: {
@@ -288,10 +305,15 @@ export class JobBellProvider {
             },
         });
 
+        let message = "Une personne vous demande à l'accueil";
+        if (location) {
+            message += ` - ${location}`;
+        }
+
         TriggerServerEvent('phone:sendSocietyMessage', 'phone:sendSocietyMessage:' + uuidv4(), {
             anonymous: false,
             number,
-            message: "Une personne vous demande à l'accueil",
+            message: message,
             position: true,
         });
     }

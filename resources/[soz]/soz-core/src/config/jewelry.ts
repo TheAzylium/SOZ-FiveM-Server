@@ -13,7 +13,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 1,
         propId: 2,
         overlay: 'Ear',
-        price: 50,
+        price: 45,
         items: {
             Oreilles: {
                 '0': {
@@ -251,7 +251,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 2,
         propId: 1,
         overlay: 'Glasses',
-        price: 50,
+        price: 45,
         items: {
             'Lunette de Soleil': {
                 '0': {
@@ -1805,15 +1805,9 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 3,
         propId: 0,
         overlay: 'Head',
-        price: 50,
+        price: 45,
         items: {
             Bonnets: {
-                '1': {
-                    '0': {
-                        GXT: '',
-                        Localized: "Bonnet d'ane",
-                    },
-                },
                 '5': {
                     '0': {
                         GXT: '',
@@ -1862,6 +1856,22 @@ export const FemaleJewelryItems: ShopJewelryContent = {
                         Localized: 'Bonnet cotonneux Yeti',
                     },
                 },
+                '23': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet Noel Rouge',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet Noel Vert',
+                    },
+                },
+                '24': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet elf',
+                    },
+                },
                 '29': {
                     '0': {
                         GXT: '',
@@ -1888,6 +1898,60 @@ export const FemaleJewelryItems: ShopJewelryContent = {
                     '0': {
                         GXT: '',
                         Localized: 'Bonnet patriotique',
+                    },
+                },
+                '40': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet pudding',
+                    },
+                },
+                '41': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant elf',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant Vert-blanc',
+                    },
+                    '2': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant Vert-rouge',
+                    },
+                    '3': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant violet',
+                    },
+                },
+                '42': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit charantaise',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit bleu',
+                    },
+                    '2': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit croix',
+                    },
+                    '3': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit carrés',
+                    },
+                },
+                '98': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet noel lumineux ',
+                    },
+                },
+                '99': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet Elf lumineux',
                     },
                 },
                 '119': {
@@ -5048,20 +5112,10 @@ export const FemaleJewelryItems: ShopJewelryContent = {
                 },
             },
             Costume: {
-                '23': {
+                '1': {
                     '0': {
                         GXT: '',
-                        Localized: 'Bonnet Noel Rouge',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet Noel Vert',
-                    },
-                },
-                '24': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet elf',
+                        Localized: "Bonnet d'ane",
                     },
                 },
                 '25': {
@@ -5160,48 +5214,6 @@ export const FemaleJewelryItems: ShopJewelryContent = {
                         Localized: 'Chapeau pointe elf',
                     },
                 },
-                '40': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet pudding',
-                    },
-                },
-                '41': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant elf',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant Vert-blanc',
-                    },
-                    '2': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant Vert-rouge',
-                    },
-                    '3': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant violet',
-                    },
-                },
-                '42': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit charantaise',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit bleu',
-                    },
-                    '2': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit croix',
-                    },
-                    '3': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit carrés',
-                    },
-                },
                 '44': {
                     '1': {
                         GXT: '',
@@ -5254,18 +5266,6 @@ export const FemaleJewelryItems: ShopJewelryContent = {
                     '0': {
                         GXT: '',
                         Localized: 'Chapeau à point lumineux Pudding',
-                    },
-                },
-                '98': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet noel lumineux ',
-                    },
-                },
-                '99': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet Elf lumineux',
                     },
                 },
                 '100': {
@@ -5495,7 +5495,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 4,
         propId: 0,
         overlay: 'Helmet',
-        price: 50,
+        price: 45,
         items: {
             Casques: {
                 '16': {
@@ -6391,7 +6391,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 5,
         propId: 6,
         overlay: 'LeftHand',
-        price: 50,
+        price: 45,
         items: {
             Montre: {
                 '0': {
@@ -6901,7 +6901,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 6,
         propId: 7,
         overlay: 'RightHand',
-        price: 50,
+        price: 45,
         items: {
             Bracelet: {
                 '0': {
@@ -7063,7 +7063,7 @@ export const FemaleJewelryItems: ShopJewelryContent = {
         categoryId: 7,
         componentId: 7,
         overlay: 'Neck',
-        price: 50,
+        price: 45,
         items: {
             Colliers: {
                 '6': {
@@ -7786,7 +7786,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 1,
         propId: 2,
         overlay: 'Ear',
-        price: 50,
+        price: 45,
         items: {
             Oreilles: {
                 '0': {
@@ -8328,7 +8328,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 2,
         propId: 1,
         overlay: 'Glasses',
-        price: 50,
+        price: 45,
         items: {
             'Lunette de Soleil': {
                 '1': {
@@ -9866,15 +9866,9 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 3,
         propId: 0,
         overlay: 'Head',
-        price: 50,
+        price: 45,
         items: {
             Bonnets: {
-                '1': {
-                    '0': {
-                        GXT: '',
-                        Localized: "Bonnet d'ane",
-                    },
-                },
                 '2': {
                     '0': {
                         GXT: '',
@@ -9919,6 +9913,22 @@ export const MaleJewelryItems: ShopJewelryContent = {
                         Localized: 'Bonnet Large Gris',
                     },
                 },
+                '22': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet Noel Rouge',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet Noel Vert',
+                    },
+                },
+                '23': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet elf',
+                    },
+                },
                 '28': {
                     '0': {
                         GXT: '',
@@ -9949,6 +9959,66 @@ export const MaleJewelryItems: ShopJewelryContent = {
                     '0': {
                         GXT: '',
                         Localized: 'Bonnet patriotique',
+                    },
+                },
+                '41': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet pudding',
+                    },
+                },
+                '42': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant elf',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant Vert-Blanc',
+                    },
+                    '2': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant Vert-Rouge',
+                    },
+                    '3': {
+                        GXT: '',
+                        Localized: 'Bonnet tombant Violet',
+                    },
+                },
+                '43': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit charantaise',
+                    },
+                    '1': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit Bleu',
+                    },
+                    '2': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit croix',
+                    },
+                    '3': {
+                        GXT: '',
+                        Localized: 'Bonnet de nuit carrés',
+                    },
+                },
+                '98': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Chapeau à point lumineux Pudding',
+                    },
+                },
+                '99': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet noel lumineux ',
+                    },
+                },
+                '100': {
+                    '0': {
+                        GXT: '',
+                        Localized: 'Bonnet Elf lumineux',
                     },
                 },
                 '120': {
@@ -13033,26 +13103,16 @@ export const MaleJewelryItems: ShopJewelryContent = {
                 },
             },
             Costume: {
+                '1': {
+                    '0': {
+                        GXT: '',
+                        Localized: "Bonnet d'ane",
+                    },
+                },
                 '19': {
                     '0': {
                         GXT: '',
                         Localized: "Casque d'aviateur",
-                    },
-                },
-                '22': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet Noel Rouge',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet Noel Vert',
-                    },
-                },
-                '23': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet elf',
                     },
                 },
                 '24': {
@@ -13151,48 +13211,6 @@ export const MaleJewelryItems: ShopJewelryContent = {
                         Localized: 'Chapeau pointe elf',
                     },
                 },
-                '41': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet pudding',
-                    },
-                },
-                '42': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant elf',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant Vert-Blanc',
-                    },
-                    '2': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant Vert-Rouge',
-                    },
-                    '3': {
-                        GXT: '',
-                        Localized: 'Bonnet tombant Violet',
-                    },
-                },
-                '43': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit charantaise',
-                    },
-                    '1': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit Bleu',
-                    },
-                    '2': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit croix',
-                    },
-                    '3': {
-                        GXT: '',
-                        Localized: 'Bonnet de nuit carrés',
-                    },
-                },
                 '45': {
                     '1': {
                         GXT: '',
@@ -13239,24 +13257,6 @@ export const MaleJewelryItems: ShopJewelryContent = {
                     '3': {
                         GXT: '',
                         Localized: 'Chapeau à point lumineux Violet',
-                    },
-                },
-                '98': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Chapeau à point lumineux Pudding',
-                    },
-                },
-                '99': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet noel lumineux ',
-                    },
-                },
-                '100': {
-                    '0': {
-                        GXT: '',
-                        Localized: 'Bonnet Elf lumineux',
                     },
                 },
                 '101': {
@@ -13442,7 +13442,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 4,
         propId: 0,
         overlay: 'Helmet',
-        price: 50,
+        price: 45,
         items: {
             Casques: {
                 '16': {
@@ -14404,7 +14404,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 5,
         propId: 6,
         overlay: 'LeftHand',
-        price: 50,
+        price: 45,
         items: {
             Montre: {
                 '0': {
@@ -15072,7 +15072,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 6,
         propId: 7,
         overlay: 'RightHand',
-        price: 50,
+        price: 45,
         items: {
             Bracelet: {
                 '0': {
@@ -15192,7 +15192,7 @@ export const MaleJewelryItems: ShopJewelryContent = {
         categoryId: 7,
         componentId: 7,
         overlay: 'Neck',
-        price: 50,
+        price: 45,
         items: {
             Colliers: {
                 '113': {

@@ -4,9 +4,10 @@ import { ProgressService } from '@public/client/progress.service';
 import { OnNuiEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
-import { wait } from '@public/core/utils';
 import { NuiEvent } from '@public/shared/event';
 import { Fine } from '@public/shared/job/police';
+
+import { NotEmptyStringValidator, PositiveNumberValidator } from '../../../shared/nui/input';
 
 @Provider()
 export class PoliceFineProvider {
@@ -24,7 +25,6 @@ export class PoliceFineProvider {
         const amount = await this.inputService.askInput({
             maxCharacters: 30,
             title: `Montant de l'amende (${fine.price.min} - ${fine.price.max})`,
-            defaultValue: '',
         });
         if (!amount || isNaN(Number(amount)) || Number(amount) < fine.price.min || Number(amount) > fine.price.max) {
             this.notifier.error('Montant invalide');
@@ -40,26 +40,32 @@ export class PoliceFineProvider {
 
     @OnNuiEvent(NuiEvent.PolicePreCustomFine)
     public async preCustomFine({ playerServerId }: { playerServerId: number }) {
-        const title = await this.inputService.askInput({
-            maxCharacters: 200,
-            title: "Titre de l'amende",
-            defaultValue: '',
-        });
+        const title = await this.inputService.askInput(
+            {
+                maxCharacters: 200,
+                title: "Titre de l'amende",
+            },
+            NotEmptyStringValidator
+        );
+
         if (!title) {
-            this.notifier.error('Titre invalide');
             return;
         }
-        await wait(100);
-        const amount = await this.inputService.askInput({
-            maxCharacters: 30,
-            title: "Montant de l'amende",
-            defaultValue: '',
-        });
-        if (!amount || isNaN(Number(amount))) {
-            this.notifier.error('Montant invalide');
+
+        const amount = await this.inputService.askInput(
+            {
+                maxCharacters: 30,
+                title: "Montant de l'amende",
+            },
+            PositiveNumberValidator
+        );
+
+        if (!amount) {
             return;
         }
+
         const completed = await this.playLicenceAnimation("Rédaction de l'amende");
+
         if (!completed) {
             return;
         }

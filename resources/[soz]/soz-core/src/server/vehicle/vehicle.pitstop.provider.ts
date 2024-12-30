@@ -8,6 +8,7 @@ import { VehicleCategory } from '@public/shared/vehicle/vehicle';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
+import { TaxType } from '../../shared/bank';
 import { RpcServerEvent } from '../../shared/rpc';
 import { BankService } from '../bank/bank.service';
 import { PrismaService } from '../database/prisma.service';
@@ -58,7 +59,7 @@ export class VehiclePitStopProvider {
         const vehicleModel = GetEntityModel(vehicle);
         const vehicleDB = await this.vehicleRepository.findByHash(vehicleModel);
 
-        return this.getCategoryPrice(vehicleDB.category);
+        return this.getCategoryPrice(vehicleDB?.category);
     }
 
     private getCategoryPrice(category: string) {
@@ -131,7 +132,7 @@ export class VehiclePitStopProvider {
     public async onPitStop(source: number, vehicleNetworkId: number) {
         const price = await this.getPrice(vehicleNetworkId);
 
-        if (!this.playerMoneyService.remove(source, price)) {
+        if (!(await this.playerMoneyService.buy(source, price, TaxType.SERVICE))) {
             this.notifier.notify(source, "Vous n'avez pas assez d'argent", 'error');
             return;
         }

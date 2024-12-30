@@ -1,3 +1,6 @@
+import './fine.repository'; // Required to load the fine repository
+import './field.repository'; // Required to load the field repository
+
 import { DrugSeedlingRepository } from '@private/client/repository/drug.seedling.repository';
 import { DrugSellLocationRepository } from '@private/client/repository/drug.sell.location.repository';
 import { Operation } from 'fast-json-patch';
@@ -8,6 +11,7 @@ import { Provider } from '../../core/decorators/provider';
 import { OnceLoader } from '../../core/loader/once.loader';
 import { Logger } from '../../core/logger';
 import { ClientEvent } from '../../shared/event';
+import { NuiDispatch } from '../nui/nui.dispatch';
 import { BillboardRepository } from './billboard.repository';
 import { FuelStationRepository } from './fuel.station.repository';
 import { GarageRepository } from './garage.repository';
@@ -52,6 +56,9 @@ export class RepositoryProvider {
     @MultiInject(Repository)
     private repositories: Repository<any>[];
 
+    @Inject(NuiDispatch)
+    private nuiDispatch: NuiDispatch;
+
     @MultiInject(Logger)
     private logger: Logger;
 
@@ -68,7 +75,10 @@ export class RepositoryProvider {
         await this.billboardRepository.load();
 
         for (const repository of this.repositories) {
-            await repository.init();
+            const type = repository.type;
+            const data = await repository.init();
+
+            this.nuiDispatch.dispatch('repository', 'Set', { type, data });
         }
 
         this.onceLoader.trigger(OnceStep.RepositoriesLoaded);
@@ -87,7 +97,10 @@ export class RepositoryProvider {
         }
 
         try {
-            repository.patch(patch);
+            const type = repository.type;
+            const data = repository.patch(patch);
+
+            this.nuiDispatch.dispatch('repository', 'Set', { type, data });
         } catch (e) {
             this.logger.error(`Error while patching repository ${type}`, e, JSON.stringify(patch));
         }

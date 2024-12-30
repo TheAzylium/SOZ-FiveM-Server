@@ -137,7 +137,6 @@ export class PlayerStateService {
             isEscorting: false,
             isHandcuffed: false,
             isInventoryBusy: false,
-            tankerEntity: null,
             isInShop: false,
             isInHub: false,
             hasPrisonerClothes: false,

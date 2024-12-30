@@ -118,7 +118,8 @@ export const KeyContainer = () => {
                         <ContainerWrapper
                             display={true}
                             banner={keychainBanner}
-                            maxWeight={-1}
+                            bannerType='thick'
+                            maxWeight={-1}                            
                             giveAllAppartmentKeysCallback={() => giveAllAppartmentKeysToTarget(playerInventory.map((item, i) => ({ ...item, id: i, slot: i + 1, type: 'key' })))}
                             giveAllVehicleKeysCallback={() => giveAllVehicleKeysToTarget(playerInventory.map((item, i) => ({ ...item, id: i, slot: i + 1, type: 'key' })))}
                         >

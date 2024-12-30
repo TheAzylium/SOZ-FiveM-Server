@@ -1,11 +1,11 @@
 import { joaat } from '@public/shared/joaat';
+import { PlayerLicenceType } from '@public/shared/player';
 import { RadioChannel } from '@public/shared/voip';
 
 import { DealershipConfigItem, DealershipType } from '../../config/dealership';
 import { JobType } from '../job';
 import { Vector3, Vector4 } from '../polyzone/vector';
 import { AuctionVehicle } from './auction';
-import { DealershipId } from './dealership';
 import { VehicleConfiguration } from './modification';
 
 export type Vehicle = {
@@ -14,7 +14,7 @@ export type Vehicle = {
     name: string;
     price: number;
     category: string;
-    dealershipId?: DealershipId | string;
+    dealershipId?: DealershipType | string;
     requiredLicence?: string;
     size: number;
     jobName?: { [key in JobType]: string };
@@ -31,6 +31,7 @@ export type VehicleHud = {
     lightState: number;
     fuelType: 'essence' | 'electric' | 'none';
     fuelLevel: number;
+    vehCategory: string;
     useRpm: boolean;
 };
 
@@ -111,6 +112,110 @@ export enum VehicleDoorIndex {
     Trunk = 5,
 }
 
+export const DoorType = {
+    Door: 'door',
+    Bone: 'bone',
+};
+
+export type VehicleSeatConfig = {
+    type: string;
+    doorIndex?: number;
+    seatIndex: number;
+    seatBone?: string;
+    doorBone?: string;
+};
+
+export const SEATS_CONFIG: Record<string, VehicleSeatConfig> = {
+    ['driver_seat']: {
+        type: DoorType.Door,
+        doorIndex: VehicleDoorIndex.FrontLeftDoor,
+        seatIndex: VehicleSeat.Driver,
+        seatBone: 'seat_dside_f',
+        doorBone: 'door_dside_f',
+    },
+    ['passenger_seat']: {
+        type: DoorType.Door,
+        doorIndex: VehicleDoorIndex.FrontRightDoor,
+        seatIndex: VehicleSeat.Copilot,
+        seatBone: 'seat_pside_f',
+        doorBone: 'door_pside_f',
+    },
+    ['rear_left_seat']: {
+        type: DoorType.Door,
+        doorIndex: VehicleDoorIndex.BackLeftDoor,
+        seatIndex: VehicleSeat.BackLeft,
+        seatBone: 'seat_dside_r',
+        doorBone: 'door_dside_r',
+    },
+    ['rear_right_seat']: {
+        type: DoorType.Door,
+        doorIndex: VehicleDoorIndex.BackRightDoor,
+        seatIndex: VehicleSeat.BackRight,
+        seatBone: 'seat_pside_r',
+        doorBone: 'door_pside_r',
+    },
+    ['extra_1']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat1,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_2']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat2,
+        seatBone: 'wheel_rr',
+    },
+    ['extra_3']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat3,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_4']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat5,
+        seatBone: 'wheel_rr',
+    },
+    ['extra_5']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat6,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_6']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat7,
+        seatBone: 'wheel_rr',
+    },
+    ['extra_7']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat8,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_8']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat9,
+        seatBone: 'wheel_rr',
+    },
+    ['extra_9']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat10,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_10']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat11,
+        seatBone: 'wheel_rr',
+    },
+    ['extra_11']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat12,
+        seatBone: 'wheel_lr',
+    },
+    ['extra_12']: {
+        type: DoorType.Bone,
+        seatIndex: VehicleSeat.ExtraSeat13,
+        seatBone: 'wheel_rr',
+    },
+};
+
 export enum VehicleWheelIndex {
     FrontLeftWheel,
     FrontRightWheel,
@@ -160,6 +265,7 @@ export type VehicleVolatileState = {
     primaryRadio: RadioChannel | null;
     secondaryRadio: RadioChannel | null;
     flatbedAttachedVehicle: number | null;
+    ambulanceAttachedStretcher: number | null;
     rentOwner: string | null;
     policeLocatorEnabled: boolean;
     job: JobType | null;
@@ -167,6 +273,9 @@ export type VehicleVolatileState = {
     locatorEndJam: number;
     label: string;
     neonLightsStatus: boolean | null;
+    fingerprint: string | null;
+    lastDrugTrace: string[] | null;
+    isAnalyzed: boolean;
 };
 
 export enum VehicleClass {
@@ -242,6 +351,7 @@ export const getDefaultVehicleVolatileState = (): VehicleVolatileState => ({
     primaryRadio: null,
     secondaryRadio: null,
     flatbedAttachedVehicle: null,
+    ambulanceAttachedStretcher: null,
     rentOwner: null,
     policeLocatorEnabled: false,
     job: null,
@@ -249,6 +359,9 @@ export const getDefaultVehicleVolatileState = (): VehicleVolatileState => ({
     locatorEndJam: 0,
     label: null,
     neonLightsStatus: true,
+    fingerprint: null,
+    lastDrugTrace: null,
+    isAnalyzed: false,
 });
 
 export type VehicleMenuData = {
@@ -272,6 +385,7 @@ export type VehicleMenuData = {
 export type VehicleAuctionMenuData = {
     name: string;
     auction: AuctionVehicle;
+    isAuctionDisable: boolean;
 };
 
 export type VehicleDealershipMenuData = {
@@ -328,13 +442,14 @@ export const VehicleElectricModels: Record<number, string> = {
     [1147287684]: 'Caddy',
     [1560980623]: 'Airtug',
     [989294410]: 'Rocket Voltic',
-    [-2066002122]: 'lspdgallardo',
-    [-107240429]: 'bcsoc7',
+    [-430238662]: 'lspd40',
+    [-635002646]: 'bcso40',
     [joaat('dilettante2')]: 'Dilettante 2',
     [joaat('virtue')]: 'Virtue',
     [joaat('powersurge')]: 'Power Surge',
     [joaat('coureur')]: 'La Coureuse',
     [joaat('buffalo5')]: 'Buffalo EVX',
+    [joaat('vivanite')]: 'Vivanite',
 };
 
 export const VehicleTrailerModels: Record<number, string> = {
@@ -379,16 +494,16 @@ export const LockPickAlertChance = 0.5;
 
 export const LockPickAlertMessage = {
     all: [
-        'Dans ${0}, ça essaye de tirer une caisse, juste devant moi là ! Juste là !',
-        "Encore un clodo qui essaye de dormir au chaud ce soir à ${0} , mais ce n'est pas dans sa voiture…",
-        'BORDEL MA CAISSE ! ON ME VOLE MA CAISSE ! JE SUIS PROCHE DE ${0} !',
-        "Hey ! J'ai un vol de voiture sous les yeux, venez vite à ${0} !",
-        "Mais où êtes vous ?! Quelqu'un vole des véhicules aux alentours de ${0} !",
+        'Dans ${0}, ça essaye de tirer une ${1}, juste devant moi là ! Juste là !',
+        "Encore un clodo qui essaye de dormir au chaud ce soir à ${0} , mais cette ${1} n'est pas à lui",
+        'BORDEL MA CAISSE ! ON ME VOLE MA ${1} ! JE SUIS PROCHE DE ${0} !',
+        "Hey ! J'ai un vol d'une ${1} sous les yeux, venez vite à ${0} !",
+        "Mais où êtes vous ?! Quelqu'un vole des ${1} aux alentours de ${0} !",
     ],
     carjack: [
-        "J'viens de me faire carjacker ! Mais oui, on m'a carjacké l'auto j'vous dis ! Cela s'est déroulé à ${0} !",
+        "J'viens de me faire carjacker ! Mais oui, on m'a carjacké l'auto j'vous dis ! Cela s'est déroulé à ${0}, une ${1} !",
     ],
-    lockpick: ["Une personne louche tripote la poignée d'une voiture proche de ${0} !"],
+    lockpick: ["Une personne louche tripote la poignée d'une ${1} proche de ${0} !"],
 };
 
 export type VehicleLocation = {
@@ -407,4 +522,11 @@ export const ALLOWED_AIR_CONTROL: Partial<Record<VehicleClass, true>> = {
     [VehicleClass.Boats]: true,
     [VehicleClass.Planes]: true,
     [VehicleClass.Military]: true,
+};
+
+//update MissiveVehicleModelList when toggle
+export const DisableNPCBike = false;
+
+export const VehicleClassFuelStorageMultiplier: Record<string, number> = {
+    [PlayerLicenceType.Moto]: 0.5,
 };

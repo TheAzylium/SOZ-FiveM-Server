@@ -136,7 +136,7 @@ const createRpcPromise = <R>(eventResponseName: string, timeout: number): Promis
 
         addEventListener(eventResponseName, resultCallback, true);
         setTimeout(() => {
-            rejectCallback(new Error('RPC timeout'));
+            rejectCallback(new Error('RPC timeout for event ' + eventResponseName));
         }, timeout);
     });
 };

@@ -1,4 +1,5 @@
 import { AnimationRunner } from '@public/client/animation/animation.factory';
+import { AnimationRagdollProvider } from '@public/client/animation/animation.ragdoll.provider';
 import { AnimationService } from '@public/client/animation/animation.service';
 import { Notifier } from '@public/client/notifier';
 import { NuiDispatch } from '@public/client/nui/nui.dispatch';
@@ -7,6 +8,7 @@ import { PhoneService } from '@public/client/phone/phone.service';
 import { PlayerListStateService } from '@public/client/player/player.list.state.service';
 import { PlayerService } from '@public/client/player/player.service';
 import { PlayerStateProvider } from '@public/client/player/player.state.provider';
+import { ProgressService } from '@public/client/progress.service';
 import { TargetFactory } from '@public/client/target/target.factory';
 import { Once, OnceStep, OnEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
@@ -18,6 +20,7 @@ import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { MenuType } from '@public/shared/nui/menu';
 import { PlayerLicenceType } from '@public/shared/player';
+import { Vector4 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
 import { inject } from 'inversify';
 
@@ -25,10 +28,18 @@ import { JobInteractionService } from '../job.interaction.service';
 import { StonkCloakRoomProvider } from '../stonk/stonk.cloakroom.provider';
 import { PoliceAnimationProvider } from './police.animation.provider';
 
-const jobsCanFine = [JobType.LSPD, JobType.BCSO, JobType.SASP];
-const jobsCanFouille = [JobType.LSPD, JobType.BCSO, JobType.CashTransfer, JobType.SASP];
-const jobsCanEscort = [JobType.LSPD, JobType.BCSO, JobType.CashTransfer, JobType.SASP, JobType.LSMC, JobType.FBI];
-const jobsCanBreathAnalyze = [JobType.LSPD, JobType.BCSO, JobType.LSMC, JobType.SASP];
+const jobsCanFine = [JobType.LSPD, JobType.BCSO, JobType.SASP, JobType.FBI, JobType.LSCS];
+const jobsCanFouille = [JobType.LSPD, JobType.BCSO, JobType.CashTransfer, JobType.SASP, JobType.LSCS];
+const jobsCanEscort = [
+    JobType.LSPD,
+    JobType.BCSO,
+    JobType.CashTransfer,
+    JobType.SASP,
+    JobType.LSMC,
+    JobType.FBI,
+    JobType.LSCS,
+];
+const jobsCanBreathAnalyze = [JobType.LSPD, JobType.BCSO, JobType.LSMC, JobType.SASP, JobType.FBI, JobType.LSCS];
 
 @Provider()
 export class PolicePlayerProvider {
@@ -68,139 +79,213 @@ export class PolicePlayerProvider {
     @Inject(PlayerStateProvider)
     private playerStateProvider: PlayerStateProvider;
 
+    @Inject(ProgressService)
+    private progressService: ProgressService;
+
+    @Inject(AnimationRagdollProvider)
+    private animationRagdollProvider: AnimationRagdollProvider;
+
     private escortingAnimation: null | { animation: AnimationRunner | null; target: number; crimi: boolean } = null;
     private escortedAnimation: null | { animation: AnimationRunner | null; target: number; crimi: boolean } = null;
 
     @Once(OnceStep.Start)
     public onStart() {
         for (const job of jobsCanFine) {
-            this.targetFactory.createForAllPlayer(
-                [
-                    {
-                        label: 'Amender',
-                        color: job,
-                        icon: 'c:police/amender.png',
-                        job: job,
-                        blackoutJob: job,
-                        blackoutGlobal: true,
-                        canInteract: () => {
-                            return this.playerService.isOnDuty();
-                        },
-                        action: entity => {
-                            const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
-                            this.nuiMenu.openMenu(MenuType.PoliceJobFines, {
-                                job: job,
-                                playerServerId: target,
-                            });
-                        },
+            this.targetFactory.createForAllPlayer([
+                {
+                    label: 'Amender',
+                    color: job,
+                    icon: 'c:police/amender.png',
+                    job: job,
+                    blackoutJob: job,
+                    blackoutGlobal: true,
+                    canInteract: () => {
+                        return this.playerService.isOnDuty();
                     },
-                    {
-                        label: 'Permis',
-                        color: job,
-                        icon: 'c:police/permis.png',
-                        job: job,
-                        canInteract: () => {
-                            return this.playerService.isOnDuty();
-                        },
-                        action: async entity => {
-                            const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
-                            const licences = await emitRpc<Partial<Record<PlayerLicenceType, number>>>(
-                                RpcServerEvent.PLAYER_GET_LICENCES,
-                                target
-                            );
+                    action: entity => {
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        this.nuiMenu.openMenu(MenuType.PoliceJobFines, {
+                            job: job,
+                            playerServerId: target,
+                        });
+                    },
+                },
+                {
+                    label: 'Permis',
+                    color: job,
+                    icon: 'c:police/permis.png',
+                    job: job,
+                    canInteract: () => {
+                        return this.playerService.isOnDuty();
+                    },
+                    action: async entity => {
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        const licences = await emitRpc<Partial<Record<PlayerLicenceType, number>>>(
+                            RpcServerEvent.PLAYER_GET_LICENCES,
+                            target
+                        );
 
-                            this.nuiMenu.openMenu(MenuType.PoliceJobLicences, {
-                                job: job,
-                                playerServerId: target,
-                                playerLicences: licences,
-                            });
-                        },
+                        this.nuiMenu.openMenu(MenuType.PoliceJobLicences, {
+                            job: job,
+                            playerServerId: target,
+                            playerLicences: licences,
+                        });
                     },
-                    {
-                        label: 'Menotter',
-                        color: job,
-                        icon: 'c:police/menotter.png',
-                        item: 'handcuffs',
-                        job: job,
-                        canInteract: entity => {
-                            return (
-                                this.playerService.isOnDuty() &&
-                                !IsEntityPlayingAnim(entity, 'mp_arresting', 'idle', 3) &&
-                                !IsPedInAnyVehicle(entity, true) &&
-                                !IsPedInAnyVehicle(PlayerPedId(), true)
-                            );
-                        },
-                        action: async entity => {
-                            if (!IsPedRagdoll(PlayerPedId())) {
-                                const player = NetworkGetPlayerIndexFromPed(entity);
-                                if (
-                                    !IsPedInAnyVehicle(GetPlayerPed(player), true) &&
-                                    !IsPedInAnyVehicle(PlayerPedId(), true)
-                                ) {
-                                    const playerId = GetPlayerServerId(player);
-                                    TriggerServerEvent(ServerEvent.CUFF_PLAYER, playerId, false);
-                                    TriggerServerEvent(
-                                        ServerEvent.MONITOR_ADD_EVENT,
-                                        'job_police_cuff_player',
-                                        {},
-                                        { target_source: playerId, position: GetEntityCoords(GetPlayerPed(player)) },
-                                        true
-                                    );
-                                } else {
-                                    this.notifier.error('Vous ne pouvez pas menotter une personne dans un véhicule');
-                                }
-                            } else {
-                                await wait(2000);
-                            }
-                        },
+                },
+                {
+                    label: 'Menotter',
+                    color: job,
+                    icon: 'c:police/menotter.png',
+                    item: 'handcuffs',
+                    job: job,
+                    canInteract: entity => {
+                        return (
+                            this.playerService.isOnDuty() &&
+                            !IsEntityPlayingAnim(entity, 'mp_arresting', 'idle', 3) &&
+                            !IsPedInAnyVehicle(entity, true) &&
+                            !IsPedInAnyVehicle(PlayerPedId(), true)
+                        );
                     },
-                    {
-                        label: 'Démenotter',
-                        color: job,
-                        icon: 'c:police/demenotter.png',
-                        item: 'handcuffs_key',
-                        job: job,
-                        canInteract: async entity => {
+                    action: async entity => {
+                        if (!IsPedRagdoll(PlayerPedId())) {
+                            const player = NetworkGetPlayerIndexFromPed(entity);
                             if (
-                                !this.playerService.isOnDuty() ||
-                                !IsEntityPlayingAnim(entity, 'mp_arresting', 'idle', 3) ||
-                                IsPedInAnyVehicle(entity, true) ||
-                                IsPedInAnyVehicle(PlayerPedId(), true)
+                                !IsPedInAnyVehicle(GetPlayerPed(player), true) &&
+                                !IsPedInAnyVehicle(PlayerPedId(), true)
                             ) {
-                                return false;
-                            }
-
-                            const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
-                            return !this.playerListStateService.isZipped(target);
-                        },
-                        action: async entity => {
-                            if (!IsPedRagdoll(PlayerPedId())) {
-                                const player = NetworkGetPlayerIndexFromPed(entity);
-                                if (
-                                    !IsPedInAnyVehicle(GetPlayerPed(player), true) &&
-                                    !IsPedInAnyVehicle(PlayerPedId(), true)
-                                ) {
-                                    const playerId = GetPlayerServerId(player);
-                                    TriggerServerEvent(ServerEvent.UNCUFF_PLAYER, playerId);
-                                    TriggerServerEvent(
-                                        ServerEvent.MONITOR_ADD_EVENT,
-                                        'job_police_uncuff_player',
-                                        {},
-                                        { target_source: playerId, position: GetEntityCoords(GetPlayerPed(player)) },
-                                        true
-                                    );
-                                    await wait(500);
-                                } else {
-                                    this.notifier.error('Vous ne pouvez pas démenotter une personne dans un véhicule');
-                                }
+                                const playerId = GetPlayerServerId(player);
+                                TriggerServerEvent(ServerEvent.CUFF_PLAYER, playerId, false);
+                                TriggerServerEvent(
+                                    ServerEvent.MONITOR_ADD_EVENT,
+                                    'job_police_cuff_player',
+                                    {},
+                                    { target_source: playerId, position: GetEntityCoords(GetPlayerPed(player)) },
+                                    true
+                                );
                             } else {
-                                await wait(2000);
+                                this.notifier.error('Vous ne pouvez pas menotter une personne dans un véhicule');
                             }
-                        },
+                        } else {
+                            await wait(2000);
+                        }
                     },
-                ],
-                1.5
-            );
+                },
+                {
+                    label: 'Démenotter',
+                    color: job,
+                    icon: 'c:police/demenotter.png',
+                    item: 'handcuffs_key',
+                    job: job,
+                    canInteract: async entity => {
+                        if (
+                            !this.playerService.isOnDuty() ||
+                            !IsEntityPlayingAnim(entity, 'mp_arresting', 'idle', 3) ||
+                            IsPedInAnyVehicle(entity, true) ||
+                            IsPedInAnyVehicle(PlayerPedId(), true)
+                        ) {
+                            return false;
+                        }
+
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        return !this.playerListStateService.isZipped(target);
+                    },
+                    action: async entity => {
+                        if (!IsPedRagdoll(PlayerPedId())) {
+                            const player = NetworkGetPlayerIndexFromPed(entity);
+                            if (
+                                !IsPedInAnyVehicle(GetPlayerPed(player), true) &&
+                                !IsPedInAnyVehicle(PlayerPedId(), true)
+                            ) {
+                                const playerId = GetPlayerServerId(player);
+                                TriggerServerEvent(ServerEvent.UNCUFF_PLAYER, playerId);
+                                TriggerServerEvent(
+                                    ServerEvent.MONITOR_ADD_EVENT,
+                                    'job_police_uncuff_player',
+                                    {},
+                                    { target_source: playerId, position: GetEntityCoords(GetPlayerPed(player)) },
+                                    true
+                                );
+                                await wait(500);
+                            } else {
+                                this.notifier.error('Vous ne pouvez pas démenotter une personne dans un véhicule');
+                            }
+                        } else {
+                            await wait(2000);
+                        }
+                    },
+                },
+                {
+                    label: "Récolte d'empreinte",
+                    color: job,
+                    icon: 'c:police/fouiller.png',
+                    job: job,
+                    item: 'fingerprint_collector',
+                    canInteract: () => {
+                        return this.playerService.isOnDuty();
+                    },
+                    action: async entity => {
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        const { completed } = await this.progressService.progress(
+                            'police_gather_drug_person',
+                            'Récupération des empreintes digitales',
+                            3000,
+                            {
+                                name: 'player_search',
+                                dictionary: 'anim@gangops@morgue@table@',
+                                options: {
+                                    freezeLastFrame: true,
+                                },
+                            },
+                            {
+                                disableMovement: true,
+                                disableMouse: true,
+                            }
+                        );
+                        if (!completed) {
+                            return;
+                        }
+                        const playerCoords = GetEntityCoords(PlayerPedId()) as Vector4;
+                        const zoneID = GetNameOfZone(playerCoords[0], playerCoords[1], playerCoords[2]);
+                        const zone = GetLabelText(zoneID);
+                        TriggerServerEvent(ServerEvent.POLICE_GATHER_FINGERPRINT_ON_PERSON, target, zone);
+                    },
+                },
+                {
+                    label: 'Rechercher des traces de poudre',
+                    color: job,
+                    icon: 'c:police/fouiller.png',
+                    job: job,
+                    canInteract: () => {
+                        return this.playerService.isOnDuty();
+                    },
+                    action: async entity => {
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        const { completed } = await this.progressService.progress(
+                            'police_gather_drug_person',
+                            'Recherche de traces de poudre',
+                            3000,
+                            {
+                                name: 'player_search',
+                                dictionary: 'anim@gangops@morgue@table@',
+                                options: {
+                                    freezeLastFrame: true,
+                                },
+                            },
+                            {
+                                disableMovement: true,
+                                disableMouse: true,
+                            }
+                        );
+                        if (!completed) {
+                            return;
+                        }
+                        const playerCoords = GetEntityCoords(PlayerPedId()) as Vector4;
+                        const zoneID = GetNameOfZone(playerCoords[0], playerCoords[1], playerCoords[2]);
+                        const zone = GetLabelText(zoneID);
+                        TriggerServerEvent(ServerEvent.POLICE_GATHER_POWDER_ON_PERSON, target, zone);
+                    },
+                },
+            ]);
         }
         for (const job of jobsCanFouille) {
             this.targetFactory.createForAllPlayer(
@@ -232,38 +317,35 @@ export class PolicePlayerProvider {
             );
         }
         for (const job of jobsCanEscort) {
-            this.targetFactory.createForAllPlayer(
-                [
-                    {
-                        label: 'Escorter',
-                        color: job,
-                        icon: 'c:police/escorter.png',
-                        job: job,
-                        canInteract: async entity => {
-                            if (
-                                this.playerService.getPlayer().job.id === JobType.CashTransfer &&
-                                !this.stonkCloakRoomProvider.wearVIPClothes()
-                            ) {
-                                return false;
-                            }
-                            if (
-                                !this.playerService.isOnDuty() ||
-                                IsPedInAnyVehicle(entity, true) ||
-                                IsPedInAnyVehicle(PlayerPedId(), true)
-                            ) {
-                                return false;
-                            }
+            this.targetFactory.createForAllPlayer([
+                {
+                    label: 'Escorter',
+                    color: job,
+                    icon: 'c:police/escorter.png',
+                    job: job,
+                    canInteract: async entity => {
+                        if (
+                            this.playerService.getPlayer().job.id === JobType.CashTransfer &&
+                            !this.stonkCloakRoomProvider.wearVIPClothes()
+                        ) {
+                            return false;
+                        }
+                        if (
+                            !this.playerService.isOnDuty() ||
+                            IsPedInAnyVehicle(entity, true) ||
+                            IsPedInAnyVehicle(PlayerPedId(), true)
+                        ) {
+                            return false;
+                        }
 
-                            const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
-                            return !this.playerListStateService.isEscorted(target);
-                        },
-                        action: async entity => {
-                            await this.jobInteractionService.escortPlayer(entity, false);
-                        },
+                        const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
+                        return !this.playerListStateService.isEscorted(target);
                     },
-                ],
-                1.5
-            );
+                    action: async entity => {
+                        await this.jobInteractionService.escortPlayer(entity, false);
+                    },
+                },
+            ]);
         }
         for (const job of jobsCanBreathAnalyze) {
             this.targetFactory.createForAllPlayer(
@@ -296,8 +378,41 @@ export class PolicePlayerProvider {
                         action: async entity => {
                             const target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity));
 
-                            const drugLevel = await emitRpc<number>(RpcServerEvent.POLICE_DRUGLEVEL, target);
-                            this.dispatcher.dispatch('police', 'OpenScreeningTest', drugLevel > 0);
+                            const drugInfo = await emitRpc<{ level: number; type: string }>(
+                                RpcServerEvent.POLICE_DRUGLEVEL_AND_TYPE,
+                                target
+                            );
+                            this.dispatcher.dispatch('police', 'OpenScreeningTest', drugInfo.level > 0);
+                            if (drugInfo.level > 0) {
+                                const { completed } = await this.progressService.progress(
+                                    'police_gather_drug_person',
+                                    "Récupération d'un échantillon de trace de drogue",
+                                    3000,
+                                    {
+                                        name: 'player_search',
+                                        dictionary: 'anim@gangops@morgue@table@',
+                                        options: {
+                                            freezeLastFrame: true,
+                                        },
+                                    },
+                                    {
+                                        disableMovement: true,
+                                        disableMouse: true,
+                                    }
+                                );
+                                if (!completed) {
+                                    return;
+                                }
+                                const playerCoords = GetEntityCoords(PlayerPedId()) as Vector4;
+                                const zoneID = GetNameOfZone(playerCoords[0], playerCoords[1], playerCoords[2]);
+                                const zone = GetLabelText(zoneID);
+                                TriggerServerEvent(
+                                    ServerEvent.POLICE_GATHER_DRUG_ON_PERSON,
+                                    target,
+                                    drugInfo.type,
+                                    zone
+                                );
+                            }
                         },
                     },
                 ],
@@ -358,7 +473,13 @@ export class PolicePlayerProvider {
     @OnEvent(ClientEvent.GET_ESCORTED)
     public async getEscorted(playerId: number, crimi: boolean) {
         const ped = PlayerPedId();
+        const player = this.playerService.getPlayer();
         const dragger = GetPlayerPed(GetPlayerFromServerId(playerId));
+
+        if (!crimi && !player.metadata.isdead) {
+            ClearPedTasks(ped);
+            this.animationRagdollProvider.stopRagdoll();
+        }
 
         let delta_x = 0.45;
         let delta_y = 0.45;

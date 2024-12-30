@@ -130,6 +130,18 @@ export const getModTypeName = (vehicleEntityId: number, mod: VehicleModType): st
 
             return GetLabelText('CMOD_MOD_S18');
         case VehicleModType.Trim:
+            if (
+                model === GetHashKey('buffalo5') ||
+                model === GetHashKey('buffalo4') ||
+                model === GetHashKey('monstrociti') ||
+                model === GetHashKey('jubilee') ||
+                model === GetHashKey('r300') ||
+                model === GetHashKey('coureur') ||
+                model === GetHashKey('stingertt')
+            ) {
+                return null;
+            }
+
             if (model === GetHashKey('SultanRS')) {
                 return GetLabelText('CMOD_MOD_S19b');
             }
@@ -144,7 +156,7 @@ export const getModTypeName = (vehicleEntityId: number, mod: VehicleModType): st
 
             return GetLabelText('CMOD_MOD_S19');
         case VehicleModType.Tank:
-            if (model === GetHashKey('deity')) {
+            if (model === GetHashKey('deity') || model === GetHashKey('buffalo4') || model === GetHashKey('jubilee')) {
                 return null;
             }
             if (model === GetHashKey('SlamVan3')) {
@@ -172,7 +184,35 @@ export const getModTypeName = (vehicleEntityId: number, mod: VehicleModType): st
             break;
 
         case VehicleModType.FenderRight:
-            if (model === GetHashKey('deity')) {
+            if (
+                model === GetHashKey('deity') ||
+                model === GetHashKey('jb7002') ||
+                model === GetHashKey('buffalo5') ||
+                model === GetHashKey('buffalo4') ||
+                model === GetHashKey('jubilee') ||
+                model === GetHashKey('r300') ||
+                model === GetHashKey('stingertt')
+            ) {
+                return null;
+            }
+            break;
+
+        case VehicleModType.Roof:
+            if (model === GetHashKey('seasparrow') || model === GetHashKey('jb7002')) {
+                return null;
+            }
+            break;
+
+        case VehicleModType.Frame:
+            if (
+                model === GetHashKey('virtue') ||
+                model === GetHashKey('buffalo5') ||
+                model === GetHashKey('buffalo4') ||
+                model === GetHashKey('jubilee') ||
+                model === GetHashKey('r300') ||
+                model === GetHashKey('stingertt') ||
+                model === GetHashKey('omnisegt')
+            ) {
                 return null;
             }
             break;
@@ -343,6 +383,10 @@ export const createModificationHelperList = (
                     continue;
                 }
 
+                if (IsVehicleModHswExclusive(vehicleEntityId, type, i)) {
+                    continue;
+                }
+
                 choices.push({
                     label: getModName(vehicleEntityId, type, i, modCount),
                     value: i,
@@ -452,6 +496,7 @@ const VehicleModificationHelpers: VehicleModificationHelperType<keyof VehicleMod
     trim: createModificationHelperList(VehicleModType.Trim),
     tank: createModificationHelperList(VehicleModType.Tank),
     windows: createModificationHelperList(VehicleModType.Windows),
+    windowsSecondary: createModificationHelperList(VehicleModType.WindowsSecondary),
 };
 
 @Injectable()

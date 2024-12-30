@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
 import {
@@ -11,6 +12,7 @@ import {
     VehicleUpgradeOption,
 } from '../../../shared/vehicle/modification';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -67,6 +69,7 @@ type MenuVehicleCustomProps = {
 
 export const MenuVehicleCustom: FunctionComponent<MenuVehicleCustomProps> = ({ data }) => {
     const [configuration, setConfiguration] = useState<VehicleConfiguration | null>(null);
+    const getPrice = useGetPrice();
 
     useEffect(() => {
         if (data?.currentConfiguration) {
@@ -174,7 +177,7 @@ export const MenuVehicleCustom: FunctionComponent<MenuVehicleCustomProps> = ({ d
                     <MenuItemButton className="border-t border-white/50" onConfirm={() => onConfirm()}>
                         <div className="flex w-full justify-between items-center">
                             <span>Confirmer les changements</span>
-                            <span>$ {Intl.NumberFormat('fr-FR').format(price)}</span>
+                            <span>$ {Intl.NumberFormat('fr-FR').format(getPrice(price, TaxType.VEHICLE))}</span>
                         </div>
                     </MenuItemButton>
                 </MenuContent>

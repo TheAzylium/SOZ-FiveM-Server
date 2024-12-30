@@ -15,8 +15,10 @@ import { PlayerService } from '../player/player.service';
 import { SenateRepository } from '../repository/senate.repository';
 import { VehicleDamageProvider } from '../vehicle/vehicle.damage.provider';
 import { VehiclePoliceLocator } from '../vehicle/vehicle.police.locator.provider';
+import { VehicleOffroadProvider } from '../vehicle/vehicule.offroad.provider';
 import { AdminMenuDeveloperProvider } from './admin.menu.developer.provider';
 import { AdminMenuInteractiveProvider } from './admin.menu.interactive.provider';
+import { AdminMenuVehicleProvider } from './admin.menu.vehicle.provider';
 
 @Provider()
 export class AdminMenuProvider {
@@ -35,6 +37,9 @@ export class AdminMenuProvider {
     @Inject(VehicleDamageProvider)
     private vehicleDamageProvider: VehicleDamageProvider;
 
+    @Inject(VehicleOffroadProvider)
+    private vehicleOffroadProvider: VehicleOffroadProvider;
+
     @Inject(HudMinimapProvider)
     private hudMinimapProvider: HudMinimapProvider;
 
@@ -46,6 +51,9 @@ export class AdminMenuProvider {
 
     @Inject(SenateRepository)
     private senateRepository: SenateRepository;
+
+    @Inject(AdminMenuVehicleProvider)
+    private adminMenuVehicleProvider: AdminMenuVehicleProvider;
 
     @OnEvent(ClientEvent.ADMIN_OPEN_MENU)
     @Command('admin', {
@@ -88,6 +96,7 @@ export class AdminMenuProvider {
                     },
                     interactive: {
                         displayOwners: this.adminMenuInteractiveProvider.intervalHandlers.displayOwners !== null,
+                        displayDebugSurface: this.vehicleOffroadProvider.displayDebugSurface,
                         displayPlayerNames:
                             this.adminMenuInteractiveProvider.intervalHandlers.displayPlayerNames !== null,
                         displayPlayersOnMap:
@@ -104,6 +113,8 @@ export class AdminMenuProvider {
                     },
                     vehicule: {
                         noStall: this.vehicleDamageProvider.getAdminNoStall(),
+                        noBurstTyres: this.adminMenuVehicleProvider.getNoBurstTyres(),
+                        noSurfaceCalc: this.vehicleOffroadProvider.getNoSurfaceCalc(),
                     },
                 },
             },

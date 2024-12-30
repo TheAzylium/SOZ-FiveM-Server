@@ -38,6 +38,7 @@ export const StorageContainer = () => {
         if (type === 'metal_storage') type = 'default';
         if (type === 'storage') type = 'default';
         if (type === 'storage_tank') type = 'default';
+        if (type === 'evidence_storage') type = 'evidence_storage';
 
         return `/html/banner/${type}.jpg`;
     }, [targetInventory?.type]);
@@ -326,6 +327,7 @@ export const StorageContainer = () => {
                     <ContainerWrapper
                         display={true}
                         banner={playerBanner}
+                        bannerType='thin'
                         weight={playerInventory.weight}
                         maxWeight={playerInventory.maxWeight}
                     >
@@ -344,6 +346,7 @@ export const StorageContainer = () => {
                     <ContainerWrapper
                         display={true}
                         banner={targetInventoryBanner}
+                        bannerType='thin'
                         weight={targetInventory.weight}
                         maxWeight={targetInventory.maxWeight}
                         sortCallback={() => handleSortInventory(targetInventory.id, setTargetInventory)}

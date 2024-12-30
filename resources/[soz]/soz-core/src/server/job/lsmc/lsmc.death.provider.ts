@@ -1,6 +1,7 @@
 import { On, Once, OnEvent } from '@core/decorators/event';
 import { Inject } from '@core/decorators/injectable';
 import { Provider } from '@core/decorators/provider';
+import { PlayerInjuryProvider } from '@private/server/player/player.injuries.provider';
 import { InventoryManager } from '@public/server/inventory/inventory.manager';
 import { Monitor } from '@public/server/monitor/monitor';
 import { Notifier } from '@public/server/notifier';
@@ -37,6 +38,9 @@ export class LSMCDeathProvider {
 
     @Inject(PlayerPositionProvider)
     private playerPositionProvider: PlayerPositionProvider;
+
+    @Inject(PlayerInjuryProvider)
+    private playerInjuryProvider: PlayerInjuryProvider;
 
     private occupiedBeds: Record<number, number> = {};
 
@@ -90,20 +94,28 @@ export class LSMCDeathProvider {
             this.notifier.notify(source, 'Cette personne a subit une overdose de drogue.', 'success', 30000);
         }
 
-        TriggerClientEvent(ClientEvent.LSMC_REVIVE, player.source, admin, uniteHU, uniteHUBed);
+        const isRPdeath = this.playerInjuryProvider.handleInjuryRevive(source, targetid);
 
-        datas.hunger = this.playerService.getIncrementedMetadata(player, 'hunger', 30, 0, 100);
-        datas.thirst = this.playerService.getIncrementedMetadata(player, 'thirst', 30, 0, 100);
-        datas.alcohol = this.playerService.getIncrementedMetadata(player, 'alcohol', -50, 0, 100);
-        datas.drug = this.playerService.getIncrementedMetadata(player, 'drug', -50, 0, 110);
-        datas.isdead = false;
-        datas.mort = '';
+        TriggerClientEvent(ClientEvent.LSMC_REVIVE, player.source, admin, uniteHU, uniteHUBed, isRPdeath);
+        if (!admin) {
+            TriggerClientEvent(ClientEvent.LSMC_REVIVE_DOC, source, isRPdeath);
+        }
 
-        this.playerService.setPlayerMetaDatas(targetid, datas);
+        if (!isRPdeath) {
+            datas.hunger = this.playerService.getIncrementedMetadata(player, 'hunger', 30, 0, 100);
+            datas.thirst = this.playerService.getIncrementedMetadata(player, 'thirst', 30, 0, 100);
+            datas.alcohol = this.playerService.getIncrementedMetadata(player, 'alcohol', -50, 0, 100);
+            datas.drug = this.playerService.getIncrementedMetadata(player, 'drug', -50, 0, 110);
+            this.playerService.setPlayerDisease(player.source, false);
+            datas.isdead = false;
+            datas.mort = '';
 
-        this.playerStateService.setClientState(targetid, {
-            isDead: false,
-        });
+            this.playerService.setPlayerMetaDatas(targetid, datas);
+
+            this.playerStateService.setClientState(targetid, {
+                isDead: false,
+            });
+        }
 
         this.endUrgency(targetid);
     }

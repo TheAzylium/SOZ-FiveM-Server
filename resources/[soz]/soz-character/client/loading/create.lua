@@ -68,6 +68,14 @@ function CharacterCreate(SpawnId, charInfo, character)
     -- Create character with menu (or other interface
     character = CreateCharacterWizard(SpawnId, character)
 
+    -- Winter
+    -- character.ClothConfig.BaseClothSet.Components[ComponentType.Chain] = GetHashKey("mp_m_freemode_01") == character.Skin.Model.Hash and
+    --                                                                         {Drawable = 35, Texture = 1, Palette = 0} or
+    --                                                                         {Drawable = 18, Texture = 1, Palette = 0}
+    -- character.ClothConfig.BaseClothSet.Props[tostring(PropType.Head)] = GetHashKey("mp_m_freemode_01") == character.Skin.Model.Hash and
+    --                                                                        {Drawable = 98, Texture = 0, Palette = 0} or
+    --                                                                        {Drawable = 97, Texture = 0, Palette = 0}
+
     local connected = QBCore.Functions.TriggerRpc("soz-character:server:CreatePlayer", charInfo, character.Skin, character.ClothConfig);
 
     if connected then

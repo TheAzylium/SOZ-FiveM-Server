@@ -1,4 +1,8 @@
-import { isVehicleModelElectric } from '@public/shared/vehicle/vehicle';
+import {
+    getDefaultVehicleCondition,
+    isVehicleModelElectric,
+    VehicleClassFuelStorageMultiplier,
+} from '@public/shared/vehicle/vehicle';
 
 import { Once } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
@@ -78,9 +82,12 @@ export class ItemFuelProvider {
             return;
         }
 
+        const storageMultiplier = VehicleClassFuelStorageMultiplier[vehModel?.requiredLicence] || 1.0;
+        const maxFuel = Math.floor(getDefaultVehicleCondition().fuelLevel * storageMultiplier);
+
         const vehicleState = this.vehicleStateService.getVehicleState(closestVehicle.vehicleNetworkId);
 
-        if (vehicleState.condition.fuelLevel >= 70) {
+        if (vehicleState.condition.fuelLevel + 30 > maxFuel) {
             this.notifier.notify(source, "Vous avez ~r~trop d'essence~s~ pour utiliser un jerrycan.", 'error');
 
             return;

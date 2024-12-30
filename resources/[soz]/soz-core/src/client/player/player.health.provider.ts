@@ -549,8 +549,9 @@ export class PlayerHealthProvider {
         const isRunning = IsPedRunning(playerPed) || IsPedSprinting(playerPed);
         const isSwimming = IsPedSwimming(playerPed);
         const isInBicycle = currentVehicle && IsThisModelABicycle(GetEntityModel(currentVehicle));
+        const ragdoll = IsPedRagdoll(playerPed);
 
-        if (isRunning || isSwimming || isInBicycle) {
+        if ((isRunning || isSwimming || isInBicycle) && !ragdoll) {
             const position = GetEntityCoords(playerPed, true) as Vector3;
 
             if (this.lastRunPosition !== null) {

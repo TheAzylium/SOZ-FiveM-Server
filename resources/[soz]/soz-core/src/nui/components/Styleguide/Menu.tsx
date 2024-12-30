@@ -115,7 +115,14 @@ export const MainMenu: FunctionComponent<PropsWithChildren> = ({ children }) => 
 };
 
 export const MenuContainer: FunctionComponent<PropsWithChildren> = ({ children }) => {
-    return <div className="absolute left-8 top-8 w-1/5 min-w-[24rem] select-none">{children}</div>;
+    let leftOffset = 'left-8';
+    if (
+        (window.innerWidth > 5000 && window.innerHeight < 1500) ||
+        (window.innerWidth > 3079 && window.innerHeight < 1200)
+    ) {
+        leftOffset = 'left-[94vh]';
+    }
+    return <div className={`absolute ${leftOffset} top-8 w-[36vh] min-w-[36vh] select-none`}>{children}</div>;
 };
 
 export type MenuTitleProps = {
@@ -123,7 +130,7 @@ export type MenuTitleProps = {
 };
 
 const MenuHeader: FunctionComponent<MenuTitleProps> = ({ banner }) => {
-    return <img src={banner} className="opacity-80 w-full h-auto object-cover mb-[-2px]" alt="banner" />;
+    return <img src={banner} className="opacity-80 w-full h-[9vh] object-cover mb-[-2px]" alt="banner" />;
 };
 
 export const MenuTitle: FunctionComponent<PropsWithChildren<MenuTitleProps>> = ({ children, banner }) => {
@@ -147,10 +154,24 @@ export const MenuContent: FunctionComponent<PropsWithChildren> = ({ children }) 
     const [description, setDescription] = useState<string | null | ReactNode>(null);
     const [visibility, setVisibility] = useState(true);
     const [pauseMenuActive, setPauseMenuActive] = useState(true);
+    const [previousLength, setPreviousLength] = useState(0);
 
     useNuiEvent('global', 'PauseMenuActive', setPauseMenuActive);
 
     useNuiEvent('menu', 'SetMenuVisibility', setVisibility);
+
+    useEffect(() => {
+        if (previousLength === descendants.length) {
+            return;
+        }
+
+        setPreviousLength(descendants.length);
+
+        if (previousLength > 0 && descendants.length > 0) {
+            // reset descendants to ensure ordering is correct
+            setDescendants([]);
+        }
+    }, [descendants.length, previousLength]);
 
     return (
         <DescendantProvider context={MenuDescendantContext} items={descendants} set={setDescendants}>
@@ -162,7 +183,7 @@ export const MenuContent: FunctionComponent<PropsWithChildren> = ({ children }) 
                         {children}
                     </ul>
                     {description && (
-                        <div className="mt-2 p-2 bg-black/50 rounded-b-lg max-h-[10vh] text-white">{description}</div>
+                        <div className="mt-2 p-2 bg-black/50 rounded-b-lg max-h-[20vh] text-white">{description}</div>
                     )}
                 </MenuControls>
             </MenuContext.Provider>
@@ -254,7 +275,7 @@ type MenuItemProps = PropsWithChildren<{
     onSelected?: () => void;
     disabled?: boolean;
     selectable?: boolean;
-    description?: string | ReactNode;
+    description?: ReactNode;
     className?: string;
 }>;
 
@@ -279,10 +300,9 @@ const MenuItemContainer: FunctionComponent<MenuItemProps> = ({
             element,
             selectable: selectable === null ? !disabled : selectable,
         };
-    }, [element]);
+    }, [element, selectable]);
 
     const index = useDescendant(descendant, MenuDescendantContext);
-
     const isSelected = index === activeIndex;
 
     useEffect(() => {
@@ -348,7 +368,7 @@ type MenuItemButtonProps = PropsWithChildren<{
     disabled?: boolean;
     selectable?: boolean;
     className?: string;
-    description?: string;
+    description?: ReactNode;
 }>;
 
 export const MenuItemButton: FunctionComponent<MenuItemButtonProps> = ({
@@ -633,6 +653,20 @@ export const MenuItemSelect: FunctionComponent<MenuItemSelectProps> = ({
     const [activeOptionIndex, setActiveOptionIndex] = useState(0);
     const [itemDescription, setItemDescription] = useState<string | null>(null);
     const [activeValue, setActiveValue] = useState(value);
+    const [previousLength, setPreviousLength] = useState(0);
+
+    useEffect(() => {
+        if (previousLength === descendants.length) {
+            return;
+        }
+
+        setPreviousLength(descendants.length);
+
+        if (previousLength > 0 && descendants.length > 0) {
+            // reset descendants to ensure ordering is correct
+            setDescendants([]);
+        }
+    }, [descendants.length, previousLength]);
 
     const onItemConfirm = useCallback(() => {
         onConfirm && onConfirm(activeOptionIndex, activeValue);

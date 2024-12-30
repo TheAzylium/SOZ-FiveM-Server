@@ -49,4 +49,34 @@ export class TaxiProvider {
             }
         );
     }
+
+    @OnEvent(ServerEvent.BUS_NPC_PAY)
+    public async busPay(source: number, amount: number) {
+        const transfer = await this.bankService.transferBankMoney(
+            TaxiConfig.bankAccount.farm,
+            TaxiConfig.bankAccount.safe,
+            amount
+        );
+        if (!transfer) {
+            this.logger.error(
+                'Failed to transfer money to safe',
+                JSON.stringify({
+                    account_source: TaxiConfig.bankAccount.farm,
+                    account_destination: TaxiConfig.bankAccount.safe,
+                    amount: amount,
+                })
+            );
+        }
+
+        this.monitor.publish(
+            'job_carljr_bus_npc_course',
+            {
+                player_source: source,
+            },
+            {
+                amount: amount,
+                position: toVector3Object(GetEntityCoords(GetPlayerPed(source)) as Vector3),
+            }
+        );
+    }
 }

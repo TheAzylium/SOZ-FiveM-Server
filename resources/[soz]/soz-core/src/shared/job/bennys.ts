@@ -14,6 +14,17 @@ const orderZone: NamedZone = {
     debugPoly: false,
 };
 
+export const orderNorthZone: NamedZone = {
+    name: 'bennys_order',
+    center: [1908.29, 3090.14, 45.98],
+    length: 0.4,
+    width: 0.4,
+    minZ: 46.58,
+    maxZ: 46.98,
+    heading: 243.28,
+    debugPoly: false,
+};
+
 const defaultUpgradeConfiguration: VehicleConfiguration = {
     ...getDefaultVehicleConfiguration(),
     modification: {
@@ -94,7 +105,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 19, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 98, Texture: 17, Palette: 0 },
                 [Component.Shoes]: { Drawable: 46, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -107,7 +117,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 19, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 98, Texture: 3, Palette: 0 },
                 [Component.Shoes]: { Drawable: 46, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -120,7 +129,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 4, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 39, Texture: 1, Palette: 0 },
                 [Component.Shoes]: { Drawable: 46, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -133,7 +141,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 22, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 31, Texture: 2, Palette: 0 },
                 [Component.Shoes]: { Drawable: 25, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -148,7 +155,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 31, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 101, Texture: 17, Palette: 0 },
                 [Component.Shoes]: { Drawable: 47, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 2, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -161,7 +167,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 31, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 101, Texture: 3, Palette: 0 },
                 [Component.Shoes]: { Drawable: 47, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 3, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -174,7 +179,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 3, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 39, Texture: 1, Palette: 0 },
                 [Component.Shoes]: { Drawable: 47, Texture: 3, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 3, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
@@ -187,7 +191,6 @@ export const NewGarrayCloakroom: WardrobeConfig = {
                 [Component.Torso]: { Drawable: 23, Texture: 0, Palette: 0 },
                 [Component.Legs]: { Drawable: 30, Texture: 2, Palette: 0 },
                 [Component.Shoes]: { Drawable: 25, Texture: 0, Palette: 0 },
-                [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                 [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },

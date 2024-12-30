@@ -2,8 +2,8 @@ import { Once, OnceStep } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { emitRpc } from '../../core/rpc';
-import { wait } from '../../core/utils';
 import { JobPermission, JobType } from '../../shared/job';
+import { PositiveNumberValidator } from '../../shared/nui/input';
 import { Err, Ok } from '../../shared/result';
 import { RpcServerEvent } from '../../shared/rpc';
 import { InputService } from '../nui/input.service';
@@ -108,7 +108,7 @@ export class JobInvoiceProvider {
     }
 
     public async getTitleAndAmount(): Promise<[string, number]> {
-        const title = await this.inputService.askInput(
+        const title = await this.inputService.askInput<string>(
             {
                 title: 'Titre de la facture',
                 maxCharacters: 200,
@@ -126,28 +126,14 @@ export class JobInvoiceProvider {
             }
         );
 
-        await wait(100);
-
-        const amountString = await this.inputService.askInput(
+        const amount = await this.inputService.askInput(
             {
                 title: 'Montant de la facture',
                 maxCharacters: 10,
             },
-            input => {
-                if (input === null) {
-                    return Ok(input);
-                }
-
-                const amount = parseInt(input);
-
-                if (isNaN(amount) || amount <= 0) {
-                    return Err('Le montant doit être un nombre positif');
-                }
-
-                return Ok(input);
-            }
+            PositiveNumberValidator
         );
 
-        return [title, parseInt(amountString)];
+        return [title, amount];
     }
 }

@@ -334,28 +334,29 @@ local function EnableTarget()
 				else sleep += 20 end
 				if not success then
 					-- Zone targets
-					local closestDis, closestZone
-					for _, zone in pairs(Zones) do
-						if distance < (closestDis or Config.MaxDistance) and distance <= zone.targetoptions.distance and zone:isPointInside(coords) then
-							closestDis = distance
-							closestZone = zone
+					local validZones = {}
+					for key, zone in pairs(Zones) do
+						if distance < Config.MaxDistance and distance <= zone.targetoptions.distance and zone:isPointInside(coords) then
+							table.insert(validZones, zone)
 						end
 					end
 
-					if closestZone then
+					if next(validZones) ~= nil then
 						table_wipe(nuiData)
 						local slot = 0
-						for o, data in pairs(closestZone.targetoptions.options) do
-							if CheckOptions(data, entity, distance) then
-								slot += 1
-								sendData[slot] = data
-								sendData[slot].entity = entity
-								nuiData[slot] = {
-									icon = data.icon,
-									label = data.label,
-									color = data.color,
-									slot = slot
-								}
+						for _, zone in pairs(validZones) do
+							for o, data in pairs(zone.targetoptions.options) do
+								if CheckOptions(data, entity, distance) then
+									slot += 1
+									sendData[slot] = data
+									sendData[slot].entity = entity
+									nuiData[slot] = {
+										icon = data.icon,
+										label = data.label,
+										color = data.color,
+										slot = slot
+									}
+								end
 							end
 						end
 						if nuiData[1] then
@@ -366,7 +367,14 @@ local function EnableTarget()
 							DrawOutlineEntity(entity, true)
 							while targetActive and success do
 								_, coords, distance, _, _ = RaycastCamera(hit, GetEntityCoords(playerPed))
-								if not closestZone:isPointInside(coords) or distance > closestZone.targetoptions.distance then
+								local stillInZone = true
+								for _, zone in pairs(validZones) do
+									if not zone:isPointInside(coords) or distance > zone.targetoptions.distance then
+										stillInZone = false
+										break
+									end
+								end
+								if not stillInZone then
 									LeftTarget()
 									DrawOutlineEntity(entity, false)
 								elseif not hasFocus and (IsControlPressed(0, Config.MenuControlKey) or IsDisabledControlPressed(0, Config.MenuControlKey)) then

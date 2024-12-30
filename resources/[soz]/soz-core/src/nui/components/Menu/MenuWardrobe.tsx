@@ -97,7 +97,7 @@ export const MenuWardrobe: FunctionComponent<MenuWardrobeProps> = ({ wardrobe })
                             >
                                 {elems.map(item => {
                                     return (
-                                        <MenuItemSelectOption value={item}>
+                                        <MenuItemSelectOption value={item} key={item}>
                                             <div className="flex justify-between items-center">
                                                 <span>{item}</span>
                                             </div>

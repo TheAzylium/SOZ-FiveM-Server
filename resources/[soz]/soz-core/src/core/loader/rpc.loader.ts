@@ -33,7 +33,8 @@ export class RpcLoader {
             if (SOZ_CORE_IS_SERVER) {
                 rpcMethod = async (source: number, responseEventName: string, ...args: any[]): Promise<void> => {
                     const result = await method(source, ...args);
-                    TriggerClientEvent(responseEventName, source, result);
+                    // allow max 512 kbps here
+                    TriggerLatentClientEvent(responseEventName, source, 524288, result);
                 };
             } else {
                 rpcMethod = async (responseEventName: string, ...args: any[]): Promise<void> => {

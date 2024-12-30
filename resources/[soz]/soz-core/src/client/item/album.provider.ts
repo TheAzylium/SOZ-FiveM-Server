@@ -3,6 +3,7 @@ import { MenuType } from '@public/shared/nui/menu';
 import { Once, OnceStep, OnEvent, OnNuiEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
+import { TaxType } from '../../shared/bank';
 import { ClientEvent, NuiEvent } from '../../shared/event';
 import { BlipFactory } from '../blip';
 import { InventoryManager } from '../inventory/inventory.manager';
@@ -86,7 +87,7 @@ export class AlbumProvider {
                         label: 'Liste des Albums',
                         icon: 'c:/magasin/album.png',
                         action: () => {
-                            this.inventoryManager.openShopInventory(shopProducts, 'menu_shop_music');
+                            this.inventoryManager.openShopInventory(shopProducts, 'menu_shop_music', TaxType.SUPPLY);
                         },
                     },
                 ],

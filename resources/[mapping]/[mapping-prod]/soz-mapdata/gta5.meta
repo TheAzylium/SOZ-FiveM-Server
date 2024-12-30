@@ -430,7 +430,7 @@
 	  <fileType>TIME_FILE</fileType>
 	</Item>
 	<Item>
-	  <filename>common:/data/levels/gta5/weather.xml</filename>
+	  <filename>resources:/soz-mapdata/weather.xml</filename>
 	  <fileType>WEATHER_FILE</fileType>
 	</Item>
 	<Item>

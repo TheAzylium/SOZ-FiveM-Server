@@ -35,6 +35,15 @@ const PhoneWrapper: React.FC<PropsWithChildren> = memo(({ children }) => {
         return visibility ? 'translate-y-0' : 'translate-y-[1000px]';
     }, [available, settings, call, visibility, notifVisibility]);
 
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    const rightOffset = () => {
+        if (aspectRatio > 3.5 && window.innerWidth > 5000) {
+            return 'right-[106vh]';
+        } else {
+            return 'right-0';
+        }
+    };
+
     return (
         <div
             className="relative h-screen w-screen"
@@ -46,7 +55,7 @@ const PhoneWrapper: React.FC<PropsWithChildren> = memo(({ children }) => {
         >
             <div
                 className={cn(
-                    'fixed right-0 bottom-0 w-[500px] h-[1000px] bg-cover origin-bottom-right transition-any ease-in-out duration-300',
+                    `fixed ${rightOffset()} bottom-0 w-[500px] h-[1000px] bg-cover origin-bottom-right transition-any ease-in-out duration-300`,
                     wrapperClass
                 )}
                 style={{

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CWeaponModelInfo__InitDataList>
+	<InitDatas>
+
+		<!-- Flashlight  -->
+		<Item>
+			<modelName>w_me_uvflashlight</modelName>
+			<txdName>w_me_uvflashlight</txdName>
+			<ptfxAssetName>NULL</ptfxAssetName>
+			<lodDist value="50"/>
+		</Item>
+		<Item>
+			<modelName>w_me_uvflashlight_flash</modelName>
+			<txdName>w_me_uvflashlight_flash</txdName>
+			<ptfxAssetName>NULL</ptfxAssetName>
+			<lodDist value="50"/>
+		</Item>
+
+	</InitDatas>
+</CWeaponModelInfo__InitDataList>

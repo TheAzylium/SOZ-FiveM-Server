@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@core/decorators/injectable';
 import { ItemService } from '@public/client/item/item.service';
+import { TaxRepository } from '@public/client/repository/tax.repository';
+import { TaxType } from '@public/shared/bank';
 
 import { InventoryItem } from '../../shared/item';
 import { PlayerService } from '../player/player.service';
@@ -11,6 +13,9 @@ export class InventoryManager {
 
     @Inject(ItemService)
     private itemService: ItemService;
+
+    @Inject(TaxRepository)
+    private taxRepository: TaxRepository;
 
     public getItems(): InventoryItem[] {
         const items = this.playerService.getPlayer().items;
@@ -77,8 +82,10 @@ export class InventoryManager {
         }
     }
 
-    public openShopInventory(shopContent, shopHeaderTexture) {
-        TriggerEvent('inventory:client:openShop', shopContent, shopHeaderTexture);
+    public openShopInventory(shopContent, shopHeaderTexture, taxType?: TaxType) {
+        const taxValue = taxType ? this.taxRepository.getTaxValue(taxType) : 0;
+
+        TriggerEvent('inventory:client:openShop', shopContent, shopHeaderTexture, taxValue / 100, taxType);
     }
 
     public openInventory(inventoryType: string, inventoryIdentifier: string, context?: any) {

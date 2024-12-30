@@ -17,6 +17,10 @@ export const StateApp: FunctionComponent = () => {
         dispatch.player.update(data);
     });
 
+    useNuiEvent('player', 'UpdatePosition', data => {
+        dispatch.playerPosition.update(data);
+    });
+
     useNuiEvent('item', 'SetItems', items => {
         dispatch.item.set(items);
     });
@@ -55,6 +59,10 @@ export const StateApp: FunctionComponent = () => {
 
     useNuiEvent('drug', 'DeleteLocation', data => {
         dispatch.drugLocation.removeZone(data);
+    });
+
+    useNuiEvent('repository', 'Set', data => {
+        dispatch.repository.set(data.type, data.data);
     });
 
     return null;

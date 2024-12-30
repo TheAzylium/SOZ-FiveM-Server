@@ -415,9 +415,10 @@ const createAnimationLeafItem = (item: AnimationConfigItem): ReactElement => {
                     <div>{item.name}</div>
                 </div>
             }
+            titleWidth={60}
         >
             <MenuItemSelectOption value="play">Jouer</MenuItemSelectOption>
-            <MenuItemSelectOption value="favorite">Mettre en Raccourci</MenuItemSelectOption>
+            <MenuItemSelectOption value="favorite">Raccourci</MenuItemSelectOption>
         </MenuItemSelect>
     );
 };
@@ -432,13 +433,27 @@ const createWalkLeafItem = (item: WalkConfigItem): ReactElement => {
     }
 
     return (
-        <MenuItemButton
-            onConfirm={() => {
-                fetchNui(NuiEvent.PlayerMenuAnimationSetWalk, { walkItem: item });
+        <MenuItemSelect
+            onConfirm={(i, value) => {
+                if (value === 'play') {
+                    fetchNui(NuiEvent.PlayerMenuAnimationSetWalk, { walkItem: item });
+                } else if (value === 'favorite') {
+                    fetchNui(NuiEvent.PlayerMenuAnimationFavorite, {
+                        animationItem: item,
+                    });
+                }
             }}
+            title={
+                <div className="flex items-center">
+                    {item.icon && <div className="mr-2">{item.icon}</div>}
+                    <div>{item.name}</div>
+                </div>
+            }
+            titleWidth={60}
         >
-            {item.name}
-        </MenuItemButton>
+            <MenuItemSelectOption value="play">Jouer</MenuItemSelectOption>
+            <MenuItemSelectOption value="favorite">Raccourci</MenuItemSelectOption>
+        </MenuItemSelect>
     );
 };
 
@@ -477,7 +492,7 @@ const MenuJob: FunctionComponent<MenuJobProps> = ({ data }) => {
                     {jobGrades.map((grade, i) => {
                         return (
                             <MenuItemSubMenuLink key={i} id={`job_grade_${grade.id}`}>
-                                {grade.name} {!!grade.is_default && '(par défaut)'}
+                                {!!grade.owner && '⭐'} {grade.name} {!!grade.is_default && '(par défaut)'}
                             </MenuItemSubMenuLink>
                         );
                     })}
@@ -510,7 +525,7 @@ const MenuJob: FunctionComponent<MenuJobProps> = ({ data }) => {
                                         });
                                     }}
                                 >
-                                    Changer le salaire ({grade.salary}$)
+                                    💵 Changer le salaire ({grade.salary}$)
                                 </MenuItemButton>
                                 {!grade.is_default && (
                                     <MenuItemButton
@@ -525,12 +540,21 @@ const MenuJob: FunctionComponent<MenuJobProps> = ({ data }) => {
                                 )}
                                 <MenuItemButton
                                     onConfirm={() => {
+                                        fetchNui(NuiEvent.PlayerMenuJobGradeUpdateName, {
+                                            gradeId: grade.id,
+                                        });
+                                    }}
+                                >
+                                    ✎ Renommer le grade
+                                </MenuItemButton>
+                                <MenuItemButton
+                                    onConfirm={() => {
                                         fetchNui(NuiEvent.PlayerMenuJobGradeDelete, {
                                             grade,
                                         });
                                     }}
                                 >
-                                    Supprimer le grade
+                                    ❌ Supprimer le grade
                                 </MenuItemButton>
                                 {Object.keys(data.job.permissions).map(permission => {
                                     const permissionValue = data.job.permissions[permission];

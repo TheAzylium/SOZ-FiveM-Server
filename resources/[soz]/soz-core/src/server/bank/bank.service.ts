@@ -9,15 +9,26 @@ export class BankService {
     @Inject(PrismaService)
     private prismaService: PrismaService;
 
-    public transferBankMoney(source: string, target: string, amount: number): Promise<Result<boolean, string>> {
+    public transferBankMoney(
+        source: string,
+        target: string,
+        amount: number,
+        allowOverflow = false
+    ): Promise<Result<boolean, string>> {
         return new Promise(resolve => {
-            exports['soz-bank'].TransferMoney(source, target, amount, (success, reason) => {
-                if (success) {
-                    resolve(Ok(true));
-                } else {
-                    resolve(Err(reason));
-                }
-            });
+            exports['soz-bank'].TransferMoney(
+                source,
+                target,
+                amount,
+                (success, reason) => {
+                    if (success) {
+                        resolve(Ok(true));
+                    } else {
+                        resolve(Err(reason));
+                    }
+                },
+                allowOverflow
+            );
         });
     }
 
@@ -70,5 +81,9 @@ export class BankService {
 
     public clearAccount(targetAccount: string) {
         exports['soz-bank'].ClearAccount(targetAccount);
+    }
+
+    public getAccountMoney(accountName: string, type: 'money' | 'marked_money' = 'money'): number {
+        return exports['soz-bank'].GetAccountMoney(accountName, type);
     }
 }

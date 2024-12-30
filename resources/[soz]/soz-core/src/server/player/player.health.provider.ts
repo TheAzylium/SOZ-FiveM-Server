@@ -1,4 +1,8 @@
+import { PriceService } from '@public/server/bank/price.service';
 import { PlayerZombieProvider } from '@public/server/player/player.zombie.provider';
+import { TaxType } from '@public/shared/bank';
+import { BoxZone } from '@public/shared/polyzone/box.zone';
+import { Vector3 } from '@public/shared/polyzone/vector';
 
 import { OnEvent } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
@@ -28,6 +32,14 @@ const MAX_STAMINA_MAX = 150;
 const STRESS_MIN = 0;
 const STRESS_MAX = 100;
 
+const psyZone = new BoxZone([343.25, -1373.04, 37.98], 26.4, 20.2, {
+    heading: 50.12,
+    minZ: 36.98,
+    maxZ: 41.58,
+});
+
+const GYM_PRICE = 270;
+
 @Provider()
 export class PlayerHealthProvider {
     @Inject(PlayerService)
@@ -47,6 +59,9 @@ export class PlayerHealthProvider {
 
     @Inject(PlayerZombieProvider)
     private playerZombieProvider: PlayerZombieProvider;
+
+    @Inject(PriceService)
+    private priceService: PriceService;
 
     private yogaAndNaturalMultiplier: (source: number) => number = () => 1;
 
@@ -132,11 +147,14 @@ export class PlayerHealthProvider {
 
             if (stressTimeDiff > 30 * 60 * 1000) {
                 playerState.lastStressLevelUpdate = new Date();
+                const ped = GetPlayerPed(source);
+                const coords = GetEntityCoords(ped) as Vector3;
+                const psyCoef = psyZone.isPointInside(coords) ? 2 : 1;
 
                 datas.stress_level = this.playerService.getIncrementedMetadata(
                     player,
                     'stress_level',
-                    this.yogaAndNaturalMultiplier(source) * STRESS_RATE,
+                    this.yogaAndNaturalMultiplier(source) * STRESS_RATE * psyCoef,
                     STRESS_MIN,
                     STRESS_MAX
                 );
@@ -239,7 +257,7 @@ export class PlayerHealthProvider {
     }
 
     @OnEvent(ServerEvent.PLAYER_HEALTH_GYM_SUBSCRIBE)
-    public onGymSubscribe(source: number) {
+    public async onGymSubscribe(source: number) {
         const player = this.playerService.getPlayer(source);
 
         if (!player) {
@@ -250,7 +268,9 @@ export class PlayerHealthProvider {
             return;
         }
 
-        if (this.playerMoneyService.remove(source, 300)) {
+        const displayPrice = await this.priceService.getPrice(GYM_PRICE, TaxType.SERVICE);
+
+        if (await this.playerMoneyService.buy(source, GYM_PRICE, TaxType.SERVICE)) {
             this.playerService.setPlayerMetadata(
                 source,
                 'gym_subscription_expire_at',
@@ -259,13 +279,13 @@ export class PlayerHealthProvider {
 
             this.notifier.notify(
                 source,
-                `Damn la team Los Santos ! Merci à toi d'avoir acheté notre abonnement de sport MUSCLE PEACH d'une semaine à 300$ ! Tu peux désormais te changer dans nos vestiaires.`,
+                `Damn la team Los Santos ! Merci à toi d'avoir acheté notre abonnement de sport MUSCLE PEACH d'une semaine à ${displayPrice}$ ! Tu peux désormais te changer dans nos vestiaires.`,
                 'success'
             );
         } else {
             this.notifier.notify(
                 source,
-                `Tu ne possèdes pas 300$ ! Si tu souhaites profiter de nos installations et de notre vestiaire, reviens avec de l'argent.`,
+                `Tu ne possèdes pas ${displayPrice}$ ! Si tu souhaites profiter de nos installations et de notre vestiaire, reviens avec de l'argent.`,
                 'error'
             );
         }

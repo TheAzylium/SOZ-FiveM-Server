@@ -79,6 +79,17 @@ QBShared.Items = {
         ['description'] = 'Pour voir dans le noir !',
         ['illustrator'] = '.MimiBloops',
     },
+    ['weapon_uvflashlight'] = {
+            ['name'] = 'weapon_uvflashlight',
+            ['label'] = 'Lampe UV Scientifique',
+            ['weight'] = 500,
+            ['type'] = 'weapon',
+            ['ammotype'] = nil,
+            ['unique'] = true,
+            ['useable'] = false,
+            ['description'] = 'Idéale pour se croire dans un film.',
+            ['illustrator'] = '.Rigonkmalk',
+        },
     ['weapon_golfclub'] = {
         ['name'] = 'weapon_golfclub',
         ['label'] = 'Club de golf',
@@ -824,6 +835,17 @@ QBShared.Items = {
         ['description'] = 'Fusil d\'assaut tactique.',
         ['illustrator'] = '.NariieL'
     },
+    ['weapon_battlerifle'] = {
+        ['name'] = 'weapon_battlerifle',
+        ['label'] = 'Fusil de combat',
+        ['weight'] = 4000,
+        ['type'] = 'weapon',
+        ['ammotype'] = 'AMMO_RIFLE',
+        ['unique'] = true,
+        ['useable'] = true,
+        ['description'] = 'Fusil de combat.',
+        ['illustrator'] = '.Laikker'
+    },
 
     -- Light Machine Guns
     ['weapon_mg'] = {
@@ -1059,6 +1081,17 @@ QBShared.Items = {
         ['ammotype'] = 'AMMO_FLARE',
         ['unique'] = true,
         ['useable'] = false,
+    },
+    ['weapon_snowlauncher'] = {
+        ['name'] = 'weapon_snowlauncher',
+        ['label'] = 'Lance boule de neige',
+        ['weight'] = 4000,
+        ['type'] = 'weapon',
+        ['ammotype'] = nil,
+        ['unique'] = true,
+        ['useable'] = false,
+        ['description'] = 'Version de Noel du lance-grenades compact.',
+        ['illustrator'] = '.Laikker'
     },
 
     -- Throwables
@@ -1707,6 +1740,98 @@ QBShared.Items = {
         },
         ['illustrator'] = '.Poulpito',
     },
+    ['bbq_chips'] = {
+        ['name'] = 'bbq_chips',
+        ['label'] = 'Chips saveur barbecue',
+        ['weight'] = 300,
+        ['type'] = 'food',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['durability'] = 2,
+        ['combinable'] = nil,
+        ['description'] = 'La plaisir du barbecue entre amis, sans amis.',
+        ['nutrition'] = {
+            ['hunger'] = 20,
+            ['thirst'] = -5,
+            ['stamina'] = 0,
+            ['fiber'] = -1,
+            ['lipid'] = 1,
+            ['sugar'] = 1,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['illustrator'] = '.Crash',
+    },
+    ['onion_chips'] = {
+        ['name'] = 'onion_chips',
+        ['label'] = 'Chips saveur oignon',
+        ['weight'] = 300,
+        ['type'] = 'food',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['durability'] = 2,
+        ['combinable'] = nil,
+        ['description'] = 'Avec ça les femmes tomberont devant vous !',
+        ['nutrition'] = {
+            ['hunger'] = 20,
+            ['thirst'] = -5,
+            ['stamina'] = 0,
+            ['fiber'] = -1,
+            ['lipid'] = 1,
+            ['sugar'] = 1,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['illustrator'] = '.Crash',
+    },
+    ['water_chips'] = {
+        ['name'] = 'water_chips',
+        ['label'] = 'Chips saveur H2O',
+        ['weight'] = 300,
+        ['type'] = 'food',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['durability'] = 2,
+        ['combinable'] = nil,
+        ['description'] = 'Vous ne vous sentirez jamais autant hydraté !',
+        ['nutrition'] = {
+            ['hunger'] = 20,
+            ['thirst'] = -2,
+            ['stamina'] = 0,
+            ['fiber'] = -1,
+            ['lipid'] = 1,
+            ['sugar'] = 1,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['illustrator'] = '.Crash',
+    },
+    ['zwix_candy'] = {
+        ['name'] = 'zwix_candy',
+        ['label'] = 'Zwix',
+        ['weight'] = 100,
+        ['type'] = 'food',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['durability'] = 2,
+        ['combinable'] = nil,
+        ['description'] = 'Lequel mangeriez-vous en premier ?',
+        ['nutrition'] = {
+            ['hunger'] = 4,
+            ['thirst'] = 0,
+            ['stamina'] = 0,
+            ['fiber'] = 0,
+            ['lipid'] = 1,
+            ['sugar'] = 2,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['illustrator'] = '.Crash',
+    },
 
     -- Drink ITEMS
     ['water_bottle'] = {
@@ -1819,6 +1944,60 @@ QBShared.Items = {
             coords = { x = 0.01, y = -0.01, z = 0.01 },
         },
         ['illustrator'] = '.Sniteur',
+    },
+    ['chocolate'] = {
+        ['name'] = 'chocolate',
+        ['label'] = 'Chocolat Chaud',
+        ['weight'] = 300,
+        ['type'] = 'drink',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'Grande source de réconfort.',
+        ['nutrition'] = {
+            ['hunger'] = 10,
+            ['thirst'] = 10,
+            ['stamina'] = 0,
+            ['fiber'] = 0,
+            ['lipid'] = 0.5,
+            ['sugar'] = 0.5,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['prop'] = {
+            model = 'prop_fib_coffee',
+            bone = 28422,
+            coords = { x = 0.01, y = -0.01, z = 0.01 },
+        },
+        ['illustrator'] = '.Gaunt',
+    },
+    ['tea'] = {
+        ['name'] = 'tea',
+        ['label'] = 'Thé',
+        ['weight'] = 300,
+        ['type'] = 'drink',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'Grande source de théine.',
+        ['nutrition'] = {
+            ['hunger'] = 10,
+            ['thirst'] = 10,
+            ['stamina'] = 0,
+            ['fiber'] = 0,
+            ['lipid'] = 0.5,
+            ['sugar'] = 0.5,
+            ['protein'] = 0,
+            ['alcohol'] = 0,
+        },
+        ['prop'] = {
+            model = 'prop_fib_coffee',
+            bone = 28422,
+            coords = { x = 0.01, y = -0.01, z = 0.01 },
+        },
+        ['illustrator'] = '.Crash',
     },
     ['kurkakola'] = {
         ['name'] = 'kurkakola',
@@ -3421,7 +3600,7 @@ QBShared.Items = {
         ['unique'] = false,
         ['useable'] = true,
         ['shouldClose'] = true,
-        ['durability'] = 21,
+        ['durability'] = 14,
         ['combinable'] = nil,
         ['description'] = 'Utile pour réanimer',
         ['illustrator'] = '.Smogogo'
@@ -3438,6 +3617,28 @@ QBShared.Items = {
         ['combinable'] = nil,
         ['description'] = 'Utile pour faire une prise de sang',
         ['illustrator'] = '.Smogogo'
+    },
+    ['stretcher'] = {
+        ['name'] = 'stretcher',
+        ['label'] = 'Brancard',
+        ['weight'] = 6000,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['description'] = 'Sert à porter des blessés, des malades, des fardeaux, ou les trois en même temps.',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['wheelchair'] = {
+        ['name'] = 'wheelchair',
+        ['label'] = 'Chaise roulante',
+        ['weight'] = 6000,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['description'] = "Fauteuil muni de roues, ou alors roues munies d'un fauteuil, on saiy pas trop",
+        ['illustrator'] = '.Sniteur'
     },
     ['used_bloodbag'] = {
         ['name'] = 'used_bloodbag',
@@ -3512,7 +3713,7 @@ QBShared.Items = {
         ['unique'] = false,
         ['useable'] = false,
         ['shouldClose'] = true,
-        ['durability'] = 60,
+        ['expiresIn'] = 1440,
         ['combinable'] = nil,
         ['description'] = 'Utile pour respirer.',
         ['illustrator'] = '.TheSeds'
@@ -3526,7 +3727,7 @@ QBShared.Items = {
         ['unique'] = false,
         ['useable'] = false,
         ['shouldClose'] = true,
-        ['durability'] = 60,
+        ['expiresIn'] = 1440,
         ['combinable'] = nil,
         ['description'] = 'Attention à la crise.',
         ['illustrator'] = '.TheSeds'
@@ -3540,10 +3741,34 @@ QBShared.Items = {
         ['unique'] = false,
         ['useable'] = false,
         ['shouldClose'] = true,
-        ['durability'] = 60,
+        ['expiresIn'] = 1440,
         ['combinable'] = nil,
         ['description'] = 'Ca pourrait t\'en couter un.',
         ['illustrator'] = '.TheSeds'
+    },
+    ['expired_organ'] = {
+        ['name'] = 'expired_organ',
+        ['label'] = 'Organe périmé',
+        ['weight'] = 1000,
+        ['type'] = 'organ',
+        ['unique'] = false,
+        ['useable'] = false,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'A première vue, ca fonctionne plus.',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['morphine'] = {
+        ['name'] = 'morphine',
+        ['label'] = 'Morphine',
+        ['weight'] = 200,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'Drogue ou médicament, ou un peu des deux.',
+        ['illustrator'] = '.Sniteur'
     },
     ['antidepressant'] = {
         ['name'] = 'antidepressant',
@@ -3847,6 +4072,18 @@ QBShared.Items = {
         ['description'] = 'VOUS NE PASSEREZ PAAAAAAAAAS !',
         ['illustrator'] = '.Sniteur'
     },
+    ['speed_speed_sign'] = {
+        ['name'] = 'speed_speed_sign',
+        ['label'] = 'Panneau de vitesse',
+        ['weight'] = 1000,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['useable'] = false,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'You shall not pass !',
+        ['illustrator'] = '.Sniteur'
+    },
 
     -- Firework Tools
     ['firework1'] = {
@@ -4040,6 +4277,136 @@ QBShared.Items = {
         ['combinable'] = nil,
         ['description'] = '',
         ['illustrator'] = '.LuckyG'
+    },
+    ['evidence_blood'] = {
+        ['name'] = 'evidence_blood',
+        ['durability'] = 30,
+        ['label'] = 'Échantillon sanguin non-identifié',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['evidence_bullet'] = {
+        ['name'] = 'evidence_bullet',
+        ['durability'] = 30,
+        ['label'] = 'Échantillon balistique non-identifié',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['evidence_glass'] = {
+        ['name'] = 'evidence_glass',
+        ['durability'] = 30,
+        ['label'] = 'Échantillon de verre non-identifié',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['evidence_fingerprint'] = {
+        ['name'] = 'evidence_fingerprint',
+        ['durability'] = 30,
+        ['label'] = 'Empreinte non-identifiée',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['evidence_drug'] = {
+        ['name'] = 'evidence_drug',
+        ['durability'] = 30,
+        ['label'] = 'Échantillon de traces de drogue non-identifiée',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['evidence_powder'] = {
+        ['name'] = 'evidence_powder',
+        ['durability'] = 30,
+        ['label'] = 'Échantillon de traces de poudre non-identifiée',
+        ['weight'] = 25,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = '',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['fingerprint_collector'] = {
+        ['name'] = 'fingerprint_collector',
+        ['label'] = 'Collecteur d\'empreintes',
+        ['weight'] = 250,
+        ['type'] = 'item',
+        ['unique'] = true,
+        ['useable'] = false,
+        ['shouldClose'] = false,
+        ['combinable'] = nil,
+        ['description'] = 'Sert à collecter des empreintes.',
+        ['illustrator'] = '.Sniteur',
+    },
+    ['scientist_camera'] = {
+        ['name'] = 'scientist_camera',
+        ['label'] = 'Appareil photo scientifique',
+        ['weight'] = 500,
+        ['type'] = 'item',
+        ['unique'] = true,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'Immortalisez vos découvertes.',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['scientist_photo'] = {
+        ['name'] = 'scientist_photo',
+        ['label'] = 'Photo scientifique',
+        ['durability'] = 30,
+        ['weight'] = 50,
+        ['type'] = 'evidence',
+        ['unique'] = true,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['canShow'] = true,
+        ['description'] = 'Photo prise avec un appareil photo scientifique.',
+        ['illustrator'] = '.Sniteur'
+    },
+    ['detective_board'] = {
+        ['name'] = 'detective_board',
+        ['label'] = 'Dossier d\'enquête scientifique',
+        ['weight'] = 250,
+        ['type'] = 'item',
+        ['storageItemType'] = 'evidence',
+        ['openStorageLabel'] = 'Stockage des preuves',
+        ['unique'] = true,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = 'Votre antre mental regorge d\'idées. Lorsque vous ouvrez ce dossier, un tableau imaginaire sert à structurer vos pensées.',
+        ['illustrator'] = '.Sniteur'
     },
     ['n_camera'] = {
         ['name'] = 'n_camera',
@@ -4364,7 +4731,8 @@ QBShared.Items = {
         ['combinable'] = nil,
         ['description'] = '',
         ['carrybox'] = 'prop_log_01',
-        ['illustrator'] = '.Omega'
+        ['illustrator'] = '.Omega',
+        ['throwable'] = true
     },
     ['wood_plank'] = {
         ['name'] = 'wood_plank',
@@ -5232,7 +5600,7 @@ QBShared.Items = {
         expiresIn = 240, -- in minutes
         shouldClose = true,
         combinable = nil,
-        description = "La douce alliance du café et du whsiky.",
+        description = "La douce alliance du café et du whisky.",
         ['nutrition'] = {
             ['hunger'] = 0,
             ['thirst'] = 5,
@@ -7305,6 +7673,18 @@ QBShared.Items = {
         ['description'] = 'Ne laissez pas les accidents vous prendre de court pour 2023',
         ['illustrator'] = '.NariieL',
     },
+    ['lsmc_calendar_2024'] = {
+        ['name'] = 'lsmc_calendar_2024',
+        ['label'] = 'Calendrier LSMC 2024',
+        ['weight'] = 150,
+        ['type'] = 'item',
+        ['unique'] = true,
+        ['useable'] = true,
+        ['shouldClose'] = true,
+        ['combinable'] = nil,
+        ['description'] = "Un calendrier resplendissant et jovial, à l'image des médecins du LSMC qu'il représente !",
+        ['illustrator'] = '.Dheyline',
+    },
     ['newcomer_ticket'] = {
         ['name'] = 'newcomer_ticket',
         ['label'] = 'Ticket nouvel arrivant',
@@ -7461,6 +7841,15 @@ QBShared.Items = {
         ['useable'] = true,
         ['combinable'] = nil,
         ['description'] = 'L\'arme idéale contre les chauffards. ',
+    },
+    ['radar'] = {
+        ['name'] = 'radar',
+        ['label'] = 'Radar',
+        ['weight'] = 10000,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['useable'] = true,
+        ['description'] = 'Vitesse = argent',
     },
     ["breathanalyzer"] = {
         ['name'] = "breathanalyzer",
@@ -8378,7 +8767,7 @@ QBShared.Items = {
         ['drug_pot'] = {
             ['target'] = 'toxic_flesh_pot',
             ['ingredient'] = 'toxic_flesh',
-            ['nbIngredient'] = 20,
+            ['nbIngredient'] = 18,
         }
     },
     ['toxic_flesh_pot'] = {
@@ -8476,7 +8865,7 @@ QBShared.Items = {
         ['drug_pot'] = {
             ['target'] = 'ciguatoxine_tank',
             ['ingredient'] = 'ciguatoxine',
-            ['nbIngredient'] = 20,
+            ['nbIngredient'] = 10,
         }
     },
     ['ciguatoxine_tank'] = {
@@ -8653,6 +9042,17 @@ QBShared.Items = {
         ['type'] = 'item',
         ['description'] = "Prix du gagnant du festival thématisé autour des courses gyrophares allumés en 2023. Désigné ainsi meilleur pilote de véhicules d'intervention.",
         ['illustrator'] = '.Poulpito',
+    },
+    ['trophee_mariuskart_2024'] = {
+        ['name'] = 'trophee_mariuskart_2024',
+        ['label'] = 'Trophée MariusKart 2024',
+        ['weight'] = 5000,
+        ['useable'] = false,
+        ['type'] = 'item',
+        ['unique'] = false,
+        ['combinable'] = nil,
+        ['description'] = 'Grand gagnant du championnat de Kart réalisé par Atkins Event & Château Marius.',
+        ['illustrator'] = '.Zedhekya'
     },
     ['summer_race_2023_gold_medal'] = {
         ['name'] = 'summer_race_2023_gold_medal',
@@ -9522,6 +9922,7 @@ QBShared.Items = {
         ['name'] = 'weapon_certificate',
         ['label'] = "Certificat de confection d'arme",
         ['weight'] = 50,
+        ['expiresIn'] = 120,
         ['useable'] = false,
         ['type'] = 'item',
         ['shouldClose'] = false,
@@ -9534,6 +9935,7 @@ QBShared.Items = {
         ['name'] = 'ammo_certificate',
         ['label'] = "Certificat de confection de munitions",
         ['weight'] = 50,
+        ['expiresIn'] = 120,
         ['useable'] = false,
         ['type'] = 'item',
         ['shouldClose'] = false,
@@ -9546,6 +9948,7 @@ QBShared.Items = {
         ['name'] = 'utilitary_certificate',
         ['label'] = "Certificat de confection d'utilitaire",
         ['weight'] = 50,
+        ['expiresIn'] = 120,
         ['useable'] = false,
         ['type'] = 'item',
         ['shouldClose'] = false,
@@ -13728,8 +14131,24 @@ QBShared.Items = {
         ['sozedex_id'] = 190,
         ['price'] = 75,
      },
-    
-    
+    ['rotten_fish'] = {
+        ['name'] = "rotten_fish",
+        ['label'] = "Poisson pourri",
+        ['useable'] = false,
+        ['weight'] = 100,
+        ['type'] = 'fish',
+        ['fish_generation'] = 'classic',
+        ['description'] = "Vestige oublié du frigo, un teint verdâtre et une odeur enivrante de marécage et de fromage oublié. Ses dents jaunies et ses yeux vitreux ajoutent au charme. Idéal pour faire fuir les invités indésirables !",
+        ['illustrator'] = ".Sniteur",
+        ['min_weight'] = 200,
+        ['max_weight'] = 200,
+        ['min_length'] = 100,
+        ['max_length'] = 100,
+        ['sozedex_id'] = 191,
+        ['price'] = 1,
+     },
+
+
     --- Halloween
 
     ['halloween_horrostine'] = {

@@ -1,11 +1,11 @@
-import { Once, OnceStep, OnNuiEvent } from '@core/decorators/event';
+import { Once, OnceStep, OnEvent, OnNuiEvent } from '@core/decorators/event';
 import { Inject } from '@core/decorators/injectable';
 import { Provider } from '@core/decorators/provider';
 import { emitRpc } from '@core/rpc';
 import { wait } from '@core/utils';
 import { Apartment } from '@public/shared/housing/housing';
 
-import { NuiEvent, ServerEvent } from '../../shared/event';
+import { ClientEvent, NuiEvent, ServerEvent } from '../../shared/event';
 import { Feature, isFeatureEnabled } from '../../shared/features';
 import { JobPermission, JobType } from '../../shared/job';
 import { MenuType } from '../../shared/nui/menu';
@@ -259,7 +259,7 @@ export class VehicleGarageProvider {
                             return false;
                         }
 
-                        const value = await this.inputService.askInput(
+                        const value = await this.inputService.askInput<number>(
                             {
                                 title: "Delai d'immobilisation du véhicule en heures (0-72)",
                                 defaultValue: '',
@@ -267,18 +267,17 @@ export class VehicleGarageProvider {
                             },
                             value => {
                                 if (!value) {
-                                    return Ok(true);
+                                    return Ok(null);
                                 }
                                 const int = parseInt(value);
                                 if (isNaN(int) || int < 0 || int > 72) {
                                     return Err('Valeur incorrecte');
                                 }
-                                return Ok(true);
+                                return Ok(int);
                             }
                         );
 
-                        const intValue = parseInt(value);
-                        if (isNaN(intValue)) {
+                        if (value === null) {
                             return;
                         }
 
@@ -288,30 +287,28 @@ export class VehicleGarageProvider {
                         const vehConfig = this.vehicleRepository.getByModelHash(model);
                         const maxPrice = Math.round(vehConfig.price * 0.15);
 
-                        const cost = await this.inputService.askInput(
+                        const cost = await this.inputService.askInput<number>(
                             {
                                 title: `Coût de sortie (0-${maxPrice})`,
-                                defaultValue: '',
                                 maxCharacters: 30,
                             },
                             value => {
                                 if (!value) {
-                                    return Ok(true);
+                                    return Ok(null);
                                 }
                                 const int = parseInt(value);
                                 if (isNaN(int) || int < 0 || int > maxPrice) {
                                     return Err('Valeur incorrecte');
                                 }
-                                return Ok(true);
+                                return Ok(int);
                             }
                         );
 
-                        const intCost = parseInt(cost);
-                        if (isNaN(intCost)) {
+                        if (cost === null) {
                             return;
                         }
 
-                        await this.doStoreVehicle(closestPound[0], closestPound[1], entity, intValue, intCost);
+                        await this.doStoreVehicle(closestPound[0], closestPound[1], entity, value, cost);
                     },
                     job: { lspd: 0, bcso: 0, sasp: 0 },
                     blackoutGlobal: true,
@@ -488,7 +485,6 @@ export class VehicleGarageProvider {
         const input = await this.inputService.askInput(
             {
                 title: 'Nom du véhicule',
-                defaultValue: '',
                 maxCharacters: 30,
             },
             input => {
@@ -500,7 +496,7 @@ export class VehicleGarageProvider {
                     return Err('Le nom doit faire au plus 30 caractères.');
                 }
 
-                return Ok(true);
+                return Ok(input);
             }
         );
 
@@ -636,5 +632,11 @@ export class VehicleGarageProvider {
                 },
             }
         );
+    }
+
+    @OnEvent(ClientEvent.VEHICLE_GARAGE_UPDATE)
+    public onUpdate(identifier: string, garage: Garage) {
+        const garageList = this.garageRepository.get();
+        garageList[identifier] = garage;
     }
 }

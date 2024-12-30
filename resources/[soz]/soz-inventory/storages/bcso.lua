@@ -18,14 +18,31 @@ Config.Storages["bcso_armory"] = {
     offsetUpZ = 1.5,
 }
 
-Config.Storages["bcso_seizure"] = {
+Config.Storages["bcso_seizure1"] = {
     label = "Saisie BCSO",
     type = "seizure",
     owner = "bcso",
-    position = vector3(1845.65, 3693.43, 30.27),
-    size = vec2(8, 12.0),
-    heading = 212.0,
-    offsetUpZ = 1.5,
+    position = vector3(1849.40, 3694.20, 30.27),
+    size = vec2(3.80, 5.20),
+    heading = 120.0,
+}
+
+Config.Storages["bcso_seizure2"] = {
+    label = "Saisie BCSO",
+    type = "seizure",
+    owner = "bcso",
+    position = vector3(1842.50, 3689.75, 30.27),
+    size = vec2(6.20, 3.20),
+    heading = 30.0,
+}
+
+Config.Storages["bcso_seizure3"] = {
+    label = "Saisie BCSO",
+    type = "seizure",
+    owner = "bcso",
+    position = vector3(1840.28, 3694.13, 30.27),
+    size = vec2(3.40, 3.50),
+    heading = 30.0,
 }
 
 Config.Storages["bcso_boss_storage"] = {
@@ -46,6 +63,15 @@ Config.Storages["bcso_storage"] = {
     size = vec2(1.5, 3.0),
     heading = 28.0,
     offsetUpZ = 1.5,
+}
+
+Config.Storages["bcso_evidence_storage"] = {
+    label = "Coffre de preuves BCSO",
+    type = "evidence_storage",
+    owner = "bcso",
+    position = vector3(1847.09, 3691.61, 34.27),
+    size = vec2(2.0, 1.80),
+    heading = 208.54,
 }
 
 Config.Storages["bcso_ammo"] = {

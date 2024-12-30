@@ -30,7 +30,23 @@ type Props = {
     price?: number
     undraggable?: boolean;
 }
-
+function type_label(type: string | undefined): string {
+    if (!type) return 'inconnu';
+    if (type == 'evidence_glass') {
+        return 'Verre';
+    } else if (type == 'evidence_blood') {
+        return 'Sang';
+    } else if (type == 'evidence_bullet') {
+        return 'Balle';
+    } else if (type == 'evidence_drug') {
+        return 'Trace de drogue';
+    } else if (type == 'evidence_fingerprint') {
+        return 'Empreinte';
+    } else if (type == 'evidence_powder') {
+        return 'Poudre';
+    }
+    return 'inconnu';
+}
 const FORMAT_LOCALIZED: Intl.DateTimeFormatOptions = {day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric"}
 const FORMAT_CURRENCY: Intl.NumberFormatOptions = {style: "currency", currency: 'USD', maximumFractionDigits: 0}
 
@@ -59,6 +75,7 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
         }
 
         let itemLabel = item?.metadata?.label ? `${item.metadata.label} <small>${item.label}</small>` : item.label;
+        let itemDescription = item.description || '';
         let itemExtraLabel = '';
         let contextExtraLabel = '';
         let secondaryDescription = '';
@@ -118,6 +135,60 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
         } else if (item?.metadata?.type && !item?.metadata?.label) {
             itemExtraLabel += ` [${item?.metadata?.type}]`
         }
+        if (item?.type === 'evidence' && item.name != 'scientist_photo' && item.metadata?.expiration) {
+            const currentTime = new Date().getTime();
+            const expiration = new Date(item.metadata['expiration']).getTime();
+            if (!item?.metadata?.evidenceInfos?.isAnalyzed) {
+                if (item?.metadata?.evidenceInfos?.type === 'evidence_fingerprint') {
+                    if (currentTime > expiration) {
+                        itemLabel = `Empreinte périmée`
+                    } else {
+                        itemLabel = `Empreinte non analysée`
+                        itemDescription += `Cette empreinte a été récupérée par la police scientifique, elle se doit être analysée afin d'y découvrir ses caractéristiques.`;
+                    }
+                } else {
+                    if (currentTime > expiration) {
+                        itemLabel = `Échantillon de ${type_label(item.metadata?.evidenceInfos?.type).toLowerCase()} périmé`
+                    } else {
+                        itemLabel = `Échantillon de ${type_label(item.metadata?.evidenceInfos?.type).toLowerCase()} non-analysé`
+                        itemDescription += `Cet échantillon a été récupéré par la police scientifique, il se doit être analysé afin d'y découvrir ses caractéristiques.`;
+                    }
+                }
+                if (currentTime <= expiration) {
+                    secondaryDescription += `<b>Type: </b><span>${type_label(item.metadata?.evidenceInfos?.type)}</span><br>`
+                    secondaryDescription += `<b>Récupéré dans la zone de: </b><span>Inconnu</span><br>`
+                    secondaryDescription += `<b>Sur: </b><span>Inconnu</span><br>`
+                }
+            } else {
+                if (item?.metadata?.evidenceInfos?.type === 'evidence_fingerprint') {
+                    if (currentTime > expiration) {
+                        itemLabel = `Empreinte périmée`
+                    } else {
+                        itemLabel = `Empreinte analysée`
+                        itemDescription += `Cette empreinte a été récupérée par la police scientifique et analysée.`;
+                    }
+                } else {
+                    if (currentTime > expiration) {
+                        itemLabel = `Échantillon de ${type_label(item.metadata?.evidenceInfos?.type).toLowerCase()} périmé`
+                    } else {
+                        itemLabel = `Échantillon de ${type_label(item.metadata?.evidenceInfos?.type).toLowerCase()} analysé`
+                        itemDescription += `Cet échantillon a été récupéré par la police scientifique et analysé.`;
+                    }
+                }
+                if (currentTime <= expiration) {
+                    secondaryDescription += `<b>Type: </b><span>${type_label(item.metadata?.evidenceInfos?.type)}</span><br>`
+                    secondaryDescription += `<b>Récupéré dans la zone de: </b><span>${item.metadata?.evidenceInfos?.zone}</span><br>`
+                    secondaryDescription += `<b>Sur: </b><span>${item.metadata?.evidenceInfos?.support}</span><br>`
+                    secondaryDescription += `<b>Informations: </b><span>${item.metadata.evidenceInfos.generalInfo}</span><br>`
+                }
+            }
+            if (item.metadata.evidenceInfos?.quantity) {
+                secondaryDescription += `<b>Quantité: </b><span>${item.metadata.evidenceInfos?.quantity}</span><br>`
+            }
+            if (item.metadata.creation) {
+                secondaryDescription += `<b>Récupéré le: </b><span>${new Date(item.metadata.creation).toLocaleDateString('fr-FR', FORMAT_LOCALIZED)}</span><br>`
+            }
+        }
 
         if (item?.metadata?.crafted) {
             itemExtraLabel += ` [Illégal]`
@@ -131,8 +202,8 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
 
         onItemHover?.(`
             <div><b>${itemLabel}</b> <span>${itemExtraLabel}</span></div>
-            ${item.description ? item.description : ''}
-            <div>${secondaryDescription}</div>
+            <div>${itemDescription}</div>
+            ${secondaryDescription}
             <div><span>${contextExtraLabel}</span> <span>${illustrator}</span></div>
         `);
     }, [item, onItemHover]);
@@ -210,7 +281,7 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
                         alt=""
                         className={style.Icon}
                         src={itemIcon(item)}
-                        onError={(e) => e.currentTarget.src = 'https://placekitten.com/200/200'}
+                        onError={(e) => e.currentTarget.src = 'https://cfx-nui-soz-core/public/images/default/cat.webp'}
                     />
                 </DragOverlay>, document.body
             )
@@ -227,7 +298,7 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
             )
         }
     }
-
+    
     return (
         <div ref={itemRef} className={clsx({
             [style.Money]: !!money,
@@ -247,7 +318,7 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
                     <>
                         {price ?
                         <span className={style.Amount}>
-                            {price > 1 && price} $
+                            {price > 0 && price} $
                         </span> : <span className={style.Amount}>
                             {item.amount > 1 && item.amount}
                         </span>}
@@ -265,7 +336,7 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
                             alt=""
                             className={style.Icon}
                             src={itemIcon(item)}
-                            onError={(e) => e.currentTarget.src = 'https://placekitten.com/200/200'}
+                            onError={(e) => e.currentTarget.src = 'https://cfx-nui-soz-core/public/images/default/cat.webp'}
                         />
                     </>
                 )}
@@ -309,14 +380,21 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
 
             {interactAction && (
                 <div ref={contextRef} className={style.ContextMenu}
-                     style={{display: `${contextData.visible ? 'block' : 'none'}`, left: contextData.posX, top: contextData.posY}}>
+                     style={{display: `${contextData.visible ? 'block' : 'none'}`, left: contextData.posX, top: contextData.posY, position:'fixed'}}>
                     <div className={style.OptionsList}>
                         {item && (item.useable || item.type === 'weapon') && <li className={style.OptionListItem} onClick={createInteractAction('useItem')}>
                             {item.type === 'weapon' ? 'Équiper' : item.usableLabel || 'Utiliser'}
 
                         </li>}
+                        {item && item.canShow && <li className={style.OptionListItem} onClick={createInteractAction('showItem')}>
+                            Montrer
+                        </li>
+                        }
                         {item && item.type !== 'card' && <li className={style.OptionListItem} onClick={createInteractAction('giveItem')}>
                             {item.giveLabel || 'Donner'}
+                        </li>}
+                        {item && (item.throwable) && <li className={style.OptionListItem} onClick={createInteractAction('throwItem')}>
+                            Jeter
                         </li>}
                         {(item && item.type === 'weapon') && (
                             <>
@@ -328,9 +406,14 @@ const Draggable: FunctionComponent<Props> = ({ id, containerName, item, money, i
                                 </li>
                             </>
                         )}
-                        {(item && item.type === 'crate' && item.metadata?.crateElements?.length) && (
+                        {(item && ((item.type === 'crate' && item.metadata?.crateElements?.length) || (item.name === 'detective_board' && item.metadata?.originalDetectiveBoard) || item.name === 'scientist_photo')) && (
                             <li className={style.OptionListItem} onClick={createInteractAction('renameItem')}>
                                 Renommer
+                            </li>
+                        )}
+                        {(item && item.storageItemType && (item.name !== 'detective_board' || item.metadata?.originalDetectiveBoard)) && (
+                            <li className={style.OptionListItem} onClick={createInteractAction('openItemStorage')}>
+                                {item.openStorageLabel || 'Ouvrir'}
                             </li>
                         )}
                         {(item && item.useable && item.type !== 'weapon') && (

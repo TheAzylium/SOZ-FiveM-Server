@@ -24,15 +24,18 @@ export const MenuVehicleAuction: FunctionComponent<MenuVehicleAuctionProps> = ({
             <MainMenu>
                 <MenuTitle banner="https://nui-img/soz/menu_shop_vehicle_car">Enchère véhicules</MenuTitle>
                 <MenuContent>
-                    <MenuItemButton onConfirm={onConfirm}>
+                    <MenuItemButton onConfirm={onConfirm} disabled={data.isAuctionDisable}>
                         Faire une enchère sur {data.auction.vehicle.name}
                     </MenuItemButton>
+                    {data.isAuctionDisable && <MenuItemText>Les enchères sont fermées.</MenuItemText>}
                     {data.auction.bestBid && (
                         <MenuItemText>
-                            Meilleur offre de {data.auction.bestBid.name} à ${data.auction.bestBid.price}
+                            Meilleure offre de {data.auction.bestBid.name} à ${data.auction.bestBid.price}
                         </MenuItemText>
                     )}
-                    {!data.auction.bestBid && <MenuItemText>Mise à prix: ${data.auction.vehicle.price}</MenuItemText>}
+                    {!data.auction.bestBid && !data.isAuctionDisable && (
+                        <MenuItemText>Mise à prix: ${data.auction.vehicle.price}</MenuItemText>
+                    )}
                 </MenuContent>
             </MainMenu>
         </Menu>

@@ -141,6 +141,14 @@ export const GameMasterSubMenu: FunctionComponent<GameMasterSubMenuProps> = ({ b
                 >
                     🗺️ Affichage des patrouilles
                 </MenuItemCheckbox>
+                <MenuItemButton
+                    disabled={!isAdminOrStaffOrGM}
+                    onConfirm={async () => {
+                        await fetchNui(NuiEvent.AdminMenuGameMasterArmor);
+                    }}
+                >
+                    𐂫 Armure
+                </MenuItemButton>
             </MenuContent>
         </SubMenu>
     );

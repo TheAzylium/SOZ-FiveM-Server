@@ -45,6 +45,7 @@ export enum RpcServerEvent {
 
     OIL_GET_STATION = 'soz-core:job:oil:get-station',
     OIL_GET_STATION_PRICES = 'soz-core:job:oil:get-station-prices',
+    OIL_LOCK_TANKER = 'soz-core:job:oil:lock-tanker',
 
     PLAYER_GET_CLIENT_STATE = 'soz-core:player:get-client-state',
     PLAYER_GET_LIST_STATE = 'soz-core:player:get-list-state',
@@ -60,6 +61,9 @@ export enum RpcServerEvent {
     CRAFTING_DO_CRAFT = 'soz-core:crafting:do-craft',
     CRAFTING_DO_SALVAGE = 'soz-core:crafting:do-salvage',
 
+    CLOTHING_GET_CATEGORY = 'soz-core:clothing:get-category',
+    CLOTHING_GET_SHOP = 'soz-core:clothing:get-shop',
+
     STORY_HALLOWEEN_SCENARIO1 = 'soz-story:server:halloween1',
     STORY_HALLOWEEN_SCENARIO2 = 'soz-story:server:halloween2',
     STORY_HALLOWEEN_SCENARIO3 = 'soz-story:server:halloween3',
@@ -67,7 +71,6 @@ export enum RpcServerEvent {
 
     REPOSITORY_GET_DATA = 'soz-core:repository:get-data',
     REPOSITORY_GET_DATA_2 = 'soz-core:repository:get-data-2',
-    REPOSITORY_CLOTHING_GET_SHOP = 'soz-core:repository:clothing:get-shop',
 
     VEHICLE_CUSTOM_GET_MODS = 'soz-core:vehicle:custom:get-mods',
     VEHICLE_CUSTOM_SET_MODS = 'soz-core:vehicle:custom:set-mods',
@@ -91,8 +94,11 @@ export enum RpcServerEvent {
     VEHICLE_PITSTOP_PRICES_UPDATE = 'soz-core:rpc:vehicle:pitstop:price-update',
     VEHICLE_SPAWN_TEMPORARY = 'soz-core:rpc:vehicle:spawn-temporary',
 
+    VOIP_SET_MUTE = 'soz-core:voip:set-mute',
     VOIP_IS_MUTED = 'soz-core:voip:is-muted',
     VOIP_GET_MEGAPHONE_PLAYERS = 'soz-core:voip:get-megaphone-players',
+    VOIP_VOICE_START_TRANSMITTING = 'soz-core:server:voip:voice-start-transmitting',
+    VOIP_VOICE_STOP_TRANSMITTING = 'soz-core:server:voip:voice-stop-transmitting',
 
     INVENTORY_GET_ITEM_BY_SHORTCUT = 'soz-core:inventory:get-item-by-shortcut',
 
@@ -120,6 +126,8 @@ export enum RpcServerEvent {
 
     LSMC_CAN_REMOVE_ITT = 'soz-core:server:lsmc:can-remove-itt',
     LSMC_CAN_SET_ITT = 'soz-core:server:lsmc:can-set-itt',
+    LSMC_PLAYER_PLASTER = 'soz-core:server:lsmc:get-plaster',
+    LSMC_STRETCHER_AMBULANCE_STATUS = 'soz-core:server:lsmc:ambulance-stretcher-status',
 
     TALENT_TREE_UNLOCK = 'soz-core:server:talent:unlock',
     TALENT_TREE_RESET = 'soz-core:server:talent:reset',
@@ -128,11 +136,15 @@ export enum RpcServerEvent {
     HELICO_INIT_LIGHT = 'soz-core:server:helico:init-spotlight',
 
     POLICE_ALCOOLLEVEL = 'soz-core:server:police:alcool-level',
-    POLICE_DRUGLEVEL = 'soz-core:server:police:drug-level',
+    POLICE_DRUGLEVEL_AND_TYPE = 'soz-core:server:police:drug-level',
     POLICE_GET_WANTED_PLAYERS = 'soz-core:server:police:get-wanted-players',
     POLICE_DELETE_WANTED_PLAYER = 'soz-core:server:police:delete-wanted-player',
     POLICE_GET_VEHICLE_OWNER = 'soz-core:server:police:get-vehicule-owner',
     POLICE_GET_MARKED_MONEY = 'soz-core:server:police:get-marked-money',
+    POLICE_GET_CLUES_IN_AREA = 'soz-core:server:police:get-clues-in-area',
+    POLICE_GET_ALL_IDENTIFIED_CLUES = 'soz-core:server:police:get-all-identified-clues',
+    POLICE_LICENSE_HAS_RECUER = 'soz-core:server:police:has-recuer-license',
+
     HUB_EXIT_TIME = 'soz-core:server:hub:exit-time',
     HUB_ENTRY_FETCH_ALL = 'soz-core:server:hub:fetch-all',
     HUB_ENTRY_FETCH_ACTIVE = 'soz-core:server:hub:fetch-active',
@@ -151,6 +163,7 @@ export enum RpcServerEvent {
     DRUG_DO_TRANSFORM = 'soz-core:server:drugs:recipes-transform',
     DRUGS_PAY_LOCATION = 'soz-core:server:drugs:location-pay',
     DRUGS_FIELD_HEALTH = 'soz-core:server:drugs:field-health',
+    DRUGS_CAN_CONTRACT = 'soz-core:server:drugs:can-contract',
 
     SOZEDEX_CLAIM_REWARD = 'soz-core:server:sozedex:claim-reward',
 
@@ -172,6 +185,7 @@ export enum RpcServerEvent {
     PROP_REQUEST_DELETE_COLLECTION = 'soz-core:server:prop:delete-collection',
     PROP_REQUEST_CREATE_PROP = 'soz-core:server:prop:create-prop',
     PROP_REQUEST_TOGGLE_LOAD_COLLECTION = 'soz-core:server:prop:load-collection',
+    PROP_REQUEST_PERSIST_COLLECTION = 'soz-core:server:prop:persist-collection',
 
     CRAFT_GET_RECIPES = 'soz-core:server:craft:get-recipes',
     CRAFT_DO_RECIPES = 'soz-core:server:craft:do-recipes',
@@ -185,10 +199,13 @@ export enum RpcServerEvent {
     FDF_PLOW_STATUS = 'soz-core:server:fdf:get-plow-status',
 
     CURRENT_PLAYERS = 'soz-core:server:utils:getnbplayers',
+
+    FOOD_HUNT_INIT = 'soz-core:server:food:hunt-init',
 }
 
 export enum RpcClientEvent {
     VEHICLE_GET_TYPE = 'soz-core:rpc:client:vehicle:get-type',
+    VEHICLE_GET_NAME = 'soz-core:rpc:client:vehicle:get-name',
     VEHICLE_SPAWN = 'soz-core:rpc:client:vehicle:spawn',
     GET_LAST_VEHICLE_SPAWN = 'soz-core:rpc:client:vehicle:get-last-spawn',
     DELETE_LAST_VEHICLE_SPAWN = 'soz-core:rpc:client:vehicle:delete-last-spawn',
@@ -197,4 +214,6 @@ export enum RpcClientEvent {
     MONITOR_GET_TRACES = 'soz-core:rpc:client:monitor:get-traces',
     DRUG_CHECK_ZONE = 'soz-core:rpc:client:drug:check-zone',
     FDF_CHECK_ZONE = 'soz-core:rpc:client:fdf:check-zone',
+    CHECK_WEARING_GLOVES = 'soz-core:rpc:client:check-wearing-gloves',
+    OBJECT_GET_GROUND_POSITION = 'soz-core:rpc:client:object:get-ground-position',
 }

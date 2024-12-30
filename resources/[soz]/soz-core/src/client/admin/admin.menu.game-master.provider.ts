@@ -126,4 +126,9 @@ export class AdminMenuGameMasterProvider {
     public async setAdminPoliceLocator(value: boolean): Promise<void> {
         this.vehiclePoliceLocator.setAdminEnabled(value);
     }
+
+    @OnNuiEvent(NuiEvent.AdminMenuGameMasterArmor)
+    public async armor(): Promise<void> {
+        SetPedArmour(PlayerPedId(), 100);
+    }
 }

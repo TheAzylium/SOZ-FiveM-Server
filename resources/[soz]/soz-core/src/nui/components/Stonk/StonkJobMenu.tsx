@@ -100,7 +100,7 @@ export const StonkJobMenu: FunctionComponent<FightForStyleStateProps> = ({ data 
                     <MenuItemSelect
                         title="🚧 Poser un objet"
                         onConfirm={async selectedIndex => {
-                            await fetchNui(NuiEvent.JobPlaceProps, propsList[selectedIndex]);
+                            await fetchNui(NuiEvent.ObjectPlace, propsList[selectedIndex]);
                         }}
                     >
                         {propsList.map(prop => (

@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import {
+    getDefaultVehicleCondition,
+    VehicleClassFuelStorageMultiplier,
     VehicleCriticalDamageThreshold,
     VehicleHighDamageThreshold,
     VehicleLightState,
@@ -93,7 +95,7 @@ const SpeedGauge: FunctionComponent<{ hasFuel: boolean; useRpm: boolean }> = ({ 
     const vehicleSpeed = useVehicleSpeed();
 
     const classes = classNames(
-        'font-prompt font-semibold flex absolute flex-col text-center top-[1.5rem] mr-[80px] w-[100px] text-white/80 uppercase text-sm tabular-nums',
+        'font-prompt font-semibold flex absolute flex-col text-center top-[1.5rem] mr-[80px] w-[100px] text-white/80 uppercase text-sm tabular-nums [text-shadow:_0px_0px_4px_rgb(0_0_0_/_40%)]',
         {
             'mr-[50px]': !hasFuel,
         }
@@ -142,8 +144,13 @@ const SpeedGauge: FunctionComponent<{ hasFuel: boolean; useRpm: boolean }> = ({ 
     );
 };
 
-const FuelGauge: FunctionComponent<{ value: number; fuelType: string }> = ({ value, fuelType }) => {
+const FuelGauge: FunctionComponent<{ value: number; fuelType: string; vehCategory: string }> = ({
+    value,
+    fuelType,
+    vehCategory,
+}) => {
     const fuelTypeClasses = classNames('relative top-[7px] left-[10px] w-4 h-4 text-gray-400/60');
+    const maxFuel = getDefaultVehicleCondition().fuelLevel * (VehicleClassFuelStorageMultiplier[vehCategory] || 1.0);
 
     return (
         <div className="relative right-[10px] top-[6px]">
@@ -171,7 +178,9 @@ const FuelGauge: FunctionComponent<{ value: number; fuelType: string }> = ({ val
                     strokeWidth="3"
                     strokeOpacity="1.0"
                     strokeDasharray="60"
-                    style={{ strokeDashoffset: 60 - (value / 100) * 60 }}
+                    style={{
+                        strokeDashoffset: 60 - (Math.min(value, maxFuel) / maxFuel) * 60,
+                    }}
                 />
             </svg>
             {fuelType === 'electric' && <EnergyIcon className={fuelTypeClasses} />}
@@ -234,7 +243,13 @@ export const SpeedoMeter: FunctionComponent = () => {
             </div>
             <div className="flex justify-center mr-[-50px]">
                 <SpeedGauge hasFuel={vehicle.fuelType !== 'none'} useRpm={vehicle.useRpm} />
-                {vehicle.fuelType !== 'none' && <FuelGauge value={vehicle.fuelLevel} fuelType={vehicle.fuelType} />}
+                {vehicle.fuelType !== 'none' && (
+                    <FuelGauge
+                        value={vehicle.fuelLevel}
+                        fuelType={vehicle.fuelType}
+                        vehCategory={vehicle.vehCategory}
+                    />
+                )}
                 <MotorIndicator motor={vehicle.engineHealth} oil={vehicle.oilLevel} fuelType={vehicle.fuelType} />
             </div>
             <div className={classesLight}>

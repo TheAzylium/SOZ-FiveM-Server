@@ -14,11 +14,8 @@ import { PlayerService } from '../player/player.service';
 import { SoundService } from '../sound.service';
 import { VehicleService } from './vehicle.service';
 
-const THRESHOLD_G_STRENGTH_DEFAULT = 9.5;
-const THRESHOLD_G_STRENGTH_VEHICLE_CLASS: { [key in VehicleClass]?: number } = {
-    [VehicleClass.Motorcycles]: 7,
-};
-
+const THRESHOLD_G_STRENGTH_EJECTION = 6.0;
+const THRESHOLD_G_STRENGTH_DAMAGE = 9.5;
 const EJECTION_TICK_INTERVAL_SECONDES = 0.1;
 
 @Provider()
@@ -48,6 +45,10 @@ export class VehicleSeatbeltProvider {
         }
 
         if (this.isSeatbeltOn) {
+            return;
+        }
+
+        if (this.playerService.getPlayer().metadata.isdead) {
             return;
         }
 
@@ -205,13 +206,14 @@ export class VehicleSeatbeltProvider {
         const gStrength = toVectorNorm(acceleration) / 9.81;
         const vehicleNetworkId = NetworkGetNetworkIdFromEntity(vehicle);
 
-        if (gStrength > THRESHOLD_G_STRENGTH_DEFAULT && this.lastVehicleHealth != vehicleHealth) {
+        if (gStrength > THRESHOLD_G_STRENGTH_EJECTION) {
             TriggerServerEvent(
                 ServerEvent.VEHICLE_ROUTE_EJECTION,
                 vehicleNetworkId,
                 gStrength,
                 this.lastVehicleVelocity,
-                this.vehicleService.getPlayersInVehicle(vehicle)
+                this.vehicleService.getPlayersInVehicle(vehicle),
+                this.lastVehicleHealth != vehicleHealth
             );
         }
 
@@ -221,7 +223,7 @@ export class VehicleSeatbeltProvider {
     }
 
     @OnEvent(ClientEvent.VEHICLE_ROUTE_EJECTION)
-    async handleVehicleEjection(vehicleNetworkId: number, gStrength: number, velocity: Vector3) {
+    async handleVehicleEjection(vehicleNetworkId: number, gStrength: number, velocity: Vector3, damaged: boolean) {
         if (!NetworkDoesNetworkIdExist(vehicleNetworkId)) {
             return;
         }
@@ -238,15 +240,12 @@ export class VehicleSeatbeltProvider {
             return;
         }
 
-        const gStrengthEjected =
-            THRESHOLD_G_STRENGTH_VEHICLE_CLASS[GetVehicleClass(vehicleEjection)] || THRESHOLD_G_STRENGTH_DEFAULT;
-
-        if (gStrength > gStrengthEjected) {
+        if (gStrength > THRESHOLD_G_STRENGTH_EJECTION) {
             this.lastEjectionTimeOrDamage = Date.now();
             if (!this.isSeatbeltOn) {
                 await this.ejectPlayer(ped, vehicleEjection, velocity);
-            } else {
-                const damage = ((gStrength - THRESHOLD_G_STRENGTH_DEFAULT) * toVectorNorm(velocity)) / 30;
+            } else if (damaged && gStrength > THRESHOLD_G_STRENGTH_DAMAGE) {
+                const damage = ((gStrength - THRESHOLD_G_STRENGTH_DAMAGE) * toVectorNorm(velocity)) / 30;
                 SetEntityHealth(ped, Math.round(GetEntityHealth(ped) - damage));
 
                 const duration = Math.min((1000 * damage) / 4, 6000);

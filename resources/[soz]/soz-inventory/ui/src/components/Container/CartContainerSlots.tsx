@@ -13,9 +13,10 @@ type Props = {
     validateAction: (cartContent: ShopItem[]) => void;
     cartAmount: number;
     cartContent: ShopItem[]
+    taxValue: number;
 }
 
-export const CartContainerSlots: FunctionComponent<Props> = ({id, columns = 5, rows, items, validateAction, cartAmount, cartContent}) => {
+export const CartContainerSlots: FunctionComponent<Props> = ({id, columns = 5, rows, items, validateAction, cartAmount, cartContent, taxValue}) => {
     const [description, setDescription] = useState<string|null>('');
     const [inContextMenu, setInContextMenu] = useState<Record<string, boolean>>({});
 
@@ -33,10 +34,12 @@ export const CartContainerSlots: FunctionComponent<Props> = ({id, columns = 5, r
         setDescription(null);
     }, [items]);
 
+    const cartAmountTtc = Math.round(cartAmount + cartAmount * taxValue);
+
     return (
         <>
             <div className={style.CartHeader}>
-                <ShoppingBagIcon className={style.CartHeaderIcon} /> 
+                <ShoppingBagIcon className={style.CartHeaderIcon} />
                     <p>Glisse et dépose dans ton panier</p>
             </div>
             <div
@@ -46,7 +49,7 @@ export const CartContainerSlots: FunctionComponent<Props> = ({id, columns = 5, r
                     gridTemplateRows: `repeat(${rows+1}, 1fr)`,
                 }}
             >
-   
+
                 {[...Array((columns*(rows+1)) - ( 0))].map((_, i) => (
                     <Droppable key={i} id={`${id}_${i - 1}`} containerName={id} slot={i+1}>
                         <Draggable
@@ -60,7 +63,7 @@ export const CartContainerSlots: FunctionComponent<Props> = ({id, columns = 5, r
                 ))}
             </div>
             <div className={style.CartFooter}>
-                    <p>PRIX : {cartAmount.toLocaleString('fr-fr') ?? cartAmount} $</p>
+                    <p>PRIX : {cartAmountTtc.toLocaleString('fr-fr') ?? cartAmountTtc} $</p>
                     <button
                         disabled={cartAmount == 0}
                         className={style.CartButton}

@@ -8,8 +8,11 @@ export enum ClientEvent {
     ANIMATION_GIVE = 'soz-core:client:animation:give',
 
     BASE_ENTERED_VEHICLE = 'baseevents:enteredVehicle',
+    BASE_ENTERING_VEHICLE = 'baseevents:enteringVehicle',
     BASE_LEFT_VEHICLE = 'baseevents:leftVehicle',
     BASE_CHANGE_VEHICLE_SEAT = 'baseevents:changedVehicleSeat',
+
+    BAUN_ICE_CUBE = 'soz-core:client:baun:create-ice-cubes',
 
     BENNYS_OPEN_CLOAKROOM = 'soz-core:client:job:bennys:open-cloakroom',
     BENNYS_FLATBED_DETACH_VEHICLE = 'soz-core:client:job:bennys:flatbed:detach-vehicle',
@@ -39,6 +42,7 @@ export enum ClientEvent {
     FFS_EXIT_CLOTHING_SHOP = 'soz-core:client:job:ffs:exit-clothing-shop',
 
     FOOD_UPDATE_ORDER = 'soz-core:client:food:update-order',
+    FOOD_HUNT_SYNC = 'soz-core:client:food:hunt-sync',
 
     HOUSING_OPEN_UPGRADES_MENU = 'soz-core:client:housing:open-upgrades-menu',
     HOUSING_REQUEST_ENTER = 'soz-core:client:housing:request-enter',
@@ -57,14 +61,18 @@ export enum ClientEvent {
     ITEM_BOOK_USE = 'soz-core:client:item:book:use',
     ITEM_CAMERA_TOGGLE = 'soz-core:client:item:camera:toggle',
     ITEM_MICROPHONE_TOGGLE = 'soz-core:client:item:microphone:toggle',
+    ITEM_SCIENTIST_CAMERA_TOGGLE = 'soz-core:client:item:scientist-camera:toggle',
+    ITEM_SCIENTIST_PHOTO_TOGGLE = 'soz-core:client:item:scientist-photo:toggle',
     ITEM_SCUBA_TOOGLE = 'soz-core:client:item:scuba:toggle',
+    ITEM_DETECTIVE_BOARD_TOGGLE = 'soz-core:client:item:detective-board:toggle',
+    ITEM_RADAR_USE = 'soz-core:client:item:radar:use',
 
     HELICO_UPDATE_LIGHT = 'soz-core:client:police:update-light',
 
     JOBS_FFS_OPEN_SOCIETY_MENU = 'soz-jobs:client:ffs:OpenSocietyMenu',
     JOBS_BAUN_OPEN_SOCIETY_MENU = 'soz-jobs:client:baun:OpenSocietyMenu',
     JOBS_FOOD_OPEN_SOCIETY_MENU = 'jobs:client:food:OpenSocietyMenu',
-    JOBS_STONK_OPEN_SOCIETY_MENU = 'stonk:client:OpenSocietyMenu',
+    JOBS_STONK_OPEN_SOCIETY_MENU = 'soz-jobs:client:stonk:OpenSocietyMenu',
     JOBS_MDR_OPEN_SOCIETY_MENU = 'soz-jobs:client:mdr:OpenSocietyMenu',
     JOBS_TAXI_OPEN_SOCIETY_MENU = 'soz-jobs:client:taxi:OpenSocietyMenu',
     JOBS_LSMC_OPEN_SOCIETY_MENU = 'soz-jobs:client:lsmc:OpenSocietyMenu',
@@ -75,6 +83,7 @@ export enum ClientEvent {
     JOBS_YOU_NEWS_OPEN_SOCIETY_MENU = 'soz-jobs:client:you-news:OpenSocietyMenu',
     JOBS_DMC_OPEN_SOCIETY_MENU = 'soz-jobs:client:dmc:OpenSocietyMenu',
     JOBS_POLICE_OPEN_SOCIETY_MENU = 'soz-jobs:client:police:OpenSocietyMenu',
+    JOBS_OIL_OPEN_SOCIETY_MENU = 'soz-jobs:client:oil:OpenSocietyMenu',
 
     JOBS_CHECK_CLOAKROOM_STORAGE = 'soz-jobs:client:check-cloakroom-storage',
     JOB_OPEN_MENU = 'soz-core:client:job:open-menu',
@@ -84,6 +93,7 @@ export enum ClientEvent {
 
     LSMC_DISEASE_APPLY_CURRENT_EFFECT = 'lsmc:maladie:client:ApplyCurrentDiseaseEffect',
     LSMC_REVIVE = 'soz-core:lsmc:client:revive',
+    LSMC_REVIVE_DOC = 'soz-core:lsmc:client:revive-doc',
     LSMC_CALL = 'soz-core:lsmc:client:call',
     LSMC_APPLY_PATIENT_CLOTHING = 'soz-core:client:lsmc:applyPatientClothing',
     LSMC_REMOVE_PATIENT_CLOTHING = 'soz-core:client:lsmc:removePatientClothing',
@@ -92,6 +102,12 @@ export enum ClientEvent {
     LSMC_HEAL = 'soz-core:lsmc:client:heal',
     LSMC_NEW_URGENCY = 'soz-core:lsmc:client:new-urgency',
     LSMC_END_URGENCY = 'soz-core:lsmc:client:end-urgency',
+    LSMC_STRETCHER_USE = 'soz-core:lsmc:client:stretcher-use',
+    LSMC_STRETCHER_PUT_ON = 'soz-core:lsmc:client:stretcher-put-on',
+    LSMC_WHEELCHAIR_USE = 'soz-core:lsmc:client:wheelchair-use',
+    LSMC_SHOW_MEDICAL_DIAG = 'soz-core:lsmc:client:show-medical-diag',
+    LSMC_BED_PUT_ON = 'soz-core:client:job:lsmc:bed-put-on',
+    LSMC_VEH_PUT_ON = 'soz-core:client:job:lsmc:veh-put-on',
 
     LSC_ENTER_SHOP = 'soz-core:client:job:lsc:enter-shop',
     LSC_EXIT_SHOP = 'soz-core:client:job:lsc:exit-shop',
@@ -117,7 +133,6 @@ export enum ClientEvent {
 
     OIL_REFILL_ESSENCE_STATION = 'soz-core:client:oil:refill-essence-station',
     OIL_REFILL_KEROSENE_STATION = 'soz-core:client:oil:refill-kerosene-station',
-    OIL_UPDATE_STATION_PRICE = 'soz-core:client:oil:update-station-price',
 
     PHONE_APP_WEATHER_UPDATE_FORECASTS = 'phone:app:weather:updateForecasts',
     PHONE_APP_WEATHER_UPDATE_STORM_ALERT = 'phone:app:weather:updateStormAlert',
@@ -138,7 +153,6 @@ export enum ClientEvent {
     PLAYER_HEALTH_DO_YOGA = 'soz-core:client:player:health:yoga',
     PLAYER_HEALTH_DO_SIT_UP = 'soz-core:client:player:health:sit-up',
     PLAYER_HEALTH_DO_FREE_WEIGHT = 'soz-core:client:player:health:free-weight',
-    PLAYER_UPDATE = 'soz-core:client:player:update',
     PLAYER_SET_JOB_OUTFIT = 'soz-core:client:player:set-job-outfit',
     PLAYER_SET_UNLIMITED_SPRINT = 'soz-core:client:player:set-unlimited-sprint',
     PLAYER_SHOW_IDENTITY = 'soz-core:client:player:show-identity',
@@ -167,7 +181,6 @@ export enum ClientEvent {
     VEHICLE_CONDITION_APPLY = 'soz-core:client:vehicle:condition:apply',
     VEHICLE_CONDITION_SYNC = 'soz-core:client:vehicle:condition:sync',
     VEHICLE_CLOSE_TRUNK = 'soz-core:client:vehicle:close-trunk',
-    VEHICLE_DEALERSHIP_AUCTION_UPDATE = 'soz-core:client:vehicle:dealership:auction:update',
     VEHICLE_DELETE = 'soz-core:client:vehicle:delete',
     VEHICLE_FUEL_START = 'soz-core:client:vehicle:fuel:start',
     VEHICLE_CHARGE_START = 'soz-core:client:vehicle:charge:start',
@@ -176,6 +189,7 @@ export enum ClientEvent {
     VEHICLE_GET_CLOSEST = 'soz-core:client:vehicle:get-closest',
     VEHICLE_GARAGE_HOUSE_OPEN_MENU = 'soz-core:client:vehicle:garage:house:open-menu',
     VEHICLE_GARAGE_HOUSE_SHOW_PARKING = 'soz-core:client:vehicle:garage:house:show-parking',
+    VEHICLE_GARAGE_UPDATE = 'soz-core:client:vehicle:garage:update',
     VEHICLE_ROUTE_EJECTION = 'soz-core:client:vehicle:route-ejection',
     VEHICLE_SET_TRUNK_STATE = 'soz-core:client:vehicle:set-trunk-state',
     VEHICLE_RADAR_FLASHED = 'soz-core:client:vehicle:radar:flashed',
@@ -185,14 +199,22 @@ export enum ClientEvent {
     VEHICLE_LOCKPICK = 'soz-core:client:vehicle:lockpick',
     VEHICLE_SET_OPEN_LIST = 'soz-core:client:vehicle:set-open-list',
     VEHICLE_DAMAGE_BLUR = 'soz-core:client:vehicle:damage-blur',
+    VEH_FEATURE_SURFACE_RESET = 'reset-feature-surface',
+    VEH_HAS_BEEN_TPM = 'soz-core:client:offroad:setTpm',
 
-    VOIP_UPDATE_MODE = 'soz-core:client:voip:update-mode',
+    VOIP_DEBUG = 'soz-core:client:voip:debug',
     VOIP_SET_MEGAPHONE = 'soz-core:client:voip:set-megaphone',
     VOIP_ITEM_RADIO_TOGGLE = 'soz-core:client:voip:item-radio:toggle',
     VOIP_ITEM_MEGAPHONE_TOGGLE = 'soz-core:client:voip:item-megaphone:toggle',
     VOIP_ITEM_MICROPHONE_TOGGLE = 'soz-core:client:voip:item-microphone:toggle',
     VOIP_RADIO_VEHICLE_ENABLE = 'soz-core:client:voip:radio-vehicle-enable',
     VOIP_RADIO_VEHICLE_UPDATE = 'soz-core:client:voip:radio-vehicle-update',
+
+    VOIP_VOICE_START_CALL = 'soz-core:client:voip:voice:start-call',
+    VOIP_VOICE_END_CALL = 'soz-core:client:voip:voice:end-call',
+    VOIP_VOICE_MUTE_CALL = 'soz-core:client:voip:voice:mute-call',
+    VOIP_VOICE_RADIO_PLAYER_START_TRANSMITTING = 'soz-core:client:voip:voice:radio:player-start-transmitting',
+    VOIP_VOICE_RADIO_PLAYER_STOP_TRANSMITTING = 'soz-core:client:voip:voice:radio:player-stop-transmitting',
 
     UPW_OPEN_CLOAKROOM = 'soz-core:client:job:upw:open-cloakroom',
     UPW_CREATE_CHARGER = 'soz-core:client:job:upw:create-charger',
@@ -209,6 +231,7 @@ export enum ClientEvent {
     WEAPON_OPEN_GUNSMITH = 'soz-core:client:weapon:open-gunsmith',
     WEAPON_EXPLOSION = 'soz-core:client:weapon:explosion',
     WEAPON_CLEAR_WEAPON = 'soz-core:client:weapon:clear',
+    WEAPON_PICK_SNOWBALL = 'soz-core:client:weapon:pick-snowball',
 
     MDR_USE_TICKET = 'soz-core:client:mdr:use-ticket',
     HEIST_GUARD = 'soz-core:client:heist:guard',
@@ -218,6 +241,8 @@ export enum ClientEvent {
 
     TAKE_DOWN = 'soz-core:client:player:animation:takedown',
     TAKE_DOWN_TARGET = 'soz-core:client:player:animation:takedown-target',
+
+    TOGGLE_CRAWLING = 'soz-core:client:player:animation:crawling',
 
     POLICE_OPEN_CLOAKROOM = 'soz-core:client:police:OpenCloakroomMenu',
     POLICE_APPLY_OUTFIT = 'soz-core:client:police:ApplyDutyClothing',
@@ -232,7 +257,14 @@ export enum ClientEvent {
     POLICE_RED_CALL = 'soz-core:client:police:red-call',
     POLICE_REQUEST_ADD_SPIKE = 'soz-core:client:police:request-add-spike',
     POLICE_SYNC_SPIKE = 'soz-core:client:police:sync-spikes',
+    POLICE_REQUEST_ADD_SPEEDZONE = 'soz-core:client:police:request-add-speedzone',
+    POLICE_SYNC_SPEEDZONE = 'soz-core:client:police:sync-speedzone',
     POLICE_OPEN_STASH_CLOAKROOM = 'police:cloakroom:openStash',
+    POLICE_IDENTIFIED_CLUE = 'soz-core:client:police:identified-clue',
+    POLICE_ANALYZE_EVIDENCE = 'soz-core:client:police:analyze-evidence',
+    POLICE_GATHERED_CLUE = 'soz-core:client:police:cleaned-clue',
+    POLICE_DESTROYED_CLUE = 'soz-core:client:police:destroyed-clue',
+    POLICE_DRUG_IN_TRUNK = 'soz-core:client:police:drug-in-trunk',
 
     SET_ESCORTING = 'soz-core:client:police:set-escorting',
     GET_ESCORTED = 'soz-core:client:police:get-escorted',
@@ -278,7 +310,6 @@ export enum ClientEvent {
     DRUGS_DELETE = 'soz-core:client:drugs:delete',
     DRUGS_ADD = 'soz-core:client:drugs:add',
     DRUGS_UPDATE_SEED = 'soz-core:client:drugs:update-seed',
-    DRUGS_POLICE_ALERT = 'soz-core:client:drugs:police-alert',
     DRUGS_CONSUME = 'soz-core:client:drugs:consume',
     DRUGS_ZONE_ADD_UPDATE = 'soz-core:client:drugs:zone-add',
     DRUGS_ZONE_DELETE = 'soz-core:client:drugs:zone-delete',

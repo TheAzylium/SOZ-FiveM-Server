@@ -11,6 +11,7 @@ import { NuiMenu } from '@public/client/nui/nui.menu';
 import { PhoneService } from '@public/client/phone/phone.service';
 import { PlayerInOutService } from '@public/client/player/player.inout.service';
 import { PlayerService } from '@public/client/player/player.service';
+import { PlayerSnowProvider } from '@public/client/player/player.snow.provider';
 import { PlayerWalkstyleProvider } from '@public/client/player/player.walkstyle.provider';
 import { SoundService } from '@public/client/sound.service';
 import { VehicleSeatbeltProvider } from '@public/client/vehicle/vehicle.seatbelt.provider';
@@ -21,6 +22,7 @@ import { emitRpc } from '@public/core/rpc';
 import { ClientEvent, ServerEvent } from '@public/shared/event';
 import {
     BedLocations,
+    deathAnim,
     FailoverLocationName,
     getBedName,
     KillData,
@@ -28,25 +30,13 @@ import {
     PatientClothes,
 } from '@public/shared/job/lsmc';
 import { BoxZone } from '@public/shared/polyzone/box.zone';
-import { rad } from '@public/shared/polyzone/vector';
-import { Ok } from '@public/shared/result';
+import { rad, Vector3 } from '@public/shared/polyzone/vector';
 import { RpcServerEvent } from '@public/shared/rpc';
+import { VehicleSeat } from '@public/shared/vehicle/vehicle';
 
 import { Animation } from '../../../shared/animation';
 import { PlayerZombieProvider } from '../../player/player.zombie.provider';
 import { VoipService } from '../../voip/voip.service';
-
-const deathAnim: Animation = {
-    base: {
-        dictionary: 'dead',
-        name: 'dead_a',
-        blendInSpeed: 8.0,
-        blendOutSpeed: 8.0,
-        options: {
-            repeat: true,
-        },
-    },
-};
 
 const deathVehcleAnim: Animation = {
     base: {
@@ -84,6 +74,28 @@ const reviveAnim: Animation = {
     },
 };
 
+const reviveAnimFail: Animation = {
+    enter: {
+        dictionary: 'mini@cpr@char_b@cpr_def',
+        name: 'cpr_intro',
+        duration: 15000.0,
+    },
+    base: {
+        dictionary: 'mini@cpr@char_b@cpr_str',
+        name: 'cpr_pumpchest',
+        duration: 5000.0,
+        options: {
+            cancellable: false,
+            repeat: true,
+        },
+    },
+    exit: {
+        dictionary: 'mini@cpr@char_b@cpr_str',
+        name: 'cpr_fail',
+        duration: 25000.0,
+    },
+};
+
 const reviveAnimDoc: Animation = {
     enter: {
         dictionary: 'mini@cpr@char_a@cpr_def',
@@ -102,6 +114,28 @@ const reviveAnimDoc: Animation = {
     exit: {
         dictionary: 'mini@cpr@char_a@cpr_str',
         name: 'cpr_success',
+        duration: 25000.0,
+    },
+};
+
+const reviveAnimDocFail: Animation = {
+    enter: {
+        dictionary: 'mini@cpr@char_a@cpr_def',
+        name: 'cpr_intro',
+        duration: 15000.0,
+    },
+    base: {
+        dictionary: 'mini@cpr@char_a@cpr_str',
+        name: 'cpr_pumpchest',
+        duration: 5000.0,
+        options: {
+            cancellable: false,
+            repeat: true,
+        },
+    },
+    exit: {
+        dictionary: 'mini@cpr@char_a@cpr_str',
+        name: 'cpr_fail',
         duration: 25000.0,
     },
 };
@@ -156,7 +190,11 @@ export class LSMCDeathProvider {
     @Inject(BlipFactory)
     private blipFactory: BlipFactory;
 
+    @Inject(PlayerSnowProvider)
+    private playerSnowProvider: PlayerSnowProvider;
+
     private IsDead = false;
+    private doFeeze = false;
     private hungerThristDeath = false;
     private radioactiveBeerEffect = false;
 
@@ -167,9 +205,20 @@ export class LSMCDeathProvider {
             if (IsEntityDead(playerPed)) {
                 await this.onDeath(playerPed);
             }
+            this.doFeeze = this.IsDead;
             if (this.IsDead) {
                 await this.animationCheck(playerPed);
             }
+        }
+    }
+
+    @Tick(10000)
+    public async deathResyncLoop() {
+        if (this.doFeeze) {
+            const playerPed = PlayerPedId();
+            FreezeEntityPosition(playerPed, true);
+            await wait(100);
+            FreezeEntityPosition(playerPed, false);
         }
     }
 
@@ -188,7 +237,7 @@ export class LSMCDeathProvider {
             this.IsDead = true;
 
             this.nuiMenu.closeAll(false);
-            this.voipService.mutePlayer(true);
+            await this.voipService.mutePlayer(true);
 
             // Skip death process if player is zombie
             if (this.playerZombieProvider.isZombie() || this.playerZombieProvider.isTransforming()) {
@@ -225,6 +274,15 @@ export class LSMCDeathProvider {
                         plate: GetVehicleNumberPlateText(veh),
                     };
                 }
+            } else if (killerentitytype == 2) {
+                const veh = killer;
+                killer = GetPedInVehicleSeat(veh, VehicleSeat.Driver);
+                killertype = GetPedType(killer);
+                killVehData = {
+                    name: GetDisplayNameFromVehicleModel(GetEntityModel(veh)),
+                    seat: -1,
+                    plate: GetVehicleNumberPlateText(veh),
+                };
             }
 
             let killerid = NetworkGetPlayerIndexFromPed(killer);
@@ -234,18 +292,19 @@ export class LSMCDeathProvider {
                 killerid = -1;
             }
 
-            const killData = {
+            const killData: KillData = {
                 killerid: killerid,
                 killertype: killertype,
                 killerentitytype: killerentitytype,
                 weaponhash: killerweapon,
                 weapondamagetype: GetWeaponDamageType(killerweapon),
                 weapongroup: GetWeapontypeGroup(killerweapon),
-                killpos: GetEntityCoords(player),
+                killpos: GetEntityCoords(player) as Vector3,
                 killerveh: killVehData,
                 ejection: Date.now() - this.vehicleSeatbeltProvider.getLastEjectTime() < 10000,
                 hungerThristDeath: this.hungerThristDeath,
-            } as KillData;
+                frozenDeath: this.playerSnowProvider.isFrozenDeath(),
+            };
             this.hungerThristDeath = false;
 
             this.playerService.updateState({
@@ -292,28 +351,21 @@ export class LSMCDeathProvider {
             const playerMetadata = this.playerService.getPlayer().metadata;
             const injuries = playerMetadata.injuries_count;
             const status =
-                (playerMetadata.rp_death && !killData.hungerThristDeath) ||
+                (playerMetadata.rp_death && !killData.hungerThristDeath && !killData.frozenDeath) ||
                 injuries >= this.playerTalentService.getMaxInjuries()
                     ? 'de ton décès'
                     : 'du coma';
 
             this.inputService
-                .askInput(
-                    {
-                        title: `Explique la raison ${status}, celle-ci sera lue par les médecins lorsqu'ils te prendront en charge :`,
-                        maxCharacters: 200,
-                        defaultValue: '',
-                    },
-                    () => {
-                        return Ok(true);
-                    }
-                )
-                .then(reasonMort => {
-                    TriggerServerEvent(ServerEvent.LSMC_SET_DEATH_REASON, reasonMort);
-                    if (this.phoneService.isPhoneVisible()) {
-                        this.phoneService.setPhoneFocus(true);
-                    }
-                });
+                .askInput({
+                    title: `Explique la raison ${status}, celle-ci sera lue par les médecins lorsqu'ils te prendront en charge :`,
+                    maxCharacters: 200,
+                })
+                .then(reason => TriggerServerEvent(ServerEvent.LSMC_SET_DEATH_REASON, reason));
+
+            if (this.phoneService.isPhoneVisible()) {
+                this.phoneService.setPhoneFocus(true);
+            }
         }
     }
 
@@ -350,7 +402,7 @@ export class LSMCDeathProvider {
     }
 
     @OnEvent(ClientEvent.LSMC_REVIVE)
-    public async revive(skipanim: boolean, uniteHU: boolean, uniteHUBed: number) {
+    public async revive(skipanim: boolean, uniteHU: boolean, uniteHUBed: number, rpDeath: boolean) {
         const player = PlayerPedId();
 
         if (uniteHU) {
@@ -371,30 +423,35 @@ export class LSMCDeathProvider {
             }
 
             if (!skipanim) {
-                await this.animationService.playAnimation(reviveAnim);
+                await this.animationService.playAnimation(rpDeath ? reviveAnimFail : reviveAnim);
             }
         }
 
+        if (rpDeath) {
+            this.IsDead = true;
+            TriggerScreenblurFadeOut(1000);
+        } else {
+            this.notifier.notify('Vous êtes réanimé!');
+            await this.voipService.mutePlayer(false);
+        }
+
+        FreezeEntityPosition(PlayerPedId(), false);
         SetEntityHealth(player, 200);
         ClearPedBloodDamage(player);
         SetPlayerSprint(PlayerId(), true);
-
-        this.voipService.mutePlayer(false);
-
-        TriggerServerEvent(ServerEvent.PLAYER_SET_CURRENT_DISEASE, false);
 
         this.playerWalkstyleProvider.updateWalkStyle('injury', null);
 
         if (uniteHU) {
             this.uniteHU(uniteHUBed);
         }
-
-        this.notifier.notify('Vous êtes réanimé!');
     }
 
     private async uniteHU(uniteHUBed: number) {
         const ped = PlayerPedId();
         const player = this.playerService.getPlayer();
+
+        this.monitor.publish('lsmx_uhu', {}, {});
 
         this.playerService.setTempClothes(PatientClothes[player.skin.Model.Hash]['Patient']);
         this.weaponDrawingProvider.refreshDrawWeapons();
@@ -461,7 +518,6 @@ export class LSMCDeathProvider {
             false,
             bloodbag
         );
-        TriggerServerEvent(ServerEvent.LSMC_REVIVE2, GetPlayerServerId(NetworkGetPlayerIndexFromPed(target)));
         this.monitor.publish(
             bloodbag ? 'job_lsmc_revive_bloodbag' : 'job_lsmc_revive_defibrillator',
             {},
@@ -471,8 +527,11 @@ export class LSMCDeathProvider {
             },
             true
         );
+    }
 
-        await this.animationService.playAnimation(reviveAnimDoc);
+    @OnEvent(ClientEvent.LSMC_REVIVE_DOC)
+    public async reviveDoc(rpDeath: boolean) {
+        await this.animationService.playAnimation(rpDeath ? reviveAnimDocFail : reviveAnimDoc);
     }
 
     @OnEvent(ClientEvent.LSMC_CALL, false)
@@ -523,7 +582,8 @@ export class LSMCDeathProvider {
             playerData.metadata.drug >= 100
         ) {
             if (GetEntityHealth(ped) > 0) {
-                ClearPedTasksImmediately(ped);
+                this.hungerThristDeath = playerData.metadata.hunger <= 0 || playerData.metadata.thirst <= 0;
+                ClearPedTasks(ped);
                 await this.animationService.playAnimation({
                     base: {
                         dictionary: 'move_m@_idles@out_of_breath',
@@ -531,10 +591,12 @@ export class LSMCDeathProvider {
                         blendInSpeed: 8.0,
                         blendOutSpeed: -8.0,
                         duration: 8000,
+                        options: {
+                            onlyUpperBody: true,
+                        },
                     },
                 });
 
-                this.hungerThristDeath = playerData.metadata.hunger <= 0 || playerData.metadata.thirst <= 0;
                 SetEntityHealth(ped, 0);
             }
         }

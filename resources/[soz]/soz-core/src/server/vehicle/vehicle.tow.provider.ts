@@ -1,7 +1,7 @@
 import { OnEvent } from '@public/core/decorators/event';
 import { Inject } from '@public/core/decorators/injectable';
 import { Provider } from '@public/core/decorators/provider';
-import { ServerEvent } from '@public/shared/event';
+import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { TowRope } from '@public/shared/vehicle/tow.rope';
 
 import { InventoryManager } from '../inventory/inventory.manager';
@@ -61,11 +61,17 @@ export class VehicleTowProvider {
     }
 
     @OnEvent(ServerEvent.VEHICLE_TOW_ROPE_DELETE)
-    public deleteTowRope(source: number, id: string) {
-        const towRope = this.towRopeRepository.find(id);
+    public async deleteTowRope(source: number, id: string) {
+        const towRope = await this.towRopeRepository.find(id);
         this.towRopeRepository.delete(id);
 
         this.notifier.notify(source, 'Le cable de remorquage a été ~r~enlevé~s~');
+
+        const owner1 = NetworkGetEntityOwner(NetworkGetEntityFromNetworkId(towRope.netId1));
+        TriggerClientEvent(ClientEvent.VEH_FEATURE_SURFACE_RESET, owner1, towRope.netId1);
+
+        const owner2 = NetworkGetEntityOwner(NetworkGetEntityFromNetworkId(towRope.netId2));
+        TriggerClientEvent(ClientEvent.VEH_FEATURE_SURFACE_RESET, owner2, towRope.netId2);
 
         this.monitor.publish(
             'tow_rope_remove',

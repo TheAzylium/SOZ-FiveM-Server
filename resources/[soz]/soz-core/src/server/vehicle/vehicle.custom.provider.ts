@@ -1,12 +1,14 @@
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
+import { TaxType } from '../../shared/bank';
 import { RpcServerEvent } from '../../shared/rpc';
 import {
     getDefaultVehicleConfiguration,
     VehicleConfiguration,
     VehicleModificationPricing,
 } from '../../shared/vehicle/modification';
+import { PriceService } from '../bank/price.service';
 import { PrismaService } from '../database/prisma.service';
 import { InventoryManager } from '../inventory/inventory.manager';
 import { Notifier } from '../notifier';
@@ -32,6 +34,9 @@ export class VehicleCustomProvider {
     @Inject(InventoryManager)
     private inventoryManager: InventoryManager;
 
+    @Inject(PriceService)
+    private priceService: PriceService;
+
     @Rpc(RpcServerEvent.VEHICLE_CUSTOM_SET_MODS)
     public async setMods(
         source: number,
@@ -41,7 +46,9 @@ export class VehicleCustomProvider {
         price: number | null = null,
         notify = true
     ) {
+        // @TODO Price client side
         const state = this.vehicleStateService.getVehicleState(vehicleNetworkId);
+        const taxedPrice = await this.priceService.getPrice(price ?? 0, TaxType.VEHICLE);
 
         const playerVehicle = state.volatile.id
             ? await this.prismaService.playerVehicle.findUnique({
@@ -51,13 +58,13 @@ export class VehicleCustomProvider {
               })
             : null;
 
-        if (price && this.playerMoneyService.get(source) < price) {
+        if (taxedPrice && this.playerMoneyService.get(source) < taxedPrice) {
             this.notifier.notify(source, "Vous n'avez pas assez d'argent", 'error');
 
             return originalConfiguration;
         }
 
-        if (price) {
+        if (taxedPrice) {
             // LS Custom upgrade parts
             const upgradedParts = this.getLSCustomUpgradedPart(originalConfiguration, mods);
 
@@ -78,7 +85,7 @@ export class VehicleCustomProvider {
                 return originalConfiguration;
             }
 
-            this.playerMoneyService.remove(source, price);
+            await this.playerMoneyService.buy(source, price, TaxType.VEHICLE);
         }
 
         if (playerVehicle) {
@@ -92,8 +99,8 @@ export class VehicleCustomProvider {
             });
         }
 
-        if (price) {
-            this.notifier.notify(source, `Vous avez payé $${price.toFixed(0)} pour modifier votre véhicule.`);
+        if (taxedPrice) {
+            this.notifier.notify(source, `Vous avez payé $${taxedPrice.toFixed(0)} pour modifier votre véhicule.`);
         } else if (notify) {
             this.notifier.notify(source, 'Le véhicule a été modifié');
         }

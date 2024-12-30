@@ -861,7 +861,7 @@ export const FDFCraftsLists: Record<string, CraftCategory> = {
 
 export const FDFCloakroom: WardrobeConfig = {
     [joaat('mp_m_freemode_01')]: {
-        ['Responsable des Cultures']: {
+        ['Métayer']: {
             Components: {
                 [3]: { Drawable: 138, Texture: 3, Palette: 0 },
                 [4]: { Drawable: 89, Texture: 23, Palette: 0 },
@@ -872,7 +872,18 @@ export const FDFCloakroom: WardrobeConfig = {
             },
             Props: { [0]: { Drawable: 13, Texture: 3, Palette: 0 } },
         },
-        ['Fermier']: {
+        ['Métayer Hiver']: {
+            Components: {
+                [3]: { Drawable: 172, Texture: 3, Palette: 0 },
+                [4]: { Drawable: 89, Texture: 18, Palette: 0 },
+                [5]: { Drawable: 44, Texture: 0, Palette: 0 },
+                [6]: { Drawable: 111, Texture: 2, Palette: 0 },
+                [8]: { Drawable: 15, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 50, Texture: 3, Palette: 0 },
+            },
+            Props: { [0]: { Drawable: 13, Texture: 3, Palette: 0 } },
+        },
+        ['Paysan']: {
             Components: {
                 [3]: { Drawable: 138, Texture: 4, Palette: 0 },
                 [4]: { Drawable: 89, Texture: 18, Palette: 0 },
@@ -880,6 +891,17 @@ export const FDFCloakroom: WardrobeConfig = {
                 [6]: { Drawable: 51, Texture: 3, Palette: 0 },
                 [8]: { Drawable: 15, Texture: 0, Palette: 0 },
                 [11]: { Drawable: 325, Texture: 11, Palette: 0 },
+            },
+            Props: { [0]: { Drawable: 13, Texture: 1, Palette: 0 } },
+        },
+        ['Paysan Hiver']: {
+            Components: {
+                [3]: { Drawable: 172, Texture: 2, Palette: 0 },
+                [4]: { Drawable: 89, Texture: 22, Palette: 0 },
+                [5]: { Drawable: 44, Texture: 0, Palette: 0 },
+                [6]: { Drawable: 111, Texture: 6, Palette: 0 },
+                [8]: { Drawable: 15, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 50, Texture: 4, Palette: 0 },
             },
             Props: { [0]: { Drawable: 13, Texture: 1, Palette: 0 } },
         },
@@ -896,7 +918,7 @@ export const FDFCloakroom: WardrobeConfig = {
         },
     },
     [joaat('mp_f_freemode_01')]: {
-        ['Responsable des Cultures']: {
+        ['Métayer']: {
             Components: {
                 [3]: { Drawable: 182, Texture: 3, Palette: 0 },
                 [4]: { Drawable: 92, Texture: 23, Palette: 0 },
@@ -907,7 +929,18 @@ export const FDFCloakroom: WardrobeConfig = {
             },
             Props: { [0]: { Drawable: 20, Texture: 1, Palette: 0 } },
         },
-        ['Fermier']: {
+        ['Métayer Hiver']: {
+            Components: {
+                [3]: { Drawable: 215, Texture: 3, Palette: 0 },
+                [4]: { Drawable: 92, Texture: 18, Palette: 0 },
+                [5]: { Drawable: 44, Texture: 0, Palette: 0 },
+                [6]: { Drawable: 115, Texture: 2, Palette: 0 },
+                [8]: { Drawable: 14, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 43, Texture: 3, Palette: 0 },
+            },
+            Props: { [0]: { Drawable: 20, Texture: 1, Palette: 0 } },
+        },
+        ['Paysan']: {
             Components: {
                 [3]: { Drawable: 182, Texture: 4, Palette: 0 },
                 [4]: { Drawable: 92, Texture: 18, Palette: 0 },
@@ -918,6 +951,19 @@ export const FDFCloakroom: WardrobeConfig = {
             },
             Props: {
                 [0]: { Drawable: 20, Texture: 0, Palette: 0 },
+            },
+        },
+        ['Paysan Hiver']: {
+            Components: {
+                [3]: { Drawable: 215, Texture: 2, Palette: 0 },
+                [4]: { Drawable: 92, Texture: 22, Palette: 0 },
+                [5]: { Drawable: 44, Texture: 0, Palette: 0 },
+                [6]: { Drawable: 115, Texture: 6, Palette: 0 },
+                [8]: { Drawable: 14, Texture: 0, Palette: 0 },
+                [11]: { Drawable: 43, Texture: 4, Palette: 0 },
+            },
+            Props: {
+                [0]: { Drawable: 20, Texture: 2, Palette: 0 },
             },
         },
         ['Stagiaire']: {

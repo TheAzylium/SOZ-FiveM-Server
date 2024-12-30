@@ -1,12 +1,11 @@
 import { Exportable } from '@public/core/decorators/exports';
 import { InventoryItem, Item } from '@public/shared/item';
 
-import { Once, OnEvent } from '../../core/decorators/event';
+import { Once } from '../../core/decorators/event';
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
-import { ClientEvent, ServerEvent } from '../../shared/event';
-import { InventoryManager } from '../inventory/inventory.manager';
-import { Notifier } from '../notifier';
+import { ClientEvent } from '../../shared/event';
+import { ObjectProvider } from '../object/object.provider';
 import { PlayerService } from '../player/player.service';
 import { ItemService } from './item.service';
 
@@ -18,11 +17,8 @@ export class ItemToolsProvider {
     @Inject(PlayerService)
     private playerService: PlayerService;
 
-    @Inject(InventoryManager)
-    private inventoryManager: InventoryManager;
-
-    @Inject(Notifier)
-    private notifier: Notifier;
+    @Inject(ObjectProvider)
+    private objectProvider: ObjectProvider;
 
     @Once()
     public onStart() {
@@ -45,9 +41,11 @@ export class ItemToolsProvider {
         this.item.setItemUseCallback('binoculars', (source: number) =>
             TriggerClientEvent(ClientEvent.BINOCULARS_TOGGLE, source)
         );
-        this.item.setItemUseCallback('cardbord', source =>
-            this.onPlaceProps(source, 'cardbord', 'prop_cardbordbox_03a', 90, 0)
-        );
+        this.item.setItemUseCallback('cardbord', async source => {
+            const position = await this.objectProvider.getGroundPositionForObject(source, 'prop_cardbordbox_03a', 90);
+
+            await this.objectProvider.onPlaceObject(source, 'cardbord', 'prop_cardbordbox_03a', position);
+        });
         this.item.setItemUseCallback('diving_gear', this.useDrivingGear.bind(this));
     }
 
@@ -63,14 +61,5 @@ export class ItemToolsProvider {
     @Exportable('ItemIsExpired')
     public itemIsExpired(item: InventoryItem) {
         return this.item.isItemExpired(item);
-    }
-
-    @OnEvent(ServerEvent.JOBS_PLACE_PROPS)
-    public onPlaceProps(source: number, item: string, props: string, rotation: number, offset: number) {
-        if (this.inventoryManager.removeItemFromInventory(source, item)) {
-            TriggerClientEvent('job:client:AddObject', source, GetHashKey(props), rotation, offset);
-        } else {
-            this.notifier.notify(source, 'Vous ne possédez pas cet objet.', 'error');
-        }
     }
 }

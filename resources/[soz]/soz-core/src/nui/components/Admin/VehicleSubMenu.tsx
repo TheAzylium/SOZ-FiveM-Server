@@ -118,6 +118,16 @@ export const VehicleSubMenu: FunctionComponent<VehicleSubMenuProps> = ({ banner,
                     )}
                     <MenuItemCheckbox
                         disabled={!isStaffOrAdmin}
+                        checked={state.noBurstTyres}
+                        onChange={async value => {
+                            state.noBurstTyres = value;
+                            await fetchNui(NuiEvent.AdminToggleBurstTyres, value);
+                        }}
+                    >
+                        🞉 Pneus increvables
+                    </MenuItemCheckbox>
+                    <MenuItemCheckbox
+                        disabled={!isStaffOrAdmin}
                         checked={state.noStall}
                         onChange={async value => {
                             state.noStall = value;
@@ -125,6 +135,16 @@ export const VehicleSubMenu: FunctionComponent<VehicleSubMenuProps> = ({ banner,
                         }}
                     >
                         ⛍ Calage désactivé
+                    </MenuItemCheckbox>
+                    <MenuItemCheckbox
+                        disabled={!isStaffOrAdmin}
+                        checked={state.noSurfaceCalc}
+                        onChange={async value => {
+                            state.noSurfaceCalc = value;
+                            await fetchNui(NuiEvent.AdminToggleNoSurfaceCalc, value);
+                        }}
+                    >
+                        ⛍ Surface désactivée
                     </MenuItemCheckbox>
                     <MenuItemButton
                         disabled={!isStaffOrAdmin}

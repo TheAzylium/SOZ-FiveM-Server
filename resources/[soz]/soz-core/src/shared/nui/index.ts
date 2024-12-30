@@ -6,6 +6,7 @@ import { NuiHudMethodMap } from '@public/shared/nui/hud';
 import { NuiItemMethodMap } from '@public/shared/nui/item';
 import { NuiMissiveMethodMap } from '@public/shared/nui/missive';
 import { NuiRadioMethodMap, NuiRadioVehicleMethodMap } from '@public/shared/nui/radio';
+import { NuiRepositoryMethodMap } from '@public/shared/nui/repository';
 import { NuiTalentMethodMap } from '@public/shared/nui/talent';
 
 import { NuiAdminPlayerSubMenuMethodMap } from '../../nui/components/Admin/PlayerSubMenu';
@@ -20,6 +21,7 @@ import { NuiFieldMethodMap } from './field';
 import { NuiFishingMethodMap } from './fishing';
 import { NuiHoodMethodMap } from './hood';
 import { NuiInputMethodMap } from './input';
+import { NuiMedicalDiagMethodMap } from './medical_diag';
 import { NuiMenuMethodMap } from './menu';
 import { NuiPanelMethodMap } from './panel';
 import { NuiPLayerMethodMap } from './player';
@@ -31,6 +33,7 @@ import { NuiRepairMethodMap } from './repair';
 import { NuiSozedexMethodMap } from './sozedex';
 import { NuiTaxiMethodMap } from './taxi';
 import { NuiUpwOrderMenuMethodMap } from './upw_order_menu';
+import { NuiColdMethodMap } from './xmas';
 
 export interface NuiGlobalMethodMap {
     PauseMenuActive: boolean;
@@ -72,6 +75,9 @@ export interface NuiMethodMap {
     placement_prop: NuiPlacementPropMethodMap;
     craft: NuiCraftMethodMap;
     zombie: NuiZombieMethodMap;
+    cold: NuiColdMethodMap;
+    medicalDiag: NuiMedicalDiagMethodMap;
+    repository: NuiRepositoryMethodMap;
 }
 
 export const eventNameFactory = <App extends keyof NuiMethodMap, Method extends keyof NuiMethodMap[App]>(

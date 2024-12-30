@@ -67,7 +67,7 @@ export class PolicePlayerProvider {
     }
 
     @OnEvent(ServerEvent.ESCORT_PLAYER)
-    public onEscortPlayer(source: number, targetId: number, crimi: number) {
+    public onEscortPlayer(source: number, targetId: number, crimi: boolean) {
         const player = this.playerService.getPlayer(source);
         const target = this.playerService.getPlayer(targetId);
 

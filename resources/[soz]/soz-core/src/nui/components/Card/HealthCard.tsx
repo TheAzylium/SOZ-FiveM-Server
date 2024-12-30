@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { FunctionComponent } from 'react';
 
 import { healthLevelToLabel, stressLevelToLabel } from '../../../shared/health';
@@ -63,6 +65,14 @@ export const HealthCard: FunctionComponent<HealthCardProps> = ({ player }) => {
                         <li>{stressLevelToLabel(player.metadata.health_book_stress_level)}</li>
                     </ul>
                 </div>
+            </div>
+            <div className="flex justify-items-start w-full mt-2 pl-8 pr-8">
+                Mis à jour le
+                <span className="text-lime-700 ml-2 italic capitalize">
+                    {player.metadata.health_book_update_date
+                        ? format(player.metadata.health_book_update_date, 'eeee dd MMMMMM yyyy', { locale: fr })
+                        : 'Inconnu'}
+                </span>
             </div>
         </div>
     );

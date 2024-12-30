@@ -44,7 +44,7 @@ export class PoliceLicenceProvider {
         TriggerServerEvent(ServerEvent.POLICE_REMOVE_POINT, playerServerId, licence, points);
     }
 
-    private async playLicenceAnimation(textProgressBar: string): Promise<boolean> {
+    public async playLicenceAnimation(textProgressBar: string): Promise<boolean> {
         const { completed } = await this.progressService.progress(
             'police-add-licence',
             textProgressBar,

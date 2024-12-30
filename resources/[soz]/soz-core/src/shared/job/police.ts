@@ -3,8 +3,12 @@ import { VanillaComponentDrawableIndexMaxValue, VanillaPropDrawableIndexMaxValue
 import { joaat } from '../joaat';
 import { JobType } from '../job';
 import { PlayerLicenceType } from '../player';
+import { Vector4 } from '../polyzone/vector';
 
 export const DUTY_OUTFIT_NAME = 'Tenue de service';
+export const WINTER = 'Tenue Hiver';
+export const SASP_DARK = 'Tenue sombre';
+export const MOTO = 'Tenue de moto';
 
 export const PrisonerClothes = {
     [joaat('mp_m_freemode_01')]: {
@@ -72,14 +76,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 51, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 4,
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Tops] + 4,
@@ -95,7 +97,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue Hiver']: {
+            [WINTER]: {
                 Components: {
                     [Component.Torso]: { Drawable: 1, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -105,7 +107,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 51, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 4,
@@ -156,7 +157,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 24, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 2,
@@ -179,7 +179,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue de moto']: {
+            [MOTO]: {
                 Components: {
                     [Component.Torso]: { Drawable: 22, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -193,7 +193,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 13, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 4,
@@ -267,14 +266,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 52, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 4,
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 4,
@@ -290,7 +287,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue Hiver']: {
+            [WINTER]: {
                 Components: {
                     [Component.Torso]: { Drawable: 3, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -300,7 +297,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 52, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 4,
@@ -351,7 +347,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 24, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 2,
@@ -374,7 +369,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue de moto']: {
+            [MOTO]: {
                 Components: {
                     [Component.Torso]: { Drawable: 23, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -388,7 +383,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 34, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 4,
@@ -432,14 +426,14 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                 Components: {
                     [Component.Torso]: { Drawable: 11, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
-                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Legs] + 11,
+                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Legs] + 10,
                         Texture: 0,
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 10, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
-                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 14,
+                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 12,
                         Texture: 1,
                         Palette: 0,
                     },
@@ -464,14 +458,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 51, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 3,
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Tops] + 4,
@@ -487,7 +479,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue Hiver']: {
+            [WINTER]: {
                 Components: {
                     [Component.Torso]: { Drawable: 1, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -497,7 +489,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 51, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 3,
@@ -530,7 +521,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 24, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 6,
@@ -553,7 +543,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue de moto']: {
+            [MOTO]: {
                 Components: {
                     [Component.Torso]: { Drawable: 20, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -567,7 +557,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 13, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Undershirt] + 3,
@@ -642,14 +631,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 52, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 3,
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 4,
@@ -665,7 +652,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue Hiver']: {
+            [WINTER]: {
                 Components: {
                     [Component.Torso]: { Drawable: 3, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -675,7 +662,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 52, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 3,
@@ -708,7 +694,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                     [Component.Bag]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Shoes]: { Drawable: 24, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 8, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 6,
@@ -731,7 +716,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue de moto']: {
+            [MOTO]: {
                 Components: {
                     [Component.Torso]: { Drawable: 23, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -745,7 +730,6 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 34, Texture: 0, Palette: 0 },
-                    [Component.Accessories]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: {
                         Drawable:
                             VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Undershirt] + 3,
@@ -789,14 +773,14 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                 Components: {
                     [Component.Torso]: { Drawable: 11, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
-                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Legs] + 11,
+                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Legs] + 10,
                         Texture: 1,
                         Palette: 0,
                     },
                     [Component.Shoes]: { Drawable: 10, Texture: 0, Palette: 0 },
                     [Component.Undershirt]: { Drawable: 15, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
-                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 14,
+                        Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 12,
                         Texture: 0,
                         Palette: 0,
                     },
@@ -854,7 +838,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue sombre']: {
+            [SASP_DARK]: {
                 Components: {
                     [Component.Torso]: { Drawable: 22, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -929,7 +913,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
+                    [Component.BodyArmor]: {
+                        Drawable:
+                            VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.BodyArmor] + 10,
+                        Texture: 0,
+                        Palette: 0,
+                    },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 2,
@@ -945,7 +934,7 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                     },
                 },
             },
-            ['Tenue sombre']: {
+            [SASP_DARK]: {
                 Components: {
                     [Component.Torso]: { Drawable: 9, Texture: 0, Palette: 0 },
                     [Component.Legs]: {
@@ -971,7 +960,12 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
                         Texture: 0,
                         Palette: 0,
                     },
-                    [Component.BodyArmor]: { Drawable: 0, Texture: 0, Palette: 0 },
+                    [Component.BodyArmor]: {
+                        Drawable:
+                            VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.BodyArmor] + 10,
+                        Texture: 0,
+                        Palette: 0,
+                    },
                     [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
                     [Component.Tops]: {
                         Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Tops] + 2,
@@ -989,27 +983,183 @@ export const POLICE_CLOAKROOM: Partial<Record<JobType, WardrobeConfig>> = {
             },
         },
     },
+    [JobType.LSCS]: {
+        [joaat('mp_m_freemode_01')]: {
+            [DUTY_OUTFIT_NAME]: {
+                Components: {
+                    [Component.Torso]: { Drawable: 0, Texture: 0, Palette: 0 },
+                    [Component.Legs]: {
+                        Drawable: 35,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Bag]: {
+                        Drawable: 0,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Shoes]: { Drawable: 60, Texture: 0, Palette: 0 },
+                    [Component.Accessories]: {
+                        Drawable:
+                            VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.Accessories] + 4,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Undershirt]: {
+                        Drawable: 58,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
+                    [Component.Tops]: {
+                        Drawable: 55,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                },
+                Props: {
+                    [Prop.Hat]: {
+                        Drawable: 46,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                },
+            },
+        },
+        [joaat('mp_f_freemode_01')]: {
+            [DUTY_OUTFIT_NAME]: {
+                Components: {
+                    [Component.Torso]: { Drawable: 14, Texture: 0, Palette: 0 },
+                    [Component.Legs]: {
+                        Drawable: 34,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Bag]: {
+                        Drawable: 0,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Shoes]: { Drawable: 25, Texture: 0, Palette: 0 },
+                    [Component.Accessories]: {
+                        Drawable:
+                            VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.Accessories] + 4,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Undershirt]: {
+                        Drawable: 35,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                    [Component.Decals]: { Drawable: 0, Texture: 0, Palette: 0 },
+                    [Component.Tops]: {
+                        Drawable: 48,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                },
+                Props: {
+                    [Prop.Hat]: {
+                        Drawable: 45,
+                        Texture: 0,
+                        Palette: 0,
+                    },
+                },
+            },
+        },
+    },
 };
 
-export const RankOutfit = {
+export const RankOutfit: Partial<Record<JobType, Record<string, Record<number, [number, number]>>>> = {
     [JobType.LSPD]: {
-        [78]: [0, 0], // Officier
-        [77]: [0, 1], // Sergeant
-        [76]: [2, 0], // Lieutenant
-        [75]: [2, 1], // Captain
-        [74]: [2, 2], // Commander
-        [73]: [2, 3], // Deputy Chief
-        [30]: [2, 4], // Chief of Police
+        [DUTY_OUTFIT_NAME]: {
+            [78]: [7, 0], // Officier
+            [284]: [7, 1], // Caporal
+            [77]: [7, 2], // Sergeant
+            [76]: [2, 0], // Second Lieutenant
+            [285]: [2, 1], // Premier Lieutenant
+            [75]: [2, 2], // Captain
+            [74]: [2, 3], // Commander
+            [73]: [2, 4], // Deputy Chief
+            [30]: [2, 5], // Chief of Police
+        },
+        [MOTO]: {
+            [78]: [7, 0], // Officier
+            [284]: [7, 1], // Caporal
+            [77]: [7, 2], // Sergeant
+            [76]: [9, 0], // Second Lieutenant
+            [285]: [9, 1], // Premier Lieutenant
+            [75]: [9, 2], // Captain
+            [74]: [9, 3], // Commander
+            [73]: [9, 4], // Deputy Chief
+            [30]: [9, 5], // Chief of Police
+        },
+        [WINTER]: {
+            [78]: [12, 0], // Officier
+            [284]: [12, 1], // Caporal
+            [77]: [12, 2], // Sergeant
+            [76]: [10, 0], // Second Lieutenant
+            [285]: [10, 1], // Premier Lieutenant
+            [75]: [10, 2], // Captain
+            [74]: [10, 3], // Commander
+            [73]: [10, 4], // Deputy Chief
+            [30]: [10, 5], // Chief of Police
+        },
     },
     [JobType.BCSO]: {
-        [70]: [0, 2], // Senior
-        [69]: [0, 3], // Major
-        [68]: [2, 5], // Major Chief
-        [201]: [2, 6], // Division Sheriff - previously 67 - Assistant Sheriff
-        [66]: [2, 7], // Undersheriff
-        [38]: [1, 0], // Sheriff
+        [DUTY_OUTFIT_NAME]: {
+            [71]: [0, 0], // Junior
+            [70]: [0, 1], // Senior
+            [69]: [0, 2], // Major
+            [282]: [5, 0], // Second Brigadier
+            [68]: [5, 1], // Premier Brigadier
+            [283]: [5, 2], // supervisor
+            [201]: [5, 3], // Division chief
+            [66]: [5, 4], // Undersheriff
+            [38]: [5, 5], // Sheriff
+        },
+        [MOTO]: {
+            [71]: [0, 0], // Junior
+            [70]: [0, 1], // Senior
+            [69]: [0, 2], // Major
+            [282]: [8, 0], // Second Brigadier
+            [68]: [8, 1], // Premier Brigadier
+            [283]: [8, 2], // supervisor
+            [201]: [8, 3], // Division chief
+            [66]: [8, 4], // Undersheriff
+            [38]: [8, 5], // Sheriff
+        },
+        [WINTER]: {
+            [71]: [13, 0], // Junior
+            [70]: [13, 1], // Senior
+            [69]: [13, 2], // Major
+            [282]: [11, 0], // Second Brigadier
+            [68]: [11, 1], // Premier Brigadier
+            [283]: [11, 2], // supervisor
+            [201]: [11, 3], // Division chief
+            [66]: [11, 4], // Undersheriff
+            [38]: [11, 5], // Sheriff
+        },
     },
-    [JobType.SASP]: {},
+    [JobType.SASP]: {
+        [DUTY_OUTFIT_NAME]: {
+            [235]: [6, 0], // Trooper
+            [286]: [6, 1], // Corporal Trooper
+            [234]: [6, 2], // Sergeant Trooper
+            [233]: [6, 3], // Lieutenant Trooper
+            [232]: [6, 4], // Assistant Commissioner
+            [231]: [6, 5], // Commissioner
+        },
+        [SASP_DARK]: {
+            [235]: [6, 0], // Trooper
+            [286]: [6, 1], // Corporal Trooper
+            [234]: [6, 2], // Sergeant Trooper
+            [233]: [6, 3], // Lieutenant Trooper
+            [232]: [6, 4], // Assistant Commissioner
+            [231]: [6, 5], // Commissioner
+        },
+    },
 };
 
 export const Armors = {
@@ -1081,13 +1231,14 @@ export const Armors = {
             Palette: 0,
         },
         ['news']: { Drawable: 31, Texture: 2, Palette: 0 }, // is unmarked, need reskin
+        ['you-news']: { Drawable: 31, Texture: 4, Palette: 0 }, // is unmarked, need reskin
         ['sasp1']: {
-            Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.BodyArmor] + 8,
+            Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.BodyArmor] + 9,
             Texture: 0,
             Palette: 0,
         },
         ['sasp2']: {
-            Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_f_freemode_01')][Component.BodyArmor] + 8,
+            Drawable: VanillaComponentDrawableIndexMaxValue[joaat('mp_m_freemode_01')][Component.BodyArmor] + 8,
             Texture: 0,
             Palette: 0,
         },
@@ -1403,6 +1554,20 @@ export type PoliceJobLicencesMenuData = {
     playerLicences: Partial<Record<PlayerLicenceType, number>>;
 };
 
+export type PoliceClue = {
+    id: string;
+    model: number;
+    position: Vector4;
+    noCollision: boolean;
+    invisible: boolean;
+    matrix?: Float32Array;
+    placeOnGround: boolean;
+    type: 'evidence_bullet' | 'evidence_blood' | 'evidence_glass';
+    information: string;
+    outline: boolean;
+    quantity: number;
+};
+
 export type PoliceJobMoneycheckerMenuData = {
     job: JobType;
     playerServerId: number;
@@ -1445,59 +1610,8 @@ export const PoliceCanEditLicences = {
 };
 
 export type Fine = {
+    id: number;
     label: string;
+    category: number;
     price: { min: number; max: number };
-};
-
-export const Fines = {
-    '1': {
-        label: 'Catégorie 1',
-        items: [
-            { label: 'Rappel à la loi', price: { min: 150, max: 450 } },
-            { label: 'Infraction aux règles de circulation', price: { min: 200, max: 600 } },
-            { label: 'Permis ou licence manquant', price: { min: 300, max: 900 } },
-            { label: 'Participation à un événement illégal ', price: { min: 450, max: 1350 } },
-            { label: 'Vol ou extorsion', price: { min: 500, max: 1500 } },
-            { label: 'Dégradation de bien privé', price: { min: 500, max: 1500 } },
-            { label: "Trouble à l'ordre publique", price: { min: 500, max: 1500 } },
-            { label: 'Braconnage ou commerce illégal', price: { min: 600, max: 1800 } },
-            { label: 'Insulte ou outrage', price: { min: 600, max: 1800 } },
-        ],
-    },
-    '2': {
-        label: 'Catégorie 2',
-        items: [
-            { label: "Détention d'objet prohibé", price: { min: 700, max: 2100 } },
-            { label: "Refus d'obtempérer", price: { min: 800, max: 2400 } },
-            { label: 'Violation de propriété privée', price: { min: 850, max: 2550 } },
-            { label: 'Vente de stupéfiants', price: { min: 900, max: 2700 } },
-            { label: 'Dégradation de bien public', price: { min: 1000, max: 3000 } },
-            { label: "Port d'arme illégal", price: { min: 1000, max: 3000 } },
-            { label: 'Braquage de commerce local', price: { min: 1500, max: 4500 } },
-            { label: 'Trafic de stupéfiants', price: { min: 2500, max: 7500 } },
-            { label: "Atteinte à l'intégrité morale et/ou physique", price: { min: 1200, max: 3600 } },
-            { label: "Mise en danger d'autrui", price: { min: 1500, max: 4500 } },
-        ],
-    },
-    '3': {
-        label: 'Catégorie 3',
-        items: [
-            { label: 'Obstruction à la justice', price: { min: 1750, max: 5700 } },
-            { label: "Divulgation d'info Confidentielle", price: { min: 2000, max: 6000 } },
-            { label: "Usurpation d'identité / Impersonation", price: { min: 2000, max: 6000 } },
-            { label: 'Détention de matériel militaire prohibé', price: { min: 2500, max: 7500 } },
-            { label: "Atteinte à l'intégrité morale et/ou physique armée", price: { min: 3500, max: 10500 } },
-            { label: "Tentative d'enlèvement", price: { min: 3500, max: 10500 } },
-        ],
-    },
-    '4': {
-        label: 'Catégorie 4',
-        items: [
-            { label: 'Corruption', price: { min: 5000, max: 15000 } },
-            { label: "Enlèvement ou prise d'otage", price: { min: 6000, max: 18000 } },
-            { label: 'Violation de serment', price: { min: 8000, max: 24000 } },
-            { label: 'Homicide', price: { min: 10000, max: 30000 } },
-            { label: 'Perturbation de San Andreas', price: { min: 10000, max: 30000 } },
-        ],
-    },
 };

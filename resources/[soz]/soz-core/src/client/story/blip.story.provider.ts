@@ -1,5 +1,4 @@
-import { OnEvent } from '@public/core/decorators/event';
-import { ClientEvent } from '@public/shared/event/client';
+import { PlayerUpdate } from '@public/core/decorators/player';
 import { PlayerData } from '@public/shared/player';
 
 import { Inject } from '../../core/decorators/injectable';
@@ -39,7 +38,7 @@ export class BlipStoryProvider {
     @Inject(Halloween2023Scenario4Provider)
     private halloween2023Scenario4Provider: Halloween2023Scenario4Provider;
 
-    @OnEvent(ClientEvent.PLAYER_UPDATE)
+    @PlayerUpdate()
     public onPlayerUpdate(player: PlayerData) {
         this.halloween2022Scenario1Provider.createBlip(player);
         this.halloween2022Scenario2Provider.createBlip(player);

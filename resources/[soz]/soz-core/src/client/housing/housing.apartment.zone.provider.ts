@@ -47,7 +47,7 @@ export class HousingApartmentZoneProvider {
     }
 
     @RepositoryDelete(RepositoryType.Housing)
-    public deleteZoneForProperty(property: Property) {
+    public async deleteZoneForProperty(property: Property) {
         for (const apartment of property.apartments) {
             this.deleteZoneForApartment(apartment);
         }
@@ -55,7 +55,7 @@ export class HousingApartmentZoneProvider {
 
     @RepositoryInsert(RepositoryType.Housing)
     @RepositoryUpdate(RepositoryType.Housing)
-    public createZoneForProperty(property: Property) {
+    public async createZoneForProperty(property: Property) {
         for (const apartment of property.apartments) {
             this.createZoneForApartment(property, apartment);
         }

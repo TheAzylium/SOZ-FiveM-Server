@@ -21,6 +21,8 @@ import PhotoApp from '../../../apps/photo';
 import PhotoIcon from '../../../apps/photo/icon';
 import { SettingsApp } from '../../../apps/settings';
 import SettingsIcon from '../../../apps/settings/icon';
+import SnakeIcon from '../../../apps/snake/icon';
+import { SnakeApp } from '../../../apps/snake/SnakeApp';
 import { SocietyContactsApp } from '../../../apps/society-contacts';
 import SocietyContactIcon from '../../../apps/society-contacts/icon';
 import { SocietyMessagesApp } from '../../../apps/society-messages';
@@ -29,8 +31,6 @@ import { TwitchNewsApp } from '../../../apps/twitch-news';
 import TwitchNewsIcon from '../../../apps/twitch-news/icon';
 import { WeatherApp } from '../../../apps/weather';
 import WeatherIcon from '../../../apps/weather/icon';
-import ZutomIcon from '../../../apps/zutom/icon';
-import { ZutomApp } from '../../../apps/zutom/ZutomApp';
 
 export interface IAppConfig {
     id: string;
@@ -126,6 +126,9 @@ export const APPS: IAppConfig[] = [
         component: <TwitchNewsApp />,
         icon: TwitchNewsIcon,
     },
+    /* 
+    Disabled as sutom web site no longer allow external inclusion
+    Need a local instance to fix
     {
         id: 'zutom',
         nameLocale: 'APPS_ZUTOM',
@@ -133,6 +136,7 @@ export const APPS: IAppConfig[] = [
         component: <ZutomApp />,
         icon: ZutomIcon,
     },
+    */
     {
         id: 'camera',
         nameLocale: 'APPS_CAMERA',
@@ -154,5 +158,12 @@ export const APPS: IAppConfig[] = [
         path: '/game-tetris',
         component: <GameTetris />,
         icon: GameTetrisIcon,
+    },
+    {
+        id: 'snake',
+        nameLocale: 'APPS_SNAKE',
+        path: '/snake',
+        component: <SnakeApp />,
+        icon: SnakeIcon,
     },
 ];

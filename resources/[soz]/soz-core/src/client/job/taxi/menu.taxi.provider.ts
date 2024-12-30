@@ -8,6 +8,7 @@ import { MenuType } from '@public/shared/nui/menu';
 
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
+import { BusMissionService } from './mission.bus.service';
 import { TaxiMissionService } from './mission.taxi.service';
 
 @Provider()
@@ -17,6 +18,9 @@ export class TaxiMenuProvider {
 
     @Inject(TaxiMissionService)
     private taxiMissionService: TaxiMissionService;
+
+    @Inject(BusMissionService)
+    private busMissionService: BusMissionService;
 
     @Inject(PlayerService)
     private playerService: PlayerService;
@@ -42,6 +46,15 @@ export class TaxiMenuProvider {
             await this.taxiMissionService.doTaxiNpc();
         } else {
             await this.taxiMissionService.clearMission();
+        }
+    }
+
+    @OnNuiEvent(NuiEvent.BusSetService)
+    public async takeBusService(status: boolean) {
+        if (status) {
+            this.busMissionService.doBusService();
+        } else {
+            this.busMissionService.cancelMission();
         }
     }
 

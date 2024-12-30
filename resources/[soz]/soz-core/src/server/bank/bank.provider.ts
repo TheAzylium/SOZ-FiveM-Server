@@ -88,7 +88,9 @@ export class BankProvider {
                     }
                 );
             }
+        }
 
+        for (const player of players) {
             if (player.metadata.is_senator) {
                 const result = await this.bankService.transferBankMoney(
                     'gouv',

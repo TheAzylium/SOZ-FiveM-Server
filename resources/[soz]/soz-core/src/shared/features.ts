@@ -13,6 +13,7 @@ export enum Feature {
     HalloweenReboot = 'HalloweenNight',
     Boat = 'Boat',
     Easter = 'Easter',
+    EasterFood = 'EasterFood',
     NewHorizon = 'NewHorizon',
 }
 
@@ -85,6 +86,11 @@ const FeatureConfig: Record<Feature, { [P in Environment]?: boolean }> = {
         test: true,
     },
     [Feature.Easter]: {
+        production: false,
+        development: false,
+        test: false,
+    },
+    [Feature.EasterFood]: {
         production: false,
         development: false,
         test: false,

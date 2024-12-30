@@ -7,6 +7,9 @@ import { DrugTransformApp } from '@private/nui/drug/DrugTransformApp';
 import { FishingApp } from '@private/nui/fishing/FishingApp';
 import { HoodApp } from '@private/nui/hood/HoodApp';
 import { MissiveApp } from '@private/nui/missive/MissiveApp';
+import { DetectiveBoard } from '@private/nui/Police/DetectiveBoard';
+import { ScientistCamera } from '@private/nui/Police/ScientistCamera';
+import { ScientistPhoto } from '@private/nui/Police/ScientistPhoto';
 import { SozedexApp } from '@private/nui/sozedex/SozedexApp';
 import { StatePrivateApp } from '@private/nui/StatePrivateApp';
 import { TalentApp } from '@private/nui/Talent/TalentApp';
@@ -24,8 +27,10 @@ import { BookApp } from './Book/BookApp';
 import { CardApp } from './Card/CardApp';
 import { CraftApp } from './Craft/CraftApp';
 import { FieldHealthApp } from './Field/FieldHealthApp';
+import { FieldZoneHealthApp } from './Field/FieldZoneHealthApp';
 import { HudApp } from './Hud/HudApp';
 import { InputApp } from './Input/InputApp';
+import { MedicalApp } from './LSMC/DiagnosticPad/MedicalApp';
 import { MenuApp } from './Menu/MenuApp';
 import { PanelApp } from './Panel/PanelApp';
 import { BreathAnalyzerApp } from './Police/BreathAnalyzer';
@@ -45,7 +50,7 @@ export const App: FunctionComponent = () => {
     useNuiEvent('global', 'PauseMenuActive', setPauseMenuActive);
     useNuiEvent('global', 'HideHud', setHideHud);
 
-    const classes = classNames('font-prompt transition-all duration-500overflow-hidden', {
+    const classes = classNames('font-prompt transition-all duration-500', {
         'opacity-0': pauseMenuActive || hideHud,
         'opacity-100': !pauseMenuActive && !hideHud,
     });
@@ -59,6 +64,7 @@ export const App: FunctionComponent = () => {
         const interval = setInterval(() => {
             fetchNui(NuiEvent.Ping);
         }, 1000);
+        store.dispatch.api.loadApi();
 
         return () => clearInterval(interval);
     }, []);
@@ -86,6 +92,9 @@ export const App: FunctionComponent = () => {
                 <RadioVehicleApp />
                 <BreathAnalyzerApp />
                 <DrugScreeningApp />
+                <DetectiveBoard />
+                <ScientistCamera />
+                <ScientistPhoto />
                 <HoodApp />
                 <TaxiHorodateurApp />
                 <TalentApp />
@@ -97,8 +106,10 @@ export const App: FunctionComponent = () => {
                 <RaceApp />
                 <BookApp />
                 <FieldHealthApp />
+                <FieldZoneHealthApp />
                 <CraftApp />
                 <InputApp />
+                <MedicalApp />
             </div>
         </Provider>
     );

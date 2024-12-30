@@ -11,9 +11,9 @@ import {
 } from '../../shared/vehicle/vehicle';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { PlayerService } from '../player/player.service';
+import { VehicleRepository } from '../repository/vehicle.repository';
 import { VehicleConditionProvider } from '../vehicle/vehicle.condition.provider';
 import { VehicleSeatbeltProvider } from '../vehicle/vehicle.seatbelt.provider';
-import { VehicleStateService } from '../vehicle/vehicle.state.service';
 
 @Provider()
 export class HudVehicleProvider {
@@ -23,8 +23,8 @@ export class HudVehicleProvider {
     @Inject(NuiDispatch)
     private readonly nuiDispatch: NuiDispatch;
 
-    @Inject(VehicleStateService)
-    private vehicleStateService: VehicleStateService;
+    @Inject(VehicleRepository)
+    private vehicleRepository: VehicleRepository;
 
     @Inject(VehicleSeatbeltProvider)
     private readonly vehicleSeatbeltProvider: VehicleSeatbeltProvider;
@@ -109,6 +109,7 @@ export class HudVehicleProvider {
         }
 
         const model = GetEntityModel(vehicle);
+        const vehDef = this.vehicleRepository.getByModelHash(model);
         const useRpm = !IsThisModelAHeli(model) && !IsThisModelAPlane(model);
         const [hasLight, lightOn, hasHighBeam] = GetVehicleLightsState(vehicle);
         const hash = GetEntityModel(vehicle);
@@ -126,6 +127,7 @@ export class HudVehicleProvider {
                     : null,
             oilLevel: condition.oilLevel,
             lockStatus: GetVehicleDoorLockStatus(vehicle) as VehicleLockStatus,
+            vehCategory: vehDef?.requiredLicence,
             useRpm,
             lightState: hasLight
                 ? hasHighBeam

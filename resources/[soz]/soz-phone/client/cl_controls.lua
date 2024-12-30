@@ -38,6 +38,10 @@ CreateThread(function()
             DisableControlAction(0, 121, true) -- Fly Camera (Flying)
             DisableControlAction(0, 122, true) -- Control OVerride (Flying)
             DisableControlAction(0, 135, true) -- Control OVerride (Sub)
+            DisableControlAction(0, 187, true) -- INPUT_FRONTEND_DOWN
+            DisableControlAction(0, 188, true) -- INPUT_FRONTEND_UP
+            DisableControlAction(0, 189, true) -- INPUT_FRONTEND_RIGHT
+            DisableControlAction(0, 190, true) -- INPUT_FRONTEND_RDOWN
             DisableControlAction(0, 200, true) -- Pause Menu
             DisableControlAction(0, 245, true) -- Chat
         else

@@ -15,6 +15,7 @@ export type InteractiveSubMenuProps = {
     banner: string;
     state: {
         displayOwners: boolean;
+        displayDebugSurface: boolean;
         displayPlayerNames: boolean;
         displayPlayersOnMap: boolean;
     };
@@ -32,6 +33,14 @@ export const InteractiveSubMenu: FunctionComponent<InteractiveSubMenuProps> = ({
                     }}
                 >
                     Afficher les propriétaires de véhicules
+                </MenuItemCheckbox>
+                <MenuItemCheckbox
+                    checked={state.displayDebugSurface}
+                    onChange={async value => {
+                        await fetchNui(NuiEvent.AdminToggleDisplaySurfaceDebug, value);
+                    }}
+                >
+                    Afficher les propriétés de surface
                 </MenuItemCheckbox>
                 <MenuItemSelect
                     title={'Afficher les noms des joueurs'}

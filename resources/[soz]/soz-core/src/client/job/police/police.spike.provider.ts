@@ -10,7 +10,9 @@ import { ClientEvent, ServerEvent } from '@public/shared/event';
 import { JobType } from '@public/shared/job';
 import { getDistance, Vector3, Vector4 } from '@public/shared/polyzone/vector';
 
-const jobsTarget = { [JobType.BCSO]: 0, [JobType.FBI]: 0, [JobType.SASP]: 0, [JobType.LSPD]: 0 };
+import { ObjectProvider } from '../../object/object.provider';
+
+const jobsTarget = { [JobType.BCSO]: 0, [JobType.FBI]: 0, [JobType.SASP]: 0, [JobType.LSPD]: 0, [JobType.LSCS]: 0 };
 const spikeModel = GetHashKey('p_ld_stinger_s');
 
 @Provider()
@@ -26,6 +28,9 @@ export class PoliceSpikeProvider {
 
     @Inject(RaceProvider)
     private raceProvider: RaceProvider;
+
+    @Inject(ObjectProvider)
+    private objectProvider: ObjectProvider;
 
     private spikes: { [id: string]: Vector4 } = {};
     private closestSpike: string | null = null;
@@ -66,6 +71,7 @@ export class PoliceSpikeProvider {
                         if (!completed) {
                             return;
                         }
+
                         TriggerServerEvent(ServerEvent.POLICE_REMOVE_SPIKE, ObjToNet(entity));
                     },
                 },
@@ -79,10 +85,24 @@ export class PoliceSpikeProvider {
                     label: 'Démonter',
                     icon: 'c:jobs/demonter.png',
                     job: jobsTarget,
-                    canInteract: () => {
+                    canInteract: entity => {
+                        const id = this.objectProvider.getIdFromEntity(entity);
+
+                        if (!id) {
+                            return false;
+                        }
+
                         return this.playerService.isOnDuty();
                     },
-                    event: 'job:client:RemoveObject',
+                    action: async (entity: number) => {
+                        const id = this.objectProvider.getIdFromEntity(entity);
+
+                        if (!id) {
+                            return;
+                        }
+
+                        TriggerServerEvent(ServerEvent.OBJECT_COLLECT, id);
+                    },
                 },
             ],
             2.5
@@ -99,7 +119,7 @@ export class PoliceSpikeProvider {
 
         const { completed } = await this.progressService.progress(
             'spawn_object',
-            'Lancement de la herse en course',
+            'Lancement de la herse en cours',
             2500,
             {
                 dictionary: 'anim@narcotics@trash',

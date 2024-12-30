@@ -45,6 +45,7 @@ export enum WeaponName {
     MILITARYRIFLE = 'weapon_militaryrifle',
     HEAVYRIFLE = 'weapon_heavyrifle',
     TACTICALRIFLE = 'weapon_tacticalrifle',
+    BATTLERIFLE = 'weapon_battlerifle',
 
     // Shotguns
     PUMPSHOTGUN = 'weapon_pumpshotgun',
@@ -76,6 +77,7 @@ export enum WeaponName {
     RAYMINIGUN = 'weapon_rayminigun',
     EMPLAUNCHER = 'weapon_emplauncher',
     RAILGUNXM3 = 'weapon_railgunxm3',
+    SNOWLAUNCHER = 'weapon_snowlauncher',
 
     // Sniper Rifles
     SNIPERRIFLE = 'weapon_sniperrifle',
@@ -127,6 +129,7 @@ export const WeaponAmmo: {[key: string]: string} = {
     [WeaponName.MILITARYRIFLE]: '7.62x51 M62',
     [WeaponName.HEAVYRIFLE]: '7.62x51 M62',
     [WeaponName.TACTICALRIFLE]: '5.56x45 M995',
+    [WeaponName.BATTLERIFLE]: '7.62x51 M62',
     [WeaponName.PUMPSHOTGUN]: 'Billes caoutchouc',
     [WeaponName.SAWNOFFSHOTGUN]: '12/70 Buckshot',
     [WeaponName.ASSAULTSHOTGUN]: '12/70 Buckshot',

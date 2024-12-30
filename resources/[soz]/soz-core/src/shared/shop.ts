@@ -28,6 +28,10 @@ export type ShopConfig = {
     zone: Zone;
     targets: TargetOptions[];
     products: ShopProduct[];
+    orders?: {
+        targetInv: string;
+        products: ShopProduct[];
+    };
 };
 
 export type BossShopMenu = {

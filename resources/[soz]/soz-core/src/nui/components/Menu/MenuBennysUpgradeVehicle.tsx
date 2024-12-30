@@ -1,5 +1,6 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 
+import { TaxType } from '../../../shared/bank';
 import { RGBColor } from '../../../shared/color';
 import { NuiEvent } from '../../../shared/event';
 import { MenuType } from '../../../shared/nui/menu';
@@ -19,6 +20,7 @@ import {
     VehicleXenonColorChoices,
 } from '../../../shared/vehicle/modification';
 import { fetchNui } from '../../fetch';
+import { useGetPrice } from '../../hook/price';
 import {
     MainMenu,
     Menu,
@@ -52,6 +54,7 @@ export const MenuItemVehicleModification: FunctionComponent<MenuItemVehicleModif
     vehiclePrice,
     initialConfig,
 }) => {
+    const getPrice = useGetPrice();
     const option = options.modification[modKey];
     const initialValue = useMemo(() => {
         return config.modification[modKey] === undefined ? null : config.modification[modKey];
@@ -95,7 +98,7 @@ export const MenuItemVehicleModification: FunctionComponent<MenuItemVehicleModif
                         <MenuItemSelectOption key={index} value={choice.value} helper={choice.label}>
                             {choice.label}
                             {choice.value === initialValue && ' (installé)'}
-                            {price !== null && ` (${price.toFixed(0)} $)`}
+                            {price !== null && ` (${getPrice(price, TaxType.VEHICLE).toFixed(0)} $)`}
                         </MenuItemSelectOption>
                     );
                 })}
@@ -124,7 +127,7 @@ export const MenuItemVehicleModification: FunctionComponent<MenuItemVehicleModif
             >
                 {option.label}
                 {config.modification[modKey] === initialValue && ' (installé)'}
-                {price !== null && ` (${price.toFixed(0)} $)`}
+                {price !== null && ` (${getPrice(price, TaxType.VEHICLE).toFixed(0)} $)`}
             </MenuItemCheckbox>
         );
     }
@@ -750,6 +753,13 @@ export const MenuBennysUpgradeVehicle: FunctionComponent<MenuBennysUpgradeVehicl
                     <MenuItemVehicleModification
                         initialConfig={data?.originalConfiguration}
                         modKey="windows"
+                        options={options}
+                        config={config}
+                        set={setConfig}
+                    />
+                    <MenuItemVehicleModification
+                        initialConfig={data?.originalConfiguration}
+                        modKey="windowsSecondary"
                         options={options}
                         config={config}
                         set={setConfig}

@@ -32,7 +32,7 @@ export class HousingProvider {
             return;
         }
 
-        if (!player.metadata.inside || !player.metadata.inside.property) {
+        if (!player.metadata?.inside || !player.metadata.inside.property) {
             return;
         }
 
@@ -123,12 +123,12 @@ export class HousingProvider {
         let hasParking = true;
 
         if (enableParking) {
-            const apartment = property.apartments[id];
+            const apartment = property.apartments.find(apartment => apartment.id === id);
 
             hasParking = apartment && apartment.hasParkingPlace;
         }
 
-        const position = GetEntityCoords(GetPlayerPed(-1)) as Vector3;
+        const position = GetEntityCoords(PlayerPedId()) as Vector3;
 
         this.nuiMenu.openMenu(
             MenuType.HousingUpgrades,

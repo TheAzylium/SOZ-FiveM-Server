@@ -51,6 +51,8 @@ enum ElevatorFloorName {
     younews0,
     younews1,
     younews2,
+    baun0,
+    baun1,
 }
 
 const Elevators: Record<ElevatorFloorName, ElevatorFloor> = {
@@ -111,10 +113,10 @@ const Elevators: Record<ElevatorFloorName, ElevatorFloor> = {
     },
     [ElevatorFloorName.lsmc2]: {
         label: 'Toit',
-        button: new BoxZone([337.45, -1432.94, 46.85], 0.2, 0.8, { minZ: 46.85, maxZ: 47.25, heading: 320 }),
+        button: new BoxZone([333.35, -1430.19, 47.21], 0.2, 0.3, { heading: 138.09, minZ: 47.01, maxZ: 47.31 }),
         upTo: [],
         downTo: [ElevatorFloorName.lsmc0, ElevatorFloorName.lsmc1],
-        spawnPoint: [336.3, -1431.05, 46.52, 140.67],
+        spawnPoint: [334.41, -1432.06, 46.52, 134.22],
     },
     //LSPD
     [ElevatorFloorName.lspd0]: {
@@ -175,7 +177,14 @@ const Elevators: Record<ElevatorFloorName, ElevatorFloor> = {
         upTo: [ElevatorFloorName.admin0],
         downTo: [],
         spawnPoint: [2154.62, 2920.95, -81.08, 272.4],
-        job: { [JobType.FBI]: 0, [JobType.LSPD]: 0, [JobType.BCSO]: 0, [JobType.SASP]: 0, [JobType.Gouv]: 0 },
+        job: {
+            [JobType.FBI]: 0,
+            [JobType.LSPD]: 0,
+            [JobType.BCSO]: 0,
+            [JobType.SASP]: 0,
+            [JobType.Gouv]: 0,
+            [JobType.LSCS]: 0,
+        },
     },
     //MTP
     [ElevatorFloorName.mtp0]: {
@@ -221,6 +230,21 @@ const Elevators: Record<ElevatorFloorName, ElevatorFloor> = {
         downTo: [ElevatorFloorName.younews1, ElevatorFloorName.younews0],
         spawnPoint: [-1072.38, -246.64, 53.21, 302.0],
     },
+    //BAHAMA
+    [ElevatorFloorName.baun0]: {
+        label: 'Rez-de-chaussée',
+        button: new BoxZone([-1383.44, -589.6, 30.32], 0.2, 0.4, { heading: 215.27, minZ: 30.12, maxZ: 30.92 }),
+        upTo: [ElevatorFloorName.baun1],
+        downTo: [],
+        spawnPoint: [-1382.07, -589.92, 30.32, 30.76],
+    },
+    [ElevatorFloorName.baun1]: {
+        label: 'Roof Top',
+        button: new BoxZone([-1379.51, -600.05, 43.8], 0.2, 0.4, { heading: 307.24, minZ: 43.8, maxZ: 44.4 }),
+        upTo: [],
+        downTo: [ElevatorFloorName.baun0],
+        spawnPoint: [-1379.1, -598.67, 43.8, 109.24],
+    },
 };
 
 @Provider()
@@ -237,7 +261,7 @@ export class ElevatorProvider {
     @Once()
     public onStart() {
         for (const [id, value] of Object.entries(Elevators)) {
-            this.targetFactory.createForBoxZone('Elevator:' + id, value.button, this.createTargetOptions(value), 1.5);
+            this.targetFactory.createForBoxZone('Elevator:' + id, value.button, this.createTargetOptions(value));
         }
     }
 

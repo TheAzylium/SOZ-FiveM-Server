@@ -1,3 +1,4 @@
+import { Society } from '@typings/society';
 import { AppContent } from '@ui/components/AppContent';
 import { AppTitle } from '@ui/components/AppTitle';
 import cn from 'classnames';
@@ -18,16 +19,16 @@ export const ContactList: React.FC = () => {
     const [searchValue, setSearchValue] = useState<string>('');
     const contacts = getContacts();
     const filteredContacts = useMemo(() => {
-        const list = [];
+        const list = new Map<string, Society[]>();
         const regExp = new RegExp(searchValue.replace(/[^a-zA-Z\d]/g, ''), 'gi');
 
         contacts
             .filter(contact => contact?.display?.match(regExp) || contact.number.match(regExp))
             .forEach(contact => {
-                if (list[contact.display[0]] === undefined) {
-                    list[contact.display[0]] = [];
+                if (list.get(contact.type) === undefined) {
+                    list.set(contact.type, []);
                 }
-                list[contact.display[0]].push(contact);
+                list.get(contact.type).push(contact);
             });
 
         return list;
@@ -50,8 +51,8 @@ export const ContactList: React.FC = () => {
                 value={searchValue}
             />
             <nav className="h-[725px] pb-10 overflow-y-auto" aria-label="Directory">
-                {Object.keys(filteredContacts)
-                    .sort()
+                {Array.from(filteredContacts.keys())
+                    .sort((a, b) => b.localeCompare(a))
                     .map(letter => (
                         <div key={letter} className="relative">
                             <div
@@ -68,8 +69,14 @@ export const ContactList: React.FC = () => {
                                     'divide-gray-200': config.theme.value === 'light',
                                 })}
                             >
-                                {filteredContacts[letter]
-                                    .sort((a, b) => a.display.localeCompare(b.display))
+                                {filteredContacts
+                                    .get(letter)
+                                    .sort((a, b) => {
+                                        if (a.order != null && b.order != null) {
+                                            return a.order - b.order;
+                                        }
+                                        return a.display.localeCompare(b.display);
+                                    })
                                     .map(contact => (
                                         <li
                                             key={contact.number}

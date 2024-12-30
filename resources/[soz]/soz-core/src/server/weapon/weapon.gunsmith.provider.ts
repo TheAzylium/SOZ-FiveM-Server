@@ -1,6 +1,7 @@
 import { Inject } from '../../core/decorators/injectable';
 import { Provider } from '../../core/decorators/provider';
 import { Rpc } from '../../core/decorators/rpc';
+import { TaxType } from '../../shared/bank';
 import { RpcServerEvent } from '../../shared/rpc';
 import { REPAIR_HEALTH_REDUCER, WEAPON_CUSTOM_PRICE, WeaponComponentType } from '../../shared/weapons/attachment';
 import { WeaponMk2TintColor, WeaponTintColor } from '../../shared/weapons/tint';
@@ -33,7 +34,7 @@ export class WeaponGunsmithProvider {
             return false;
         }
 
-        if (this.playerMoneyService.remove(source, WEAPON_CUSTOM_PRICE.label)) {
+        if (await this.playerMoneyService.buy(source, WEAPON_CUSTOM_PRICE.label, TaxType.WEAPON)) {
             this.inventoryManager.updateMetadata(source, slot, { label: label.replace(WEAPON_NAME_REGEX, '') });
             return true;
         }
@@ -62,9 +63,9 @@ export class WeaponGunsmithProvider {
             health = GlobalWeaponConfig.MaxHealth;
         }
 
-        const price = WEAPON_CUSTOM_PRICE.repair * Math.floor(100 - (health / maxHealth) * WEAPON_CUSTOM_PRICE.repair);
+        const price = WEAPON_CUSTOM_PRICE.repair * Math.floor(100 - (health / maxHealth) * 100);
 
-        if (this.playerMoneyService.remove(source, price)) {
+        if (await this.playerMoneyService.buy(source, price, TaxType.WEAPON)) {
             const heal = maxHealth * REPAIR_HEALTH_REDUCER;
 
             this.inventoryManager.updateMetadata(source, slot, { maxHealth: heal, health: heal });
@@ -89,8 +90,9 @@ export class WeaponGunsmithProvider {
             return false;
         }
 
-        if (this.payUpgrade(source, WEAPON_CUSTOM_PRICE.tint, Number(tint) === weapon.metadata.tint)) {
+        if (await this.payUpgrade(source, WEAPON_CUSTOM_PRICE.tint, Number(tint) === weapon.metadata.tint)) {
             this.inventoryManager.updateMetadata(source, slot, { tint: Number(tint) });
+
             return true;
         }
 
@@ -113,7 +115,7 @@ export class WeaponGunsmithProvider {
             return false;
         }
 
-        if (this.payUpgrade(source, WEAPON_CUSTOM_PRICE.attachment, attachment === null)) {
+        if (await this.payUpgrade(source, WEAPON_CUSTOM_PRICE.attachment, attachment === null)) {
             if (weapon.metadata.attachments === undefined) {
                 weapon.metadata.attachments = {
                     clip: null,
@@ -135,10 +137,11 @@ export class WeaponGunsmithProvider {
         return false;
     }
 
-    private payUpgrade(source, price, skipMoneyCheck = false) {
+    private async payUpgrade(source, price, skipMoneyCheck = false) {
         if (skipMoneyCheck) {
             return true;
         }
-        return this.playerMoneyService.remove(source, price);
+
+        return this.playerMoneyService.buy(source, price, TaxType.WEAPON);
     }
 }

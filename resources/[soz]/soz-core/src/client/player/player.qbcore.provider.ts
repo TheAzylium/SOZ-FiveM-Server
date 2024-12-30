@@ -27,6 +27,10 @@ export class PlayerQbcoreProvider {
 
     @On('QBCore:Player:SetPlayerData')
     playerUpdate(playerData: PlayerData): void {
+        if (!playerData || !playerData.metadata) {
+            return;
+        }
+
         this.playerService.setPlayer(playerData);
     }
 

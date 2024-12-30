@@ -31,7 +31,8 @@ export type AnimationConfigItem =
     | AnimationConfigEvent
     | AnimationConfigScenario
     | AnimationConfigAnimation
-    | AnimationConfigCategory;
+    | AnimationConfigCategory
+    | WalkConfigItem;
 
 export type AnimationConfigList = AnimationConfigItem[];
 
@@ -39,6 +40,7 @@ export type WalkConfigBase = {
     type: 'walk';
     name: string;
     walk: string;
+    icon?: string;
 };
 
 export type WalkConfigCategory = {
@@ -53,7 +55,7 @@ export enum AnimationStopReason {
     Finished, // Normal finish, animation is finished
 }
 
-export type WalkConfigItem = WalkConfigBase | WalkConfigCategory;
+export type WalkConfigItem = WalkConfigBase | WalkConfigCategory | AnimationConfigEvent;
 
 export type WalkConfigList = WalkConfigItem[];
 
@@ -79,6 +81,11 @@ export type Scenario = {
     position?: Vector4;
     isSittingScenario?: boolean;
     shouldTeleport?: boolean;
+};
+
+export type Walking = {
+    walk: string;
+    previous: string;
 };
 
 export type Vfx = {

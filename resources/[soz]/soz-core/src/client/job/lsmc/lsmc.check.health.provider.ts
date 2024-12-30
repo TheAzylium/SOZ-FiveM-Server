@@ -11,7 +11,6 @@ import { PlayerHealthBook } from '../../../shared/player';
 import { Vector3 } from '../../../shared/polyzone/vector';
 import { Err, Ok } from '../../../shared/result';
 import { InputService } from '../../nui/input.service';
-import { NuiDispatch } from '../../nui/nui.dispatch';
 import { NuiMenu } from '../../nui/nui.menu';
 import { PlayerService } from '../../player/player.service';
 import { ProgressService } from '../../progress.service';
@@ -30,9 +29,6 @@ export class LSMCCheckHealthProvider {
 
     @Inject(NuiMenu)
     private nuiMenu: NuiMenu;
-
-    @Inject(NuiDispatch)
-    private nuiDispatch: NuiDispatch;
 
     @Inject(InputService)
     private inputService: InputService;
@@ -63,10 +59,9 @@ export class LSMCCheckHealthProvider {
 
     @OnNuiEvent(NuiEvent.PlayerSetHealthBookField)
     async setPlayerHealthBookField({ source, field }: { source: number; field: keyof PlayerHealthBook }) {
-        const value = await this.inputService.askInput(
+        const value = await this.inputService.askInput<number>(
             {
                 title: `Carte de santé: ${HealthBookLabel[field]}`,
-                defaultValue: '',
                 maxCharacters: 3,
             },
             value => {
@@ -86,7 +81,7 @@ export class LSMCCheckHealthProvider {
                     return Err(`Valeur incorrecte, doit être supérieure à ${HealthBookMinMax[field].min}`);
                 }
 
-                return Ok(true);
+                return Ok(number);
             }
         );
 
@@ -94,7 +89,7 @@ export class LSMCCheckHealthProvider {
             return Ok(true);
         }
 
-        TriggerServerEvent(ServerEvent.LSMC_SET_HEALTH_BOOK, source, field, Number(value));
+        TriggerServerEvent(ServerEvent.LSMC_SET_HEALTH_BOOK, source, field, value);
 
         return Ok(true);
     }
@@ -149,14 +144,19 @@ export class LSMCCheckHealthProvider {
             },
         ]);
 
-        this.targetFactory.createForBoxZone(
-            'lsmc_analyze',
+        [
+            new BoxZone([1816.41, 3680.58, 33.48], 1.0, 1.0, {
+                heading: 310.81,
+                minZ: 33.88,
+                maxZ: 34.48,
+            }),
             new BoxZone([373.02, -1416.34, 32.41], 0.8, 0.6, {
                 heading: 231.23,
                 minZ: 32.41,
                 maxZ: 32.86,
             }),
-            [
+        ].forEach((zone, index) =>
+            this.targetFactory.createForBoxZone('lsmc_analyze_' + index, zone, [
                 {
                     label: 'Analyse urinaire',
                     icon: 'c:ems/urine_test.png',
@@ -184,7 +184,7 @@ export class LSMCCheckHealthProvider {
                     },
                     item: 'flask_blood_full',
                 },
-            ]
+            ])
         );
     }
 }
