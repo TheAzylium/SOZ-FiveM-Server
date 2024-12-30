@@ -83,20 +83,12 @@ end)
 ------
 RegisterNetEvent('InteractSound_SV:PlayWithinDistance')
 AddEventHandler('InteractSound_SV:PlayWithinDistance', function(maxDistance, soundFile, soundVolume)
-  if GetConvar("onesync_enableInfinity", "false") == "true" then
-    TriggerClientEvent('InteractSound_CL:PlayWithinDistanceOS', -1, GetEntityCoords(GetPlayerPed(source)), maxDistance, soundFile, soundVolume)
-  else
-    TriggerClientEvent('InteractSound_CL:PlayWithinDistance', -1, source, maxDistance, soundFile, soundVolume)
-  end
-end)
-
-RegisterNetEvent('InteractSound_SV:PlayWithinDistance')
-AddEventHandler('InteractSound_SV:PlayWithinDistance', function(maxDistance, soundFile, soundVolume)
-    local src = source
-    local DistanceLimit = 300
-    if maxDistance < DistanceLimit then
-	TriggerClientEvent('InteractSound_CL:PlayWithinDistance', -1, GetEntityCoords(GetPlayerPed(src)), maxDistance, soundFile, soundVolume)
-    else
-        print(('[interact-sound] [^3WARNING^7] %s attempted to trigger InteractSound_SV:PlayWithinDistance over the distance limit ' .. DistanceLimit):format(GetPlayerName(src)))
+  local players = GetPlayers()
+  local sourceLocation = GetEntityCoords(GetPlayerPed(source))
+  for _, player in pairs(players) do 
+    local targetLocation = GetEntityCoords(GetPlayerPed(player))
+    if math.abs(targetLocation.x -  sourceLocation.x) < maxDistance and math.abs(targetLocation.y -  sourceLocation.y) < maxDistance then
+      TriggerClientEvent('InteractSound_CL:PlayWithinDistance', player, sourceLocation, maxDistance, soundFile, soundVolume)
     end
+  end
 end)

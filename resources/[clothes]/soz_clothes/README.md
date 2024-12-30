@@ -11,14 +11,24 @@
 9  hiver Stonks
 10 intervention LSPD/BCSO
 11 anti-emeute LSPD/BCSO
-12 sport LSPD/BCSO (14 for femme)
+12 sport LSPD/BCSO
+13 M N/A | F Swimsuit LSMC
 
     Decalque
-0  chevron 0-4
+0  chevron BCSO 0-3 
 1  4 étoiles or 0
-2  col or et argent 0-7
+2  col BCSO 0-5
 3  épaullete stonks
 4  badge LSPD/BCSO
+5  col LSPD 0-5
+6  col SASP or 0-5
+7  chevron LSPD 0-3 
+8  moto col BCSO
+9  moto col LSPD
+10 Hiver col LSPD
+11 Hiver col BCSO
+12 moto chevron LSPD
+13 moto chevron BCSO
 
     Armor
 0  stonks
@@ -29,8 +39,9 @@
 5  anti-emeute LSPD/BCSO
 6  light crimi
 7  medium crimi
-8  bandoulière SASP       / femme armor SASP
-9  armor SASP
+8  bandoulière SASP       / femme armor SASP2 moche
+9  armor SASP1            / femme armor SASP1
+10 armor SASP2            / femme bandoulière SASP
 
     Undershirt
 0  stonk holster radio epaule // pas utilisé?
@@ -41,7 +52,6 @@
 5  ceinture LSMC
 6  pilote BCSO
 7  antiemeute LSPD/BCSO
-8  harnais holster
 
     Accessories
 0  stétho    //same as vanilla?
@@ -49,6 +59,7 @@
 2  badge LSPD/BCSO  -- no longer used IG
 3  harnais holster
 4  holster ceinture
+5  gilets Life Guard
 
     bag
 0  LSPD badge pectoraux
@@ -64,7 +75,9 @@
 6  intervention LSPD/BCSO
 7  antiemeute LSPD/BCSO
 8  SASP Sombre
-9  sport LSPD/BCSO (10 for femme)
+9  M sport LSPD/BCSO | F ??
+10 M N/A | F sport LSPD/BCSO
+11 M N/A | F Swimsuit LSMC
 
     chapeau
 0  casquette stonk
