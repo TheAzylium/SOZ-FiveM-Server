@@ -5,7 +5,7 @@ import { Inject } from '../../../core/decorators/injectable';
 import { Rpc } from '../../../core/decorators/rpc';
 import { uuidv4 } from '../../../core/utils';
 import { ClientEvent } from '../../../shared/event';
-import { ZDropDevice, ZDropSendResult } from '../../../shared/phone/apps/zdrop';
+import { ZDropContentType, ZDropDevice, ZDropSendResult } from '../../../shared/phone/apps/zdrop';
 import { PlayerData } from '../../../shared/player';
 import { getDistance, Vector3 } from '../../../shared/polyzone/vector';
 import { RpcServerEvent } from '../../../shared/rpc';
@@ -22,7 +22,7 @@ type PendingRequestData = { display: string; number: string } | { image: string 
 type PendingRequest = {
     fromSource: number;
     toSource: number;
-    type: 'contact' | 'photo';
+    type: ZDropContentType;
     data: PendingRequestData;
     timeout: NodeJS.Timeout;
 };
@@ -154,7 +154,7 @@ export class PhoneAppZDropProvider {
             });
 
             TriggerClientEvent(ClientEvent.PHONE_APP_ZDROP_DELIVERED, source, { type: 'contact', contact });
-        } else {
+        } else if (request.type === 'photo') {
             const data = request.data as { image: string };
             const photo = await this.prismaService.phone_gallery.create({
                 data: {
@@ -164,6 +164,8 @@ export class PhoneAppZDropProvider {
             });
 
             TriggerClientEvent(ClientEvent.PHONE_APP_ZDROP_DELIVERED, source, { type: 'photo', photo });
+        } else {
+            return false;
         }
 
         TriggerClientEvent(ClientEvent.PHONE_APP_ZDROP_RESULT, request.fromSource, { requestId, accepted: true });
@@ -200,7 +202,7 @@ export class PhoneAppZDropProvider {
         source: number,
         sender: PlayerData,
         targets: number[],
-        type: 'contact' | 'photo',
+        type: ZDropContentType,
         preview: string,
         data: PendingRequestData
     ): Promise<ZDropSendResult> {

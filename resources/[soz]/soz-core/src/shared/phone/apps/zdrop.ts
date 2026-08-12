@@ -1,3 +1,5 @@
+export type ZDropContentType = 'contact' | 'photo';
+
 export type ZDropDevice = {
     playerId: number;
     name: string;
@@ -7,7 +9,7 @@ export type ZDropDevice = {
 export type ZDropIncomingRequest = {
     requestId: string;
     fromName: string;
-    type: 'contact' | 'photo';
+    type: ZDropContentType;
     preview: string;
 };
 

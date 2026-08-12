@@ -6,7 +6,7 @@ import { emitRpc } from '../../../core/rpc';
 import { ClientEvent } from '../../../shared/event/client';
 import { NuiEvent } from '../../../shared/event/nui';
 import { PhotoItem } from '../../../shared/phone/apps/photos';
-import { ZDropDevice } from '../../../shared/phone/apps/zdrop';
+import { ZDropDevice, ZDropIncomingRequest } from '../../../shared/phone/apps/zdrop';
 import { Contact } from '../../../shared/phone/simcard';
 import { RpcServerEvent } from '../../../shared/rpc';
 import { Notifier } from '../../notifier';
@@ -61,7 +61,7 @@ export class PhoneAppZDropProvider {
     }
 
     @OnEvent(ClientEvent.PHONE_APP_ZDROP_INCOMING)
-    onZDropIncoming(data: { requestId: string; fromName: string; type: 'contact' | 'photo'; preview: string }) {
+    onZDropIncoming(data: ZDropIncomingRequest) {
         this.nuiDispatch.dispatch('phone', 'ZDropIncomingRequest', data);
     }
 
