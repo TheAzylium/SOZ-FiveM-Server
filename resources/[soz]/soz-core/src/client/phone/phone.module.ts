@@ -8,6 +8,7 @@ import { PhoneAppSnakeProvider } from './apps/phone.app.snake.provider';
 import { PhoneAppSocietyProvider } from './apps/phone.app.society.provider';
 import { PhoneAppTetrisProvider } from './apps/phone.app.tetris.provider';
 import { PhoneAppWeatherProvider } from './apps/phone.app.weather.provider';
+import { PhoneBoothProvider } from './phone.booth.provider';
 import { PhoneLights } from './phone.lights';
 import { PhoneManager } from './phone.manager';
 import { PhoneProvider } from './phone.provider';
@@ -27,6 +28,7 @@ import { PhoneState } from './phone.state';
         PhoneSimCardCalls,
         PhoneSimCardContacts,
         PhoneSimCardMessages,
+        PhoneBoothProvider,
         // Apps
         PhoneAppDarkWebProvider,
         PhoneAppSocietyProvider,
