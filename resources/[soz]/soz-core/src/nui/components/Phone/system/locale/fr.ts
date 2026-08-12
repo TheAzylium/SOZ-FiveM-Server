@@ -209,6 +209,8 @@ export const fr = {
             SEND: 'Envoyer le message',
             SEND_POSITION: 'Envoyer + Position',
             SET_ANONYMOUS: 'Être anonyme',
+            HISTORY_TITLE: 'Historique des messages',
+            HISTORY_EMPTY: "Vous n'avez envoyé aucun message",
         },
         SOCIETY_MESSAGES: {
             NOTIFICATION: {
