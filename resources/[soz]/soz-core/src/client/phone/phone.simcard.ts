@@ -31,6 +31,9 @@ export class PhoneSimCard {
 
         const avatar = await emitRpc<string>(RpcServerEvent.PHONE_SIMCARD_GET_AVATAR);
         this.nuiDispatch.dispatch('phone', 'SetSimCardAvatar', avatar);
+
+        const name = await emitRpc<string>(RpcServerEvent.PHONE_SIMCARD_GET_NAME);
+        this.nuiDispatch.dispatch('phone', 'SetSimCardName', name);
     }
 
     @On('QBCore:Client:OnJobUpdate')
@@ -47,5 +50,11 @@ export class PhoneSimCard {
     async onUpdateAvatar({ avatar }: { avatar: string }) {
         await emitRpc(RpcServerEvent.PHONE_SIMCARD_UPDATE_AVATAR, avatar);
         this.nuiDispatch.dispatch('phone', 'SetSimCardAvatar', avatar);
+    }
+
+    @OnNuiEvent(NuiEvent.PhoneSimCardUpdateName)
+    async onUpdateName(name: string) {
+        await emitRpc(RpcServerEvent.PHONE_SIMCARD_UPDATE_NAME, name);
+        this.nuiDispatch.dispatch('phone', 'SetSimCardName', name);
     }
 }

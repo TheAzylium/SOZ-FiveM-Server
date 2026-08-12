@@ -89,6 +89,46 @@ export class PhoneSimCard {
         });
     }
 
+    @Rpc(RpcServerEvent.PHONE_SIMCARD_GET_NAME)
+    async getName(source: number): Promise<string> {
+        const player = this.playerService.getPlayer(source);
+        if (!player) {
+            return;
+        }
+
+        const profile = await this.prismaService.phone_profile.findFirst({
+            select: {
+                name: true,
+            },
+            where: {
+                number: player.charinfo.phone,
+            },
+        });
+
+        return profile?.name ?? `Zphone-${player.charinfo.firstname}`;
+    }
+
+    @Rpc(RpcServerEvent.PHONE_SIMCARD_UPDATE_NAME)
+    async updateName(source: number, name: string) {
+        const player = this.playerService.getPlayer(source);
+        if (!player) {
+            return;
+        }
+
+        await this.prismaService.phone_profile.upsert({
+            where: {
+                number: player.charinfo.phone,
+            },
+            update: {
+                name,
+            },
+            create: {
+                number: player.charinfo.phone,
+                name,
+            },
+        });
+    }
+
     @Rpc(RpcServerEvent.PHONE_SIMCARD_CALLS_HISTORY_GET)
     async getCallHistory(source: number) {
         const player = this.playerService.getPlayer(source);

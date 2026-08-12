@@ -6,6 +6,7 @@ import { NewsMessage } from '@public/shared/phone/apps/news';
 import { NoteItem } from '@public/shared/phone/apps/notes';
 import { PhotoItem } from '@public/shared/phone/apps/photos';
 import { SocietyMessage } from '@public/shared/phone/apps/society';
+import { ZDropDevice, ZDropIncomingRequest } from '@public/shared/phone/apps/zdrop';
 import { ActiveCall, CallHistory, Contact, Message, MessageConversation } from '@public/shared/phone/simcard';
 import { ForecastWithTemperature } from '@public/shared/weather';
 
@@ -21,6 +22,7 @@ export interface NuiPhoneMap {
 
     SetSimCard: string;
     SetSimCardAvatar: string;
+    SetSimCardName: string;
 
     SetSocietySimCard: string;
 
@@ -63,4 +65,8 @@ export interface NuiPhoneMap {
     AppSocietyPatchData: SocietyMessage;
     AppWeatherSetData: ForecastWithTemperature[];
     AppWeatherSetStormAlert: number;
+    ZDropNearbyDevices: ZDropDevice[];
+    ZDropIncomingRequest: ZDropIncomingRequest;
+    ZDropRequestResult: { requestId: string; accepted: boolean };
+    ZDropCancelled: { requestId: string };
 }

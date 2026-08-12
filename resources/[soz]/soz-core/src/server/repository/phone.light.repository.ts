@@ -42,4 +42,8 @@ export class PhoneLightRepository extends Repository<RepositoryType.PhoneLight> 
         }
         delete this.playerPhone[source];
     }
+
+    public hasPhoneOut(source: number): boolean {
+        return (this.playerPhone[source]?.length ?? 0) > 0;
+    }
 }

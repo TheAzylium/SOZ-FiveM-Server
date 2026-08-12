@@ -31,6 +31,9 @@ import { usePhoneFocus, usePhoneInsideInput, usePhoneStateHandlers } from './sys
 import { PhoneWrapper } from './system/PhoneWrapper';
 import { useSimCardStateHandlers } from './system/sim-card/sim.card.atom';
 import { SoundProvider } from './system/sound/providers/SoundProvider';
+import { ZDropPicker } from './system/zdrop/components/ZDropPicker';
+import { ZDropRequestModal } from './system/zdrop/components/ZDropRequestModal';
+import { useAppZDropStateHandlers } from './system/zdrop/zdrop.atom';
 
 export const PhoneApp: FunctionComponent = () => {
     const apps = useApps();
@@ -77,6 +80,8 @@ export const PhoneApp: FunctionComponent = () => {
 
                         <Alerts />
                         <ActionSheet />
+                        <ZDropRequestModal />
+                        <ZDropPicker />
 
                         <CallDynamicIsland />
                         <NotificationDynamicIsland />
@@ -112,6 +117,7 @@ const PhoneAppHooks: FunctionComponent = () => {
     // System Apps
     useEmergencyStateHandlers();
     useAppPhotosStateHandlers();
+    useAppZDropStateHandlers();
 
     // Apps
     useAppBankStateHandlers();

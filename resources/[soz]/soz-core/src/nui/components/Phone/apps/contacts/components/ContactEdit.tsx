@@ -1,5 +1,5 @@
 import { StarIcon as StarIconOutline } from '@heroicons/react/outline';
-import { ChatIcon, PhoneIcon, StarIcon, TrashIcon } from '@heroicons/react/solid';
+import { ChatIcon, PaperAirplaneIcon, PhoneIcon, StarIcon, TrashIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,8 +18,9 @@ import { useApp } from '../../../system/apps/hooks/useApp';
 import { useAppTitleActionsUpdater } from '../../../system/apps/hooks/useAppTitleActionsUpdater';
 import { useAppTitleGetBackUpdater } from '../../../system/apps/hooks/useAppTitleGetBackUpdater';
 import { useAppTitleUpdater } from '../../../system/apps/hooks/useAppTitleUpdater';
-import { useThemeConfig } from '../../../system/config/config.atom';
+import { useConfig, useThemeConfig } from '../../../system/config/config.atom';
 import { useContactByID } from '../../../system/sim-card/hooks/useContact';
+import { useZDropAPI } from '../../../system/zdrop/hooks/useZDropAPI';
 import { useContactsAPI } from '../hooks/useContactsAPI';
 
 interface ContactInfoRouteQuery {
@@ -34,6 +35,7 @@ export const ContactEdit: FunctionComponent = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const theme = useThemeConfig();
+    const config = useConfig();
     const { sendAlert } = useAlert();
 
     const { id } = useParams();
@@ -47,6 +49,7 @@ export const ContactEdit: FunctionComponent = () => {
     });
 
     const { updateContact, addNewContact, deleteContact, addFavoriteContact, removeFavoriteContact } = useContactsAPI();
+    const { openZDropPicker } = useZDropAPI();
 
     const contact = useContactByID(parseInt(id));
 
@@ -84,6 +87,8 @@ export const ContactEdit: FunctionComponent = () => {
         updateContact(contact.id, { number, display: name });
     };
 
+    const handleContactZDrop = () => openZDropPicker({ type: 'contact', contactId: contact.id });
+
     useAppTitleUpdater(true, t(contactsApp.nameLocale));
     useAppTitleGetBackUpdater(() => navigate(-1));
     useAppTitleActionsUpdater([
@@ -104,6 +109,15 @@ export const ContactEdit: FunctionComponent = () => {
             icon: <StarIconOutline className="size-5" />,
             className: 'text-yellow-500 hover:text-yellow-600',
             onClick: () => addFavoriteContact(contact?.id),
+        },
+        {
+            display: Boolean(contact) && config.zdropEnabled,
+            icon: <PaperAirplaneIcon className="size-5" />,
+            className: {
+                'text-ios-100 hover:text-ios-200': theme === 'dark',
+                'text-ios-700 hover:text-ios-600': theme === 'light',
+            },
+            onClick: handleContactZDrop,
         },
         {
             display: true,
