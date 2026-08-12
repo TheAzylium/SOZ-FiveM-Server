@@ -1,3 +1,4 @@
+import { Transition } from '@headlessui/react';
 import { ChatAltIcon, PaperAirplaneIcon } from '@heroicons/react/outline';
 import {
     AdjustmentsIcon,
@@ -11,17 +12,22 @@ import {
     TrashIcon,
     VolumeOffIcon,
     VolumeUpIcon,
+    WifiIcon,
 } from '@heroicons/react/solid';
 import { SettingOption } from '@public/shared/phone/config';
 import clsx from 'clsx';
 import qs from 'qs';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { NuiEvent } from '../../../../../../shared/event/nui';
+import { fetchNui } from '../../../../../fetch';
 import { usePhoneAPI } from '../../../api/usePhoneAPI';
 import { Button } from '../../../components/Button';
 import { ContactPicture } from '../../../components/ContactPicture';
+import { DialogForm } from '../../../components/DialogForm';
+import { TextField } from '../../../components/Input';
 import { List, ListItem } from '../../../components/List';
 import { AppContent } from '../../../components/system/AppContent';
 import { AppTitle } from '../../../components/system/AppTitle';
@@ -42,6 +48,7 @@ import {
 import { useSettingsChange } from '../../../system/config/hooks/useSettingsChange';
 import { useAvatar } from '../../../system/sim-card/hooks/useAvatar';
 import { useSimCard } from '../../../system/sim-card/hooks/useSimCard';
+import { useSimCardName } from '../../../system/sim-card/hooks/useSimCardName';
 import { useSocietySimCard } from '../../../system/sim-card/hooks/useSocietySimCard';
 import { SettingItem } from '../components/SettingItem';
 import { SettingItemSlider } from '../components/SettingItemSlider';
@@ -64,6 +71,10 @@ export const SettingsHome = () => {
 
     const { sendAlert } = useAlert();
     const { avatar } = useAvatar();
+    const { name } = useSimCardName();
+
+    const [deviceNameModal, setDeviceNameModal] = useState(false);
+    const [deviceNameValue, setDeviceNameValue] = useState('');
 
     const extraFrames = useExtraFrames();
 
@@ -121,6 +132,20 @@ export const SettingsHome = () => {
         );
     };
 
+    const openDeviceNameModal = () => {
+        setDeviceNameValue(name || '');
+        setDeviceNameModal(true);
+    };
+
+    const handleDeviceNameSubmit = () => {
+        if (!deviceNameValue.trim()) {
+            return;
+        }
+
+        fetchNui(NuiEvent.PhoneSimCardUpdateName, deviceNameValue.trim());
+        setDeviceNameModal(false);
+    };
+
     const handleChooseImage = useCallback(() => {
         navigate(
             `/photos?${qs.stringify({
@@ -159,6 +184,13 @@ export const SettingsHome = () => {
                         icon={<PhoneIcon />}
                         color="bg-[#65C466]"
                     />
+                    <SettingItem
+                        label={t('SETTINGS.OPTIONS.DEVICE_NAME.DIALOG_TITLE')}
+                        value={name}
+                        onClick={openDeviceNameModal}
+                        icon={<PencilIcon />}
+                        color="bg-[#007AFF]"
+                    />
                     <SettingSwitch
                         label={t('SETTINGS.OPTIONS.HAND_FREE')}
                         icon={<DeviceMobileIcon />}
@@ -172,6 +204,13 @@ export const SettingsHome = () => {
                         color="bg-[#FF6633]"
                         value={config.planeMode}
                         onClick={curr => handleSettingChange('planeMode', !curr)}
+                    />
+                    <SettingSwitch
+                        label={t('SETTINGS.OPTIONS.ZDROP')}
+                        icon={<WifiIcon />}
+                        color="bg-[#007AFF]"
+                        value={config.zdropEnabled}
+                        onClick={curr => handleSettingChange('zdropEnabled', !curr)}
                     />
                 </List>
                 {canUseDynamicAlerts && (
@@ -323,6 +362,31 @@ export const SettingsHome = () => {
                     />
                 </List>
             </AppContent>
+
+            <Transition
+                appear={true}
+                show={deviceNameModal}
+                className="absolute top-[45%] z-40"
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="scale-0"
+                enterTo="scale-100"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="scale-100"
+                leaveTo="scale-0"
+            >
+                <DialogForm
+                    handleClose={() => setDeviceNameModal(false)}
+                    onSubmit={handleDeviceNameSubmit}
+                    title={t('SETTINGS.OPTIONS.DEVICE_NAME.DIALOG_TITLE')}
+                    content={t('SETTINGS.OPTIONS.DEVICE_NAME.DIALOG_CONTENT')}
+                >
+                    <TextField
+                        value={deviceNameValue}
+                        onChange={e => setDeviceNameValue(e.currentTarget.value)}
+                        placeholder={t('SETTINGS.OPTIONS.DEVICE_NAME.DIALOG_PLACEHOLDER')}
+                    />
+                </DialogForm>
+            </Transition>
         </AppWrapper>
     );
 };
