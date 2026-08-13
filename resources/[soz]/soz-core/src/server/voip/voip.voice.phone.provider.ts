@@ -37,7 +37,13 @@ export class VoipVoicePhoneProvider {
     }
 
     @OnEvent(ServerEvent.VOIP_PHONE_CALL_START)
-    public startCall(_source: number, callerPhone: string, receiverPhone: string) {
+    public startCall(
+        _source: number,
+        callerPhone: string,
+        receiverPhone: string,
+        callerSource?: number,
+        receiverSource?: number
+    ) {
         const blackout = this.store.getState().global.blackout;
         const blackoutLevel = this.store.getState().global.blackoutLevel;
 
@@ -45,8 +51,14 @@ export class VoipVoicePhoneProvider {
             return;
         }
 
-        const caller = this.playerService.getPlayerByPhone(callerPhone);
-        const receiver = this.playerService.getPlayerByPhone(receiverPhone);
+        const caller =
+            callerSource != null
+                ? this.playerService.getPlayer(callerSource)
+                : this.playerService.getPlayerByPhone(callerPhone);
+        const receiver =
+            receiverSource != null
+                ? this.playerService.getPlayer(receiverSource)
+                : this.playerService.getPlayerByPhone(receiverPhone);
 
         if (!caller || !receiver) {
             return;

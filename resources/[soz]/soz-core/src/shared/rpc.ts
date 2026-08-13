@@ -431,6 +431,10 @@ export enum RpcServerEvent {
     PET_SHOULD_PLAYER_BE_ATTACKED = 'soz-core:server:pet:should-player-be-attacked',
 
     PLAYER_CLOTHES_UPDATE = 'soz-core:server:player:clothes:update',
+
+    PHONE_BOOTH_PICKUP = 'soz-core:server:phone:booth:pickup',
+    PHONE_BOOTH_HANGUP = 'soz-core:server:phone:booth:hangup',
+    PHONE_BOOTH_CALL = 'soz-core:server:phone:booth:call',
 }
 
 export enum RpcClientEvent {

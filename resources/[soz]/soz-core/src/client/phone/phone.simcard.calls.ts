@@ -96,6 +96,10 @@ export class PhoneSimCardCalls {
 
     @OnEvent(ClientEvent.PHONE_SIMCARD_CALLS_UPDATE)
     async onCallUpdate(call: ActiveCall) {
+        if (this.phoneState.isAttachedToBooth()) {
+            return;
+        }
+
         const muted = this.phoneState.getCurrentCall()?.muted ?? false;
         if (call !== null) {
             this.phoneState.setCurrentCall({ ...call, muted });

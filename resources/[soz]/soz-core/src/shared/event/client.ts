@@ -258,6 +258,10 @@ export enum ClientEvent {
     VOIP_VOICE_RADIO_PLAYER_START_TRANSMITTING = 'soz-core:client:voip:voice:radio:player-start-transmitting',
     VOIP_VOICE_RADIO_PLAYER_STOP_TRANSMITTING = 'soz-core:client:voip:voice:radio:player-stop-transmitting',
 
+    PHONE_BOOTH_FORCE_HANGUP = 'soz-core:client:phone:booth:force-hangup',
+    PHONE_BOOTH_RING_START = 'soz-core:client:phone:booth:ring-start',
+    PHONE_BOOTH_RING_STOP = 'soz-core:client:phone:booth:ring-stop',
+
     UPW_OPEN_CLOAKROOM = 'soz-core:client:job:upw:open-cloakroom',
     UPW_CREATE_CHARGER = 'soz-core:client:job:upw:create-charger',
     UPW_POLLUTION_UPDATE = 'soz-core:client:job:upw:pollution-update',

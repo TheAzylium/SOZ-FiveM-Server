@@ -409,6 +409,9 @@ export enum ServerEvent {
     VOIP_RADIO_JOIN_CHANNEL = 'soz-core:server:voip:radio-join-channel',
     VOIP_RADIO_LEAVE_CHANNEL = 'soz-core:server:voip:radio-leave-channel',
 
+    PHONE_BOOTH_RING = 'soz-core:server:phone:booth:ring',
+    PHONE_BOOTH_RING_STOP = 'soz-core:server:phone:booth:ring-stop',
+
     HALLOWEEN2022_HUNT = 'halloween2022:server:hunt',
     LSMC_HALLOWEEN_LOOT_PLAYER = 'lsmc:halloween:lootPlayer',
     VEHICLE_FREE_JOB_SPAWN = 'soz-core:server:vehicle:free-job-spawn',

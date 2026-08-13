@@ -45,6 +45,7 @@ export class PhoneState {
     private phoneFrontCameraEnabled = false;
 
     private currentCall: ActiveCall | null = null;
+    private attachedToBooth = false;
 
     @PlayerUpdate()
     public onPlayerUpdate(player: PlayerData) {
@@ -146,6 +147,14 @@ export class PhoneState {
 
     public isInActiveCall() {
         return this.currentCall !== null && (this.currentCall.isTransmitter || this.currentCall.is_accepted);
+    }
+
+    public setAttachedToBooth(value: boolean) {
+        this.attachedToBooth = value;
+    }
+
+    public isAttachedToBooth() {
+        return this.attachedToBooth;
     }
 
     @StateSelector(state => state.global.blackout, state => state.global.blackoutLevel)

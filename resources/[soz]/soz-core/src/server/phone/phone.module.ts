@@ -6,6 +6,7 @@ import { PhoneAppPhotosProvider } from './apps/phone.app.photos.provider';
 import { PhoneAppSnakeProvider } from './apps/phone.app.snake.provider';
 import { PhoneAppSocietyProvider } from './apps/phone.app.society.provider';
 import { PhoneAppTetrisProvider } from './apps/phone.app.tetris.provider';
+import { PhoneBoothProvider } from './phone.booth.provider';
 import { PhoneAppZDropProvider } from './apps/phone.app.zdrop.provider';
 import { PhoneProvider } from './phone.provider';
 import { PhoneSimCard } from './phone.simcard';
@@ -20,6 +21,7 @@ import { PhoneSimCardMessages } from './phone.simcard.messages';
         PhoneSimCardCalls,
         PhoneSimCardContacts,
         PhoneSimCardMessages,
+        PhoneBoothProvider,
         // Apps
         PhoneAppSocietyProvider,
         PhoneAppDarkWebProvider,
