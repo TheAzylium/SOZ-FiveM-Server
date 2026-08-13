@@ -379,6 +379,20 @@ export class VehicleConditionProvider {
         }
     }
 
+    @OnEvent(ServerEvent.VEHICLE_FORCE_CLEAR_WAYPOINT)
+    public onVehicleForceClearWaypoint(source: number, players: number[]) {
+        for (const player of players) {
+            TriggerClientEvent(ClientEvent.VEHICLE_FORCE_CLEAR_WAYPOINT, player);
+        }
+    }
+
+    @OnEvent(ServerEvent.VEHICLE_WAYPOINT_STATE)
+    public onVehicleWaypointState(source: number, players: number[], active: boolean) {
+        for (const player of players) {
+            TriggerClientEvent(ClientEvent.VEHICLE_WAYPOINT_STATE, player, active);
+        }
+    }
+
     @OnEvent(ServerEvent.VEHICLE_UPDATE_MILEAGE)
     public updateMileage(source: number, vehicleNetworkId: number, mileage: number) {
         const state = this.vehicleStateService.getVehicleState(vehicleNetworkId);
