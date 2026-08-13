@@ -25,6 +25,7 @@ export const numberAtom = atom<string>('');
 export const societyNumberAtom = atom<string>();
 
 export const avatarAtom = atom<string>();
+export const simCardNameAtom = atom<string>();
 
 export const currentCallAtom = atom<ActiveCall>();
 
@@ -128,6 +129,7 @@ export const useSimCardStateHandlers = () => {
 
     const [number, setNumber] = useAtom(numberAtom);
     const setAvatar = useSetAtom(avatarAtom);
+    const setSimCardName = useSetAtom(simCardNameAtom);
 
     const setSocietyNumber = useSetAtom(societyNumberAtom);
 
@@ -140,6 +142,7 @@ export const useSimCardStateHandlers = () => {
 
     useNuiEvent('phone', 'SetSimCard', setNumber);
     useNuiEvent('phone', 'SetSimCardAvatar', setAvatar);
+    useNuiEvent('phone', 'SetSimCardName', setSimCardName);
 
     useNuiEvent('phone', 'SetSocietySimCard', setSocietyNumber);
 

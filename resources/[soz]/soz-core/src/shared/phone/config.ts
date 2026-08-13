@@ -13,6 +13,7 @@ export type PhoneConfig = {
     ringtoneVol: number;
     notiSoundVol: number;
     societyNotificationVol: number;
+    zdropEnabled: boolean;
     handsFree: boolean;
     planeMode: boolean;
     dynamicAlert: boolean;

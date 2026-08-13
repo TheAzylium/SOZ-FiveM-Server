@@ -409,6 +409,7 @@ model phone_notes {
 model phone_profile {
     number String  @id @db.VarChar(8)
     avatar String? @db.VarChar(255)
+    name   String? @db.VarChar(64)
 
     @@index([number], map: "number")
 }

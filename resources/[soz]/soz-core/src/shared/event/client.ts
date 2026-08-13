@@ -495,6 +495,10 @@ export enum ClientEvent {
     PHONE_APP_DARKWEB_RECEIVE_MESSAGE = 'phone:app:darkweb:receive-message',
     PHONE_CAMERA_OPEN = 'soz-core:client:phone:camera:open',
     PHONE_CAMERA_CLOSE = 'soz-core:client:phone:camera:close',
+    PHONE_APP_ZDROP_INCOMING = 'soz-core:client:phone:app:zdrop:incoming',
+    PHONE_APP_ZDROP_RESULT = 'soz-core:client:phone:app:zdrop:result',
+    PHONE_APP_ZDROP_CANCELLED = 'soz-core:client:phone:app:zdrop:cancelled',
+    PHONE_APP_ZDROP_DELIVERED = 'soz-core:client:phone:app:zdrop:delivered',
 
     LASER_GAME_REQUEST_JOIN = 'soz-core:client:phone:app:laser-game:request-join',
     LASER_GAME_REJOIN_GAME = 'soz-core:client:phone:app:laser-game:rejoin',
