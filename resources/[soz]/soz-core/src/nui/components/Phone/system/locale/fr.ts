@@ -47,6 +47,12 @@ export const fr = {
                 HAND_FREE: 'Kit mains libres',
                 PLANE_MODE: 'Mode avion',
                 PLANE_MODE_ACTIVATED: 'Mode avion activé',
+                ZDROP: 'Z-Drop',
+                DEVICE_NAME: {
+                    DIALOG_TITLE: 'Nom du ZPhone',
+                    DIALOG_CONTENT: "Ce nom est visible par les autres lors d'un envoi via Z-Drop.",
+                    DIALOG_PLACEHOLDER: 'Nom du ZPhone',
+                },
                 DYNAMIC_ALERTS: 'Alertes dynamiques',
                 DYNAMIC_ALERTS_VOLUME: 'Volume des alertes dynamiques',
                 DYNAMIC_ALERTS_DURATION: 'Durée des alertes dynamiques',
@@ -91,6 +97,15 @@ export const fr = {
             FEEDBACK: {
                 NO_PHOTOS: "Vous n'avez pas de photos",
             },
+        },
+        ZDROP: {
+            PICKER_TITLE: 'Envoyer via Z-Drop',
+            NO_DEVICE_NEARBY: 'Aucun téléphone détecté à proximité',
+            SEND: 'Envoyer',
+            CLOSE: 'Fermer',
+            INCOMING_TITLE: '{{ name }} vous envoie un Z-Drop',
+            ACCEPT: 'Accepter',
+            DECLINE: 'Refuser',
         },
         CONTACTS: {
             FEEDBACK: {
@@ -209,6 +224,8 @@ export const fr = {
             SEND: 'Envoyer le message',
             SEND_POSITION: 'Envoyer + Position',
             SET_ANONYMOUS: 'Être anonyme',
+            HISTORY_TITLE: 'Historique des messages',
+            HISTORY_EMPTY: "Vous n'avez envoyé aucun message",
         },
         SOCIETY_MESSAGES: {
             NOTIFICATION: {

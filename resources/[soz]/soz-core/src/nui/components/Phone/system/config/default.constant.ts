@@ -42,6 +42,7 @@ export const defaultConfig = {
     societyNotificationVol: 50,
     handsFree: false,
     planeMode: false,
+    zdropEnabled: false,
     dynamicAlert: false,
     dynamicAlertVol: 50,
     dynamicAlertDuration: {

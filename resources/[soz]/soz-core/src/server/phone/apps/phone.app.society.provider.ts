@@ -73,6 +73,28 @@ export class PhoneAppSocietyProvider {
         return messages.map(this.messageMapper);
     }
 
+    @Rpc(RpcServerEvent.PHONE_APP_SOCIETY_GET_SENT_MESSAGES)
+    async getSentMessages(source: number) {
+        const player = this.playerService.getPlayer(source);
+        if (!player) {
+            return;
+        }
+
+        const messages = await this.prismaService.phone_society_messages.findMany({
+            where: {
+                source_phone: { in: [player.charinfo.phone, `#${player.charinfo.phone}`] },
+                createdAt: {
+                    gte: subDays(Date.now(), 2),
+                },
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        return messages.map(this.messageMapper);
+    }
+
     @Rpc(RpcServerEvent.PHONE_APP_SOCIETY_SEND_MESSAGE)
     async sendMessage(source: number, message: NewSocietyMessage) {
         const player = this.playerService.getPlayer(source);

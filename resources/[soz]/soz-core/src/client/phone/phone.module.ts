@@ -9,6 +9,7 @@ import { PhoneAppSocietyProvider } from './apps/phone.app.society.provider';
 import { PhoneAppTetrisProvider } from './apps/phone.app.tetris.provider';
 import { PhoneAppWeatherProvider } from './apps/phone.app.weather.provider';
 import { PhoneBoothProvider } from './phone.booth.provider';
+import { PhoneAppZDropProvider } from './apps/phone.app.zdrop.provider';
 import { PhoneLights } from './phone.lights';
 import { PhoneManager } from './phone.manager';
 import { PhoneProvider } from './phone.provider';
@@ -39,6 +40,7 @@ import { PhoneState } from './phone.state';
         PhoneAppTetrisProvider,
         PhoneAppSnakeProvider,
         PhoneAppWeatherProvider,
+        PhoneAppZDropProvider,
     ],
 })
 export class PhoneModule {}

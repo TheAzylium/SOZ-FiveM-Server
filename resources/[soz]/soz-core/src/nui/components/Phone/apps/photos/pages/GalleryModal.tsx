@@ -1,4 +1,4 @@
-import { ShareIcon, TrashIcon } from '@heroicons/react/solid';
+import { PaperAirplaneIcon, ShareIcon, TrashIcon } from '@heroicons/react/solid';
 import { fetchNui } from '@public/nui/fetch';
 import { NuiEvent } from '@public/shared/event/nui';
 import React, { useMemo, useState } from 'react';
@@ -12,14 +12,16 @@ import { useQueryParams } from '../../../hooks/useQueryParams';
 import { useAlert } from '../../../system/alerts/hooks/useAlert';
 import { useAppTitleActionsUpdater } from '../../../system/apps/hooks/useAppTitleActionsUpdater';
 import { useAppTitleGetBackUpdater } from '../../../system/apps/hooks/useAppTitleGetBackUpdater';
-import { useThemeConfig } from '../../../system/config/config.atom';
+import { useConfig, useThemeConfig } from '../../../system/config/config.atom';
 import { useDynamicIsland } from '../../../system/dynamic-island/hooks/useDynamicIsland';
 import { useNotifications } from '../../../system/notifications/hooks/useNotifications';
+import { useZDropAPI } from '../../../system/zdrop/hooks/useZDropAPI';
 
 export const GalleryModal = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const theme = useThemeConfig();
+    const config = useConfig();
 
     const [bigImage, setBigImage] = useState<boolean>(false);
 
@@ -29,6 +31,7 @@ export const GalleryModal = () => {
     const { sendIsland } = useDynamicIsland();
     const { addNotification } = useNotifications();
     const copyToClipboard = useClipboard();
+    const { openZDropPicker } = useZDropAPI();
 
     const referral = query.referral || '/photos';
 
@@ -52,6 +55,8 @@ export const GalleryModal = () => {
         navigate(referral);
     };
 
+    const handlePhotoZDrop = () => openZDropPicker({ type: 'photo', photoId: meta.id });
+
     useAppTitleGetBackUpdater(() => navigate(referral));
 
     useAppTitleActionsUpdater([
@@ -63,6 +68,15 @@ export const GalleryModal = () => {
                 'text-ios-700 hover:text-ios-600': theme === 'light',
             },
             onClick: handleCopyImage,
+        },
+        {
+            display: config.zdropEnabled,
+            icon: <PaperAirplaneIcon className="size-5" />,
+            className: {
+                'text-ios-100 hover:text-ios-200': theme === 'dark',
+                'text-ios-700 hover:text-ios-600': theme === 'light',
+            },
+            onClick: handlePhotoZDrop,
         },
         {
             display: true,

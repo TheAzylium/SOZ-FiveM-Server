@@ -1,3 +1,4 @@
+import { ClockIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import React, { FunctionComponent, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ export const LIST_ITEM_SEPARATOR_HEIGHT = 35;
 export const ContactList: FunctionComponent = () => {
     const ref = useRef<VariableSizeList>(null);
     const contactsApp = useApp('society-contacts');
+    const navigate = useNavigate();
 
     const { t } = useTranslation();
 
@@ -38,7 +40,17 @@ export const ContactList: FunctionComponent = () => {
     return (
         <AppWrapper>
             <AppContent>
-                <AppTitle app={contactsApp} />
+                <div className="flex items-start justify-between">
+                    <AppTitle app={contactsApp} />
+                    <button onClick={() => navigate('history')} className="mr-5 mt-1.5">
+                        <ClockIcon
+                            className={clsx('size-6', {
+                                'text-white': theme === 'dark',
+                                'text-black': theme === 'light',
+                            })}
+                        />
+                    </button>
+                </div>
                 <div className="sticky top-0 z-10">
                     <SearchField onChange={e => setSearchValue(e.target.value)} value={searchValue} />
                 </div>
