@@ -337,6 +337,7 @@ export enum RpcServerEvent {
     PHONE_APP_SOCIETY_GET = 'soz-core:server:phone:app:society:get',
     PHONE_APP_SOCIETY_SEND_MESSAGE = 'soz-core:server:phone:app:society:send-message',
     PHONE_APP_SOCIETY_UPDATE_MESSAGE = 'soz-core:server:phone:app:society:update-message',
+    PHONE_APP_SOCIETY_GET_SENT_MESSAGES = 'soz-core:server:phone:app:society:get-sent-messages',
     PHONE_APP_DARKWEB_GET_CONVERSATIONS = 'soz-core:server:phone:app:darkweb:get-conversations',
     PHONE_APP_DARKWEB_CREATE_CONVERSATION = 'soz-core:server:phone:app:darkweb:create-conversation',
     PHONE_APP_DARKWEB_UPDATE_CONVERSATION = 'soz-core:server:phone:app:darkweb:update-conversation',

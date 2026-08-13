@@ -40,6 +40,11 @@ export class PhoneAppSocietyProvider {
         return emitRpc(RpcServerEvent.PHONE_APP_SOCIETY_UPDATE_MESSAGE, message);
     }
 
+    @OnNuiEvent(NuiEvent.PhoneAppSocietyGetSentMessages)
+    async getSentMessages() {
+        return emitRpc<SocietyMessage[]>(RpcServerEvent.PHONE_APP_SOCIETY_GET_SENT_MESSAGES);
+    }
+
     private async fetchSocietyMembers() {
         const messages = await emitRpc<SocietyMessage[]>(RpcServerEvent.PHONE_APP_SOCIETY_GET);
         this.nuiDispatch.dispatch('phone', 'AppSocietySetData', messages);
