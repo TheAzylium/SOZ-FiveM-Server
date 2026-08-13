@@ -124,7 +124,7 @@ export class WeaponGunsmithProvider {
             await this.weaponService.set(weapon);
         }
 
-        return GetHashKey(weapon.name);
+        return this.weaponService.getNativeWeaponHash(weapon.name);
     }
 
     // Tint

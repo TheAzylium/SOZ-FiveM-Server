@@ -88,6 +88,13 @@ export class WeaponService {
         this.currentWeapon = weapon;
     }
 
+    // Some item variants (e.g. weapon_assaultsmg_training) don't have their own weapons.meta/
+    // animation registration and equip as a different, real native weapon instead (WeaponConfig.nativeWeapon).
+    getNativeWeaponHash(weaponName: string): number {
+        const nativeName = this.getWeaponConfig(weaponName)?.nativeWeapon ?? weaponName;
+        return GetHashKey(nativeName);
+    }
+
     async set(weapon: InventoryItem) {
         if (this.disabledReasons.size > 0) {
             return;
@@ -99,14 +106,17 @@ export class WeaponService {
             await this.clear();
         }
 
-        const weaponHash = GetHashKey(weapon.name);
+        const config = this.getWeaponConfig(weapon.name);
+        const weaponHash = this.getNativeWeaponHash(weapon.name);
         const ammo = weapon.metadata.ammo >= 0 ? weapon.metadata.ammo : 0;
 
         this.currentWeapon = weapon;
 
         GiveWeaponToPed(player, weaponHash, ammo, false, true);
 
-        if (weapon.metadata.tint) {
+        if (config?.forcedTint !== undefined) {
+            SetPedWeaponTintIndex(player, weaponHash, config.forcedTint);
+        } else if (weapon.metadata.tint) {
             SetPedWeaponTintIndex(player, weaponHash, weapon.metadata.tint);
         }
 
@@ -139,7 +149,7 @@ export class WeaponService {
         }
 
         if (this.currentWeapon) {
-            const currhash = GetHashKey(this.currentWeapon.name);
+            const currhash = this.getNativeWeaponHash(this.currentWeapon.name);
             if (currhash !== GetHashKey(WeaponName.UNARMED)) {
                 RemoveWeaponFromPed(ped, currhash);
             }

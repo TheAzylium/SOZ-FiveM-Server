@@ -435,6 +435,7 @@ export enum ServerEvent {
 
     WEAPON_SHOOTING = 'soz-core:server:weapon:shooting',
     WEAPON_SHOOTING_ALERT = 'soz-core:server:weapon:shooting-alert',
+    TRAINING_WEAPON_HIT = 'soz-core:server:weapon:training-hit',
     WEAPON_GET_SNOW = 'soz-core:server:weapon:get-dnow',
 
     VANDALISM_ABORT = 'soz-core:server:vandalism:abort',

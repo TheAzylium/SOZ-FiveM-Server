@@ -59,6 +59,7 @@ const messageExclude = [
     GetHashKey('weapon_snowlauncher'),
     GetHashKey('weapon_grenadelauncher_smoke'),
     GetHashKey('weapon_raycarbine'),
+    GetHashKey('weapon_assaultsmg_training'),
 ];
 const NonLethalWeapons = {
     [GetHashKey('weapon_pumpshotgun')]: 10,
@@ -297,13 +298,14 @@ export class WeaponProvider {
             return;
         }
 
-        const weaponGroup = GetWeapontypeGroup(weapon.name);
+        const nativeWeaponHash = this.weapon.getNativeWeaponHash(weapon.name);
+        const weaponGroup = GetWeapontypeGroup(nativeWeaponHash);
         const isWearingGloves = this.clothingService.checkWearingGloves();
         emitNet(
             ServerEvent.WEAPON_SHOOTING,
             weapon.metadata?.serial,
             weaponGroup,
-            GetAmmoInClip(player, weapon.name)[1],
+            GetAmmoInClip(player, nativeWeaponHash)[1],
             isWearingGloves
         );
 
@@ -464,7 +466,7 @@ export class WeaponProvider {
         }
 
         if (this.weapon.getCurrentWeapon()) {
-            const hash = GetHashKey(this.weapon.getCurrentWeapon().name);
+            const hash = this.weapon.getNativeWeaponHash(this.weapon.getCurrentWeapon().name);
             let [, weaponHash] = GetCurrentPedWeapon(ped, true);
 
             if (weaponHash === GetHashKey('WEAPON_UNARMED')) {

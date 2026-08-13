@@ -419,6 +419,7 @@ export class WeaponProvider {
         this.item.setItemUseCallback('ammo_17', this.useAmmo.bind(this));
         this.item.setItemUseCallback('ammo_18', this.useAmmo.bind(this));
         this.item.setItemUseCallback('ammo_19', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_04', this.useAmmo.bind(this));
     }
 
     private getWeaponConfig(weaponName: string): WeaponConfig | null {

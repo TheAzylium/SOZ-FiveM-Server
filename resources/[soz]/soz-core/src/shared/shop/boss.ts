@@ -309,6 +309,12 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 price: 2000,
             },
             {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_assaultsmg_training', label: 'P90 GEN2 (Entraînement)' },
+                price: 500,
+            },
+            {
                 id: POLICE_DRONE_NAME,
                 type: 'item',
                 price: 100000,
@@ -390,6 +396,12 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 type: 'item',
                 metadata: { craftCertificate: 'weapon_pumpshotgun', label: 'Remington 870 Non lethal' },
                 price: 2000,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_assaultsmg_training', label: 'P90 GEN2 (Entraînement)' },
+                price: 500,
             },
             {
                 id: POLICE_DRONE_NAME,
@@ -474,6 +486,12 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 type: 'item',
                 metadata: { craftCertificate: 'weapon_pumpshotgun', label: 'Remington 870 Non lethal' },
                 price: 2000,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_assaultsmg_training', label: 'P90 GEN2 (Entraînement)' },
+                price: 500,
             },
             {
                 id: POLICE_DRONE_NAME,

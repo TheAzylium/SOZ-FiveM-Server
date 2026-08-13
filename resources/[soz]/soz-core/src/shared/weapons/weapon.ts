@@ -83,10 +83,17 @@ export type WeaponConfig = {
         | 'ammo_16'
         | 'ammo_17'
         | 'ammo_18'
-        | 'ammo_19';
+        | 'ammo_19'
+        | 'ammo_training_04';
     drawPositionInfo?: WeaponDrawPositionInfo;
     extaDraw?: ExtraWeaponDrawPosition[];
     attachments?: WeaponAttachment[];
+    // When set, this item equips as this OTHER (real, native) weapon instead of its own name —
+    // used for item variants that don't have their own weapons.meta/animation registration
+    // (e.g. weapon_assaultsmg_training equips as the real WEAPON_ASSAULTSMG).
+    nativeWeapon?: WeaponName;
+    // Forces this weapon tint whenever equipped, regardless of the item's own metadata.tint.
+    forcedTint?: WeaponTintColor;
 };
 
 export enum WeaponName {
@@ -139,6 +146,7 @@ export enum WeaponName {
     MICROSMG = 'WEAPON_MICROSMG',
     SMG = 'WEAPON_SMG',
     ASSAULTSMG = 'WEAPON_ASSAULTSMG',
+    ASSAULTSMG_TRAINING = 'WEAPON_ASSAULTSMG_TRAINING',
     COMBATPDW = 'WEAPON_COMBATPDW',
     SMG_MK2 = 'WEAPON_SMG_MK2',
     MACHINEPISTOL = 'WEAPON_MACHINEPISTOL',
@@ -614,6 +622,20 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MACRO', type: WeaponComponentType.Scope },
             { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP_02', type: WeaponComponentType.Suppressor },
             { label: 'Skin', component: 'COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER', type: WeaponComponentType.PrimarySkin },
+        ],
+    },
+    [WeaponName.ASSAULTSMG_TRAINING]: {
+        recoil: 0.025,
+        ammo: 'ammo_training_04',
+        drawPositionInfo: { model: 'w_sb_assaultsmg', type: 'SMG' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-assaultsmg-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_ASSAULTSMG_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MACRO', type: WeaponComponentType.Scope },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP_02', type: WeaponComponentType.Suppressor },
         ],
     },
     [WeaponName.COMBATPDW]: {
@@ -1232,6 +1254,19 @@ export const excludeExplosionAlert = [
     ExplosionType.FLASHGRENADE,
 ];
 
+// Weapons with a dedicated weapons.meta/weaponanimations.meta (same real damage/falloff/headshot
+// values as their base weapon, cloned under their own name — see
+// resources/[weapon]/soz-weapon-assaultsmg-training) whose real HP/armor loss gets captured then
+// cancelled client-side (by the victim, identified by weapon hash alone) and replayed on a purely
+// virtual plates -> armor -> health counter instead, ragdolling the victim once it would reach 0.
+export const TrainingWeapons = [WeaponName.ASSAULTSMG_TRAINING];
+
+export const TrainingWeaponConfig = {
+    ragdollDurationMs: 10000,
+    // A fake-combat session for a victim resets if no hit landed for this long.
+    sessionTimeoutMs: 20000,
+};
+
 export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.PISTOL]: '9x19 AP',
     [WeaponName.PISTOL_MK2]: '9x19 AP',
@@ -1254,6 +1289,7 @@ export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.MICROSMG]: '9x19 AP',
     [WeaponName.SMG]: '9x19 AP',
     [WeaponName.ASSAULTSMG]: '5.7x28 SB193',
+    [WeaponName.ASSAULTSMG_TRAINING]: '5.7x28 SB193 à blanc',
     [WeaponName.COMBATPDW]: '9x19 AP',
     [WeaponName.SMG_MK2]: '5.7x28 SB193',
     [WeaponName.MACHINEPISTOL]: '9x19 AP',
