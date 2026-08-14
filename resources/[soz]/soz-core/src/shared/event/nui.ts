@@ -275,6 +275,10 @@ export enum NuiEvent {
     WatchMenuSetShowInjuryTracker = 'soz-core:nui:player:menu:hud-set-show-injury-tracker',
     WatchMenuSetZoomInjuryTracker = 'soz-core:nui:player:menu:hud-set-zoom-injury-tracker',
     WatchMenuSetSwitchInjuryTrackerPosition = 'soz-core:nui:player:menu:hud-set-switch-injury-tracker-position',
+
+    TacticalWatchSetLoadout = 'soz-core:nui:weapon:tactical-watch-set-loadout',
+    TacticalWatchReset = 'soz-core:nui:weapon:tactical-watch-reset',
+    TacticalWatchGetUp = 'soz-core:nui:weapon:tactical-watch-get-up',
     PlayerMenuJobGradeCreate = 'soz-core:nui:player:menu:job-grade-create',
     PlayerMenuJobGradeDelete = 'soz-core:nui:player:menu:job-grade-delete',
     PlayerMenuJobGradeSetDefault = 'soz-core:nui:player:menu:job-grade-set-default',

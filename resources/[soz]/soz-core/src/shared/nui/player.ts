@@ -3,6 +3,7 @@ import { Invoice } from '@public/shared/bank';
 import { InventoryConfiguration, InventoryItem } from '@public/shared/inventory';
 import { Job } from '@public/shared/job';
 import { Vector3 } from '@public/shared/polyzone/vector';
+import { TrainingWatchSnapshot } from '@public/shared/weapons/weapon';
 
 import { PlayerData } from '../player';
 
@@ -11,12 +12,13 @@ export interface PlayerStats {
     armor: number;
     stamina: number;
     armorPlates: number;
+    trainingWatch?: TrainingWatchSnapshot;
 }
 
 export interface NuiPLayerMethodMap {
     Update: PlayerData;
     UpdatePosition: Vector3;
-    UpdatePlayerStats: PlayerStats;
+    UpdatePlayerStats: Partial<PlayerStats>;
     UpdateAnimationShortcuts: Record<string, Shortcut>;
     UpdateAnimationFavorites: Record<string, Shortcut>;
     UpdateCombatMode: boolean;

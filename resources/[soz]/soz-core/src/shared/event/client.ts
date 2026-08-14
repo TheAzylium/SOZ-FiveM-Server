@@ -277,6 +277,9 @@ export enum ClientEvent {
     WEAPON_PICK_SNOWBALL = 'soz-core:client:weapon:pick-snowball',
     WEAPON_FLASH = 'soz-core:client:weapon:flash',
     TRAINING_WEAPON_DOWN = 'soz-core:client:weapon:training-down',
+    TACTICAL_WATCH_USE = 'soz-core:client:weapon:tactical-watch-use',
+    TACTICAL_WATCH_SYNC = 'soz-core:client:weapon:tactical-watch-sync',
+    TACTICAL_WATCH_STAND_UP = 'soz-core:client:weapon:tactical-watch-stand-up',
 
     MDR_USE_TICKET = 'soz-core:client:mdr:use-ticket',
     HEIST_GUARD = 'soz-core:client:heist:guard',

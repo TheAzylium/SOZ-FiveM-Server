@@ -60,6 +60,18 @@ const messageExclude = [
     GetHashKey('weapon_grenadelauncher_smoke'),
     GetHashKey('weapon_raycarbine'),
     GetHashKey('weapon_assaultsmg_training'),
+    GetHashKey('weapon_smg_training'),
+    GetHashKey('weapon_pistol_mk2_training'),
+    GetHashKey('weapon_combatpistol_training'),
+    GetHashKey('weapon_heavypistol_training'),
+    GetHashKey('weapon_combatpdw_training'),
+    GetHashKey('weapon_tecpistol_training'),
+    GetHashKey('weapon_carbinerifle_mk2_training'),
+    GetHashKey('weapon_heavysniper_mk2_training'),
+    GetHashKey('weapon_revolver_mk2_training'),
+    GetHashKey('weapon_heavyrifle_training'),
+    GetHashKey('weapon_tacticalrifle_training'),
+    GetHashKey('weapon_heavyshotgun_training'),
 ];
 const NonLethalWeapons = {
     [GetHashKey('weapon_pumpshotgun')]: 10,

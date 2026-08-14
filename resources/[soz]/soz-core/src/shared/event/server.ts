@@ -436,6 +436,10 @@ export enum ServerEvent {
     WEAPON_SHOOTING = 'soz-core:server:weapon:shooting',
     WEAPON_SHOOTING_ALERT = 'soz-core:server:weapon:shooting-alert',
     TRAINING_WEAPON_HIT = 'soz-core:server:weapon:training-hit',
+    TACTICAL_WATCH_SET_LOADOUT = 'soz-core:server:weapon:tactical-watch-set-loadout',
+    TACTICAL_WATCH_RESET = 'soz-core:server:weapon:tactical-watch-reset',
+    TACTICAL_WATCH_GET_UP = 'soz-core:server:weapon:tactical-watch-get-up',
+    TACTICAL_WATCH_DEACTIVATE = 'soz-core:server:weapon:tactical-watch-deactivate',
     WEAPON_GET_SNOW = 'soz-core:server:weapon:get-dnow',
 
     VANDALISM_ABORT = 'soz-core:server:vandalism:abort',

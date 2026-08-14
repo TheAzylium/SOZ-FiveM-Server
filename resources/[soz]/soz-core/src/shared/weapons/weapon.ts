@@ -84,7 +84,13 @@ export type WeaponConfig = {
         | 'ammo_17'
         | 'ammo_18'
         | 'ammo_19'
-        | 'ammo_training_04';
+        | 'ammo_training_01'
+        | 'ammo_training_02'
+        | 'ammo_training_04'
+        | 'ammo_training_06'
+        | 'ammo_training_07'
+        | 'ammo_training_08'
+        | 'ammo_training_16';
     drawPositionInfo?: WeaponDrawPositionInfo;
     extaDraw?: ExtraWeaponDrawPosition[];
     attachments?: WeaponAttachment[];
@@ -123,13 +129,17 @@ export enum WeaponName {
     // Handguns
     PISTOL = 'WEAPON_PISTOL',
     PISTOL_MK2 = 'WEAPON_PISTOL_MK2',
+    PISTOL_MK2_TRAINING = 'WEAPON_PISTOL_MK2_TRAINING',
     REVOLVER_MK2 = 'WEAPON_REVOLVER_MK2',
+    REVOLVER_MK2_TRAINING = 'WEAPON_REVOLVER_MK2_TRAINING',
     STUNGUN = 'WEAPON_STUNGUN',
     COMBATPISTOL = 'WEAPON_COMBATPISTOL',
+    COMBATPISTOL_TRAINING = 'WEAPON_COMBATPISTOL_TRAINING',
     APPISTOL = 'WEAPON_APPISTOL',
     PISTOL50 = 'WEAPON_PISTOL50',
     SNSPISTOL = 'WEAPON_SNSPISTOL',
     HEAVYPISTOL = 'WEAPON_HEAVYPISTOL',
+    HEAVYPISTOL_TRAINING = 'WEAPON_HEAVYPISTOL_TRAINING',
     VINTAGEPISTOL = 'WEAPON_VINTAGEPISTOL',
     FLAREGUN = 'WEAPON_FLAREGUN',
     MARKSMANPISTOL = 'WEAPON_MARKSMANPISTOL',
@@ -145,20 +155,24 @@ export enum WeaponName {
     // SMG
     MICROSMG = 'WEAPON_MICROSMG',
     SMG = 'WEAPON_SMG',
+    SMG_TRAINING = 'WEAPON_SMG_TRAINING',
     ASSAULTSMG = 'WEAPON_ASSAULTSMG',
     ASSAULTSMG_TRAINING = 'WEAPON_ASSAULTSMG_TRAINING',
     COMBATPDW = 'WEAPON_COMBATPDW',
+    COMBATPDW_TRAINING = 'WEAPON_COMBATPDW_TRAINING',
     SMG_MK2 = 'WEAPON_SMG_MK2',
     MACHINEPISTOL = 'WEAPON_MACHINEPISTOL',
     MINISMG = 'WEAPON_MINISMG',
     RAYCARBINE = 'WEAPON_RAYCARBINE',
     TECPISTOL = 'WEAPON_TECPISTOL',
+    TECPISTOL_TRAINING = 'WEAPON_TECPISTOL_TRAINING',
 
     // Assault Rifles
     ASSAULTRIFLE = 'WEAPON_ASSAULTRIFLE',
     ASSAULTRIFLE_MK2 = 'WEAPON_ASSAULTRIFLE_MK2',
     CARBINERIFLE = 'WEAPON_CARBINERIFLE',
     CARBINERIFLE_MK2 = 'WEAPON_CARBINERIFLE_MK2',
+    CARBINERIFLE_MK2_TRAINING = 'WEAPON_CARBINERIFLE_MK2_TRAINING',
     ADVANCEDRIFLE = 'WEAPON_ADVANCEDRIFLE',
     SPECIALCARBINE = 'WEAPON_SPECIALCARBINE',
     BULLPUPRIFLE = 'WEAPON_BULLPUPRIFLE',
@@ -167,7 +181,9 @@ export enum WeaponName {
     BULLPUPRIFLE_MK2 = 'WEAPON_BULLPUPRIFLE_MK2',
     MILITARYRIFLE = 'WEAPON_MILITARYRIFLE',
     HEAVYRIFLE = 'WEAPON_HEAVYRIFLE',
+    HEAVYRIFLE_TRAINING = 'WEAPON_HEAVYRIFLE_TRAINING',
     TACTICALRIFLE = 'WEAPON_TACTICALRIFLE',
+    TACTICALRIFLE_TRAINING = 'WEAPON_TACTICALRIFLE_TRAINING',
     BATTLERIFLE = 'WEAPON_BATTLERIFLE',
 
     // Shotguns
@@ -177,6 +193,7 @@ export enum WeaponName {
     BULLPUPSHOTGUN = 'WEAPON_BULLPUPSHOTGUN',
     MUSKET = 'WEAPON_MUSKET',
     HEAVYSHOTGUN = 'WEAPON_HEAVYSHOTGUN',
+    HEAVYSHOTGUN_TRAINING = 'WEAPON_HEAVYSHOTGUN_TRAINING',
     DBSHOTGUN = 'WEAPON_DBSHOTGUN',
     AUTOSHOTGUN = 'WEAPON_AUTOSHOTGUN',
     PUMPSHOTGUN_MK2 = 'WEAPON_PUMPSHOTGUN_MK2',
@@ -205,6 +222,7 @@ export enum WeaponName {
     SNIPERRIFLE = 'WEAPON_SNIPERRIFLE',
     HEAVYSNIPER = 'WEAPON_HEAVYSNIPER',
     HEAVYSNIPER_MK2 = 'WEAPON_HEAVYSNIPER_MK2',
+    HEAVYSNIPER_MK2_TRAINING = 'WEAPON_HEAVYSNIPER_MK2_TRAINING',
     MARKSMANRIFLE = 'WEAPON_MARKSMANRIFLE',
     MARKSMANRIFLE_MK2 = 'WEAPON_MARKSMANRIFLE_MK2',
     PRECISIONRIFLE = 'WEAPON_PRECISIONRIFLE',
@@ -446,6 +464,33 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             },
         ],
     },
+    [WeaponName.PISTOL_MK2_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_01',
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-pistol-mk2-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_PISTOL_MK2_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Viseur', component: 'COMPONENT_AT_PI_RAIL', type: WeaponComponentType.Scope },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_PI_FLSH_02', type: WeaponComponentType.Flashlight },
+            { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP_02', type: WeaponComponentType.Suppressor },
+            { label: 'Compensateur', component: 'COMPONENT_AT_PI_COMP', type: WeaponComponentType.Suppressor },
+        ],
+    },
+    [WeaponName.REVOLVER_MK2_TRAINING]: {
+        recoil: 0.15,
+        ammo: 'ammo_training_02',
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-revolver-mk2-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Holo', component: 'COMPONENT_AT_SIGHTS', type: WeaponComponentType.Scope },
+            { label: 'Macro', component: 'COMPONENT_AT_SCOPE_MACRO_MK2', type: WeaponComponentType.Scope },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_PI_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Compensateur', component: 'COMPONENT_AT_PI_COMP_03', type: WeaponComponentType.Suppressor },
+        ],
+    },
     [WeaponName.REVOLVER_MK2]: {
         recoil: 0.15,
         ammo: 'ammo_02',
@@ -489,6 +534,18 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP', type: WeaponComponentType.Suppressor },
         ],
     },
+    [WeaponName.COMBATPISTOL_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_01',
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-combatpistol-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_COMBATPISTOL_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_PI_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP', type: WeaponComponentType.Suppressor },
+        ],
+    },
     [WeaponName.APPISTOL]: {
         recoil: 0.05,
         ammo: 'ammo_01',
@@ -518,6 +575,18 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
     [WeaponName.HEAVYPISTOL]: {
         recoil: 0.05,
         ammo: 'ammo_01',
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_HEAVYPISTOL_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_PI_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP', type: WeaponComponentType.Suppressor },
+        ],
+    },
+    [WeaponName.HEAVYPISTOL_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_01',
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-heavypistol-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             { label: 'Grand chargeur', component: 'COMPONENT_HEAVYPISTOL_CLIP_02', type: WeaponComponentType.Clip },
             { label: 'Lampe torche', component: 'COMPONENT_AT_PI_FLSH', type: WeaponComponentType.Flashlight },
@@ -612,6 +681,21 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP', type: WeaponComponentType.Suppressor },
         ],
     },
+    [WeaponName.SMG_TRAINING]: {
+        recoil: 0.025,
+        ammo: 'ammo_training_01',
+        drawPositionInfo: { model: 'w_sb_smg', type: 'SMG' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-smg-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_SMG_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Très grand chargeur', component: 'COMPONENT_SMG_CLIP_03', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MACRO_02', type: WeaponComponentType.Scope },
+            { label: 'Silencieux', component: 'COMPONENT_AT_PI_SUPP', type: WeaponComponentType.Suppressor },
+        ],
+    },
     [WeaponName.ASSAULTSMG]: {
         recoil: 0.025,
         ammo: 'ammo_04',
@@ -642,6 +726,21 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
         recoil: 0.025,
         ammo: 'ammo_01',
         drawPositionInfo: { model: 'w_sb_pdw', type: 'SMG' },
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_COMBATPDW_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Très grand chargeur', component: 'COMPONENT_COMBATPDW_CLIP_03', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Poignée', component: 'COMPONENT_AT_AR_AFGRIP', type: WeaponComponentType.Grip },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_SMALL', type: WeaponComponentType.Scope },
+        ],
+    },
+    [WeaponName.COMBATPDW_TRAINING]: {
+        recoil: 0.025,
+        ammo: 'ammo_training_01',
+        drawPositionInfo: { model: 'w_sb_pdw', type: 'SMG' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-combatpdw-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             { label: 'Grand chargeur', component: 'COMPONENT_COMBATPDW_CLIP_02', type: WeaponComponentType.Clip },
             { label: 'Très grand chargeur', component: 'COMPONENT_COMBATPDW_CLIP_03', type: WeaponComponentType.Clip },
@@ -696,6 +795,18 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
     [WeaponName.TECPISTOL]: {
         recoil: 0.025,
         ammo: 'ammo_01',
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_TECPISTOL_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MACRO', type: WeaponComponentType.Scope },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP_02', type: WeaponComponentType.Suppressor },
+        ],
+    },
+    [WeaponName.TECPISTOL_TRAINING]: {
+        recoil: 0.025,
+        ammo: 'ammo_training_01',
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-tecpistol-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             { label: 'Grand chargeur', component: 'COMPONENT_TECPISTOL_CLIP_02', type: WeaponComponentType.Clip },
             { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MACRO', type: WeaponComponentType.Scope },
@@ -772,6 +883,33 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
                 model: 'w_at_cr_barrel_1',
             },
         ],
+        attachments: [
+            {
+                label: 'Grand chargeur',
+                component: 'COMPONENT_CARBINERIFLE_MK2_CLIP_02',
+                type: WeaponComponentType.Clip,
+            },
+            { label: 'Grip', component: 'COMPONENT_AT_AR_AFGRIP_02', type: WeaponComponentType.Grip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Holo', component: 'COMPONENT_AT_SIGHTS', type: WeaponComponentType.Scope },
+            { label: 'Macro', component: 'COMPONENT_AT_SCOPE_MACRO_MK2', type: WeaponComponentType.Scope },
+            { label: 'Petit', component: 'COMPONENT_AT_SCOPE_MEDIUM_MK2', type: WeaponComponentType.Scope },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP', type: WeaponComponentType.Suppressor },
+        ],
+    },
+    [WeaponName.CARBINERIFLE_MK2_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_06',
+        drawPositionInfo: { model: 'w_ar_carbineriflemk2', type: 'AR' },
+        extaDraw: [
+            {
+                bone: 'WAPBarrel',
+                model: 'w_at_cr_barrel_1',
+            },
+        ],
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-carbinerifle-mk2-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             {
                 label: 'Grand chargeur',
@@ -903,10 +1041,39 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             { label: 'Families', component: 'COMPONENT_HEAVYRIFLE_CAMO1', type: WeaponComponentType.PrimarySkin },
         ],
     },
+    [WeaponName.HEAVYRIFLE_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_07',
+        drawPositionInfo: { model: 'w_ar_heavyrifleh', type: 'AR' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-heavyrifle-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_HEAVYRIFLE_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Poignée', component: 'COMPONENT_AT_AR_AFGRIP', type: WeaponComponentType.Grip },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP', type: WeaponComponentType.Suppressor },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_MEDIUM', type: WeaponComponentType.Scope },
+        ],
+    },
     [WeaponName.TACTICALRIFLE]: {
         recoil: 0.05,
         ammo: 'ammo_06',
         drawPositionInfo: { model: 'w_ar_carbinerifle_reh', type: 'AR' },
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_TACTICALRIFLE_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH_REH', type: WeaponComponentType.Flashlight },
+            { label: 'Poignée', component: 'COMPONENT_AT_AR_AFGRIP', type: WeaponComponentType.Grip },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP_02', type: WeaponComponentType.Suppressor },
+        ],
+    },
+    [WeaponName.TACTICALRIFLE_TRAINING]: {
+        recoil: 0.05,
+        ammo: 'ammo_training_06',
+        drawPositionInfo: { model: 'w_ar_carbinerifle_reh', type: 'AR' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-tacticalrifle-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             { label: 'Grand chargeur', component: 'COMPONENT_TACTICALRIFLE_CLIP_02', type: WeaponComponentType.Clip },
             { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH_REH', type: WeaponComponentType.Flashlight },
@@ -965,6 +1132,25 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
         recoil: 0.4,
         ammo: 'ammo_08',
         drawPositionInfo: { model: 'w_sg_heavyshotgun', type: 'PUMP' },
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_HEAVYSHOTGUN_CLIP_02', type: WeaponComponentType.Clip },
+            {
+                label: 'Très grand chargeur',
+                component: 'COMPONENT_HEAVYSHOTGUN_CLIP_03',
+                type: WeaponComponentType.Clip,
+            },
+            { label: 'Lampe torche', component: 'COMPONENT_AT_AR_FLSH', type: WeaponComponentType.Flashlight },
+            { label: 'Silencieux', component: 'COMPONENT_AT_AR_SUPP_02', type: WeaponComponentType.Suppressor },
+            { label: 'Poignée', component: 'COMPONENT_AT_AR_AFGRIP', type: WeaponComponentType.Grip },
+        ],
+    },
+    [WeaponName.HEAVYSHOTGUN_TRAINING]: {
+        recoil: 0.4,
+        ammo: 'ammo_training_08',
+        drawPositionInfo: { model: 'w_sg_heavyshotgun', type: 'PUMP' },
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-heavyshotgun-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
         attachments: [
             { label: 'Grand chargeur', component: 'COMPONENT_HEAVYSHOTGUN_CLIP_02', type: WeaponComponentType.Clip },
             {
@@ -1148,6 +1334,28 @@ export const Weapons: Record<WeaponsType, WeaponConfig> = {
             { label: 'Silencieux', component: 'COMPONENT_AT_SR_SUPP_03', type: WeaponComponentType.Suppressor },
         ],
     },
+    [WeaponName.HEAVYSNIPER_MK2_TRAINING]: {
+        recoil: 0.4,
+        ammo: 'ammo_training_16',
+        drawPositionInfo: { model: 'w_sr_heavysnipermk2', type: 'RPG' },
+        extaDraw: [
+            {
+                bone: 'WAPBarrel',
+                model: 'w_at_sr_barrel_1',
+            },
+        ],
+        // Dedicated weapons.meta/weaponanimations.meta (resources/[weapon]/soz-weapon-heavysniper-mk2-training),
+        // always rendered orange so it's visually obvious it's the training version.
+        forcedTint: WeaponTintColor.Orange,
+        attachments: [
+            { label: 'Grand chargeur', component: 'COMPONENT_HEAVYSNIPER_MK2_CLIP_02', type: WeaponComponentType.Clip },
+            { label: 'Viseur', component: 'COMPONENT_AT_SCOPE_LARGE_MK2', type: WeaponComponentType.Scope },
+            { label: 'Viseur Avancé', component: 'COMPONENT_AT_SCOPE_MAX', type: WeaponComponentType.Scope },
+            { label: 'Viseur nocturne', component: 'COMPONENT_AT_SCOPE_NV', type: WeaponComponentType.Scope },
+            { label: 'Viseur thermique', component: 'COMPONENT_AT_SCOPE_THERMAL', type: WeaponComponentType.Scope },
+            { label: 'Silencieux', component: 'COMPONENT_AT_SR_SUPP_03', type: WeaponComponentType.Suppressor },
+        ],
+    },
     [WeaponName.MARKSMANRIFLE]: {
         recoil: 0.4,
         ammo: 'ammo_07',
@@ -1258,24 +1466,96 @@ export const excludeExplosionAlert = [
 // values as their base weapon, cloned under their own name — see
 // resources/[weapon]/soz-weapon-assaultsmg-training) whose real HP/armor loss gets captured then
 // cancelled client-side (by the victim, identified by weapon hash alone) and replayed on a purely
-// virtual plates -> armor -> health counter instead, ragdolling the victim once it would reach 0.
-export const TrainingWeapons = [WeaponName.ASSAULTSMG_TRAINING];
+// virtual plates -> armor -> health counter instead, putting the victim in the "coma" pose once it
+// would reach 0 (client/weapon/training.watch.provider.ts) until they stand back up via the watch.
+export const TrainingWeapons = [
+    WeaponName.ASSAULTSMG_TRAINING,
+    WeaponName.SMG_TRAINING,
+    WeaponName.PISTOL_MK2_TRAINING,
+    WeaponName.COMBATPISTOL_TRAINING,
+    WeaponName.HEAVYPISTOL_TRAINING,
+    WeaponName.COMBATPDW_TRAINING,
+    WeaponName.TECPISTOL_TRAINING,
+    WeaponName.CARBINERIFLE_MK2_TRAINING,
+    WeaponName.HEAVYSNIPER_MK2_TRAINING,
+    WeaponName.REVOLVER_MK2_TRAINING,
+    WeaponName.HEAVYRIFLE_TRAINING,
+    WeaponName.TACTICALRIFLE_TRAINING,
+    WeaponName.HEAVYSHOTGUN_TRAINING,
+];
 
-export const TrainingWeaponConfig = {
-    ragdollDurationMs: 10000,
-    // A fake-combat session for a victim resets if no hit landed for this long.
-    sessionTimeoutMs: 20000,
+// Server-side sanity ceiling for damage reported by a training weapon hit (see
+// server/weapon/training.session.service.ts). The client-victim's report is declarative/trusted
+// (see docs/core/training-weapon-system.md, "Points d'attention" #1), so any reported value above
+// this is clamped down rather than trusted outright. Each ceiling is the weapon's real `Damage`
+// value (from its dedicated weapons.meta, `HeadShotDamageModifierPlayer` deliberately set to 1.0
+// there — no headshot bonus for training weapons) times 10, the only legitimate amplifier left
+// (the real-armor-plates compensation in client/weapon/training.weapon.provider.ts).
+export const TrainingWeaponMaxDamage: Partial<Record<WeaponName, number>> = {
+    [WeaponName.ASSAULTSMG_TRAINING]: 250,
+    [WeaponName.SMG_TRAINING]: 250,
+    [WeaponName.PISTOL_MK2_TRAINING]: 320,
+    [WeaponName.COMBATPISTOL_TRAINING]: 270,
+    [WeaponName.HEAVYPISTOL_TRAINING]: 400,
+    [WeaponName.COMBATPDW_TRAINING]: 280,
+    [WeaponName.TECPISTOL_TRAINING]: 250,
+    [WeaponName.CARBINERIFLE_MK2_TRAINING]: 330,
+    [WeaponName.HEAVYSNIPER_MK2_TRAINING]: 2300,
+    [WeaponName.REVOLVER_MK2_TRAINING]: 2000,
+    [WeaponName.HEAVYRIFLE_TRAINING]: 340,
+    [WeaponName.TACTICALRIFLE_TRAINING]: 347.5,
+    [WeaponName.HEAVYSHOTGUN_TRAINING]: 1170,
+};
+
+// "Tactical watch" item: lets a training participant drive their own fake-combat session
+// (server/weapon/training.session.service.ts) without needing a real vest/plates equipped.
+export const TrainingWatchConfig = {
+    maxPlates: 6,
+    armorOn: 100,
+    // Health floor applied when standing back up via the watch, so the player doesn't
+    // instantly go back down if hit again right after getting up.
+    getUpMinHealth: 1,
+    // Virtual health is always out of this fixed value (independent of the player's real
+    // max_health), and every new watch-driven session (activation, reset, session timeout) starts
+    // full at this value.
+    fullHealth: 200,
+};
+
+export type TrainingWatchLoadout = {
+    // Always TrainingWatchConfig.armorOn (100) or 0 — not a literal union so callers can build it
+    // from clamped/computed values without fighting TS literal narrowing.
+    armor: number;
+    plates: number;
+};
+
+export type TrainingWatchSnapshot = {
+    active: boolean;
+    health: number;
+    maxHealth: number;
+    armor: number;
+    maxArmor: number;
+    plates: number;
+    maxPlates: number;
+};
+
+export type TrainingWatchMenuData = {
+    snapshot: TrainingWatchSnapshot;
+    loadout: TrainingWatchLoadout;
 };
 
 export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.PISTOL]: '9x19 AP',
     [WeaponName.PISTOL_MK2]: '9x19 AP',
+    [WeaponName.PISTOL_MK2_TRAINING]: '9x19 AP à blanc',
     [WeaponName.REVOLVER_MK2]: '.357 Magnum',
+    [WeaponName.REVOLVER_MK2_TRAINING]: '.357 Magnum à blanc',
     [WeaponName.COMBATPISTOL]: '9x19 AP',
+    [WeaponName.COMBATPISTOL_TRAINING]: '9x19 AP à blanc',
     [WeaponName.APPISTOL]: '9x19 AP',
     [WeaponName.PISTOL50]: '.357 Magnum',
     [WeaponName.SNSPISTOL]: '9x19 AP',
     [WeaponName.HEAVYPISTOL]: '9x19 AP',
+    [WeaponName.HEAVYPISTOL_TRAINING]: '9x19 AP à blanc',
     [WeaponName.VINTAGEPISTOL]: '9x19 AP',
     [WeaponName.FLAREGUN]: 'Flair',
     [WeaponName.MARKSMANPISTOL]: '9x19 AP',
@@ -1288,18 +1568,22 @@ export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.PISTOLXM3]: '9x19 AP',
     [WeaponName.MICROSMG]: '9x19 AP',
     [WeaponName.SMG]: '9x19 AP',
+    [WeaponName.SMG_TRAINING]: '9x19 AP à blanc',
     [WeaponName.ASSAULTSMG]: '5.7x28 SB193',
     [WeaponName.ASSAULTSMG_TRAINING]: '5.7x28 SB193 à blanc',
     [WeaponName.COMBATPDW]: '9x19 AP',
+    [WeaponName.COMBATPDW_TRAINING]: '9x19 AP à blanc',
     [WeaponName.SMG_MK2]: '5.7x28 SB193',
     [WeaponName.MACHINEPISTOL]: '9x19 AP',
     [WeaponName.MINISMG]: '9x19 AP',
     [WeaponName.RAYCARBINE]: 'Munition Alien',
     [WeaponName.TECPISTOL]: '9x19 AP',
+    [WeaponName.TECPISTOL_TRAINING]: '9x19 AP à blanc',
     [WeaponName.ASSAULTRIFLE]: '7.62x39 BP',
     [WeaponName.ASSAULTRIFLE_MK2]: '7.62x39 BP',
     [WeaponName.CARBINERIFLE]: '5.56x45 M995',
     [WeaponName.CARBINERIFLE_MK2]: '5.56x45 M995',
+    [WeaponName.CARBINERIFLE_MK2_TRAINING]: '5.56x45 M995 à blanc',
     [WeaponName.ADVANCEDRIFLE]: '7.62x51 M62',
     [WeaponName.SPECIALCARBINE]: '5.56x45 M995',
     [WeaponName.BULLPUPRIFLE]: '5.56x45 M995',
@@ -1308,7 +1592,9 @@ export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.BULLPUPRIFLE_MK2]: '7.62x39 BP',
     [WeaponName.MILITARYRIFLE]: '7.62x51 M62',
     [WeaponName.HEAVYRIFLE]: '7.62x51 M62',
+    [WeaponName.HEAVYRIFLE_TRAINING]: '7.62x51 M62 à blanc',
     [WeaponName.TACTICALRIFLE]: '5.56x45 M995',
+    [WeaponName.TACTICALRIFLE_TRAINING]: '5.56x45 M995 à blanc',
     [WeaponName.BATTLERIFLE]: '7.62x51 M62',
     [WeaponName.PUMPSHOTGUN]: 'Billes caoutchouc',
     [WeaponName.SAWNOFFSHOTGUN]: '12/70 Buckshot',
@@ -1316,6 +1602,7 @@ export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.BULLPUPSHOTGUN]: '12/70 Buckshot',
     [WeaponName.MUSKET]: 'Lead Bullet',
     [WeaponName.HEAVYSHOTGUN]: '12/70 Buckshot',
+    [WeaponName.HEAVYSHOTGUN_TRAINING]: '12/70 Buckshot à blanc',
     [WeaponName.DBSHOTGUN]: '12/70 Buckshot',
     [WeaponName.AUTOSHOTGUN]: '12/70 Buckshot',
     [WeaponName.PUMPSHOTGUN_MK2]: '12/70 Buckshot',
@@ -1338,6 +1625,7 @@ export const WeaponAmmo: Partial<Record<WeaponName, string>> = {
     [WeaponName.SNIPERRIFLE]: '.50 BMG',
     [WeaponName.HEAVYSNIPER]: '.50 BMG',
     [WeaponName.HEAVYSNIPER_MK2]: '.50 BMG',
+    [WeaponName.HEAVYSNIPER_MK2_TRAINING]: '.50 BMG à blanc',
     [WeaponName.MARKSMANRIFLE]: '7.62x51 M62',
     [WeaponName.MARKSMANRIFLE_MK2]: '7.62x51 M62',
     [WeaponName.PRECISIONRIFLE]: '.50 BMG',

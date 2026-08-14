@@ -315,6 +315,96 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 price: 500,
             },
             {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_smg_training', label: 'Mitraillette (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_pistol_mk2_training', label: 'Pistolet Mk II (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_combatpistol_training',
+                    label: 'Pistolet de combat (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavypistol_training', label: 'Pistolet lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_combatpdw_training', label: 'ADP de combat (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_tecpistol_training',
+                    label: 'Mitraillette Tactique (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_carbinerifle_mk2_training',
+                    label: 'Carabine spéciale Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavysniper_mk2_training',
+                    label: 'Fusil de précision lourd (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_revolver_mk2_training',
+                    label: 'Revolver lourd Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavyrifle_training', label: 'Fusil lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_tacticalrifle_training', label: 'Fusil tactique (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavyshotgun_training',
+                    label: 'Fusil à pompe lourd (Entraînement)',
+                },
+                price: 500,
+            },
+            {
                 id: POLICE_DRONE_NAME,
                 type: 'item',
                 price: 100000,
@@ -401,6 +491,96 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 id: 'weapon_certificate',
                 type: 'item',
                 metadata: { craftCertificate: 'weapon_assaultsmg_training', label: 'P90 GEN2 (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_smg_training', label: 'Mitraillette (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_pistol_mk2_training', label: 'Pistolet Mk II (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_combatpistol_training',
+                    label: 'Pistolet de combat (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavypistol_training', label: 'Pistolet lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_combatpdw_training', label: 'ADP de combat (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_tecpistol_training',
+                    label: 'Mitraillette Tactique (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_carbinerifle_mk2_training',
+                    label: 'Carabine spéciale Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavysniper_mk2_training',
+                    label: 'Fusil de précision lourd (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_revolver_mk2_training',
+                    label: 'Revolver lourd Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavyrifle_training', label: 'Fusil lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_tacticalrifle_training', label: 'Fusil tactique (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavyshotgun_training',
+                    label: 'Fusil à pompe lourd (Entraînement)',
+                },
                 price: 500,
             },
             {
@@ -491,6 +671,96 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
                 id: 'weapon_certificate',
                 type: 'item',
                 metadata: { craftCertificate: 'weapon_assaultsmg_training', label: 'P90 GEN2 (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_smg_training', label: 'Mitraillette (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_pistol_mk2_training', label: 'Pistolet Mk II (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_combatpistol_training',
+                    label: 'Pistolet de combat (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavypistol_training', label: 'Pistolet lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_combatpdw_training', label: 'ADP de combat (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_tecpistol_training',
+                    label: 'Mitraillette Tactique (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_carbinerifle_mk2_training',
+                    label: 'Carabine spéciale Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavysniper_mk2_training',
+                    label: 'Fusil de précision lourd (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_revolver_mk2_training',
+                    label: 'Revolver lourd Mk II (Entraînement)',
+                },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_heavyrifle_training', label: 'Fusil lourd (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: { craftCertificate: 'weapon_tacticalrifle_training', label: 'Fusil tactique (Entraînement)' },
+                price: 500,
+            },
+            {
+                id: 'weapon_certificate',
+                type: 'item',
+                metadata: {
+                    craftCertificate: 'weapon_heavyshotgun_training',
+                    label: 'Fusil à pompe lourd (Entraînement)',
+                },
                 price: 500,
             },
             {

@@ -35,6 +35,7 @@ export const PlayerStats: FunctionComponent = () => {
     const armor = useSelector((state: RootState) => state.playerStats.armor);
     const plates = useSelector((state: RootState) => state.playerStats.armorPlates);
     const stamina = useSelector((state: RootState) => state.playerStats.stamina);
+    const trainingWatch = useSelector((state: RootState) => state.playerStats.trainingWatch);
 
     useNuiEvent('hud', 'SetShowStats', setShowStats);
     useNuiEvent('hud', 'SetBattery', setBattery);
@@ -111,6 +112,42 @@ export const PlayerStats: FunctionComponent = () => {
                         }}
                         src={getPath('images/hud/player/armor.webp')}
                         alt="armor"
+                    />
+                </StatusGauge>
+            )}
+
+            {trainingWatch?.active && showStats && (
+                <StatusGauge
+                    value={trainingWatch.maxHealth > 0 ? (trainingWatch.health / trainingWatch.maxHealth) * 100 : 0}
+                    color={gaugeColors.orange_light}
+                    backgroundColor={gaugeColors.orange_dark}
+                    hideCondition={() => false}
+                >
+                    <img
+                        style={{
+                            width: iconSize,
+                            height: iconSize,
+                        }}
+                        src={getPath('images/hud/player/health.webp')}
+                        alt="training-health"
+                    />
+                </StatusGauge>
+            )}
+
+            {trainingWatch?.active && showStats && (
+                <StatusGauge
+                    value={trainingWatch.armor}
+                    color={gaugeColors.orange_light}
+                    backgroundColor={gaugeColors.orange_dark}
+                    secondaryValue={trainingWatch.plates}
+                >
+                    <img
+                        style={{
+                            width: iconSize,
+                            height: iconSize,
+                        }}
+                        src={getPath('images/hud/player/armor.webp')}
+                        alt="training-armor"
                     />
                 </StatusGauge>
             )}

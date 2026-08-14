@@ -37,7 +37,7 @@ import {
     VehicleMenuData,
     VehicleOrderMenuData,
 } from '../vehicle/vehicle';
-import { WeaponsMenuData } from '../weapons/weapon';
+import { TrainingWatchMenuData, WeaponsMenuData } from '../weapons/weapon';
 import { HousingPropPlacementMenuData } from './prop_placement';
 
 export interface NuiMenuMethodMap {
@@ -158,6 +158,7 @@ export enum MenuType {
     GangMenu = 'gang',
     GangVehiculeMenu = 'gang_vehicule_menu',
     WatchMenu = 'watch_menu',
+    TacticalWatchMenu = 'tactical_watch_menu',
     HalloweenVampire = 'halloween_vampire',
     LaserGameCreate = 'laser_game_create',
     LaserGameManage = 'laser_game_manage',
@@ -248,6 +249,7 @@ export interface MenuTypeMap extends Record<MenuType, any> {
     [MenuType.DoorAdmin]: string;
     [MenuType.SmugglingBlackMarketPrices]: MenuSmugglingPricesData;
     [MenuType.WatchMenu]: HudSettings;
+    [MenuType.TacticalWatchMenu]: TrainingWatchMenuData;
     [MenuType.HalloweenVampire]: never;
     [MenuType.LaserGameCreate]: null;
     [MenuType.LaserGameManage]: LaserGameData;

@@ -1,0 +1,74 @@
+Version 165 32
+{
+	Shaders
+	{
+		weapon_normal_spec_detail_palette.sps
+		{
+			DiffuseSampler W_PI_HeavyPistol
+			DetailSampler ENV_SMOOTH_CONCRETE2
+			DiffuseExtraSampler W_PI_HeavyPistol
+			BumpSampler W_PI_HeavyPistol_N
+			SpecSampler W_PI_HeavyPistol_S
+			TextureSamplerDiffPal W_PI_HeavyPistol_Dpal
+			DetailSettings 0.20000000 0.20000000 12.00000000 12.00000000
+			PaletteSelector 0.00000000
+			UseTessellation 0.00000000
+			Bumpiness 1.00000000
+			Specular2ColorIntensity 1.00000000
+			Specular2Factor 40.00000000
+			SpecularIntensityMult 1.00000000
+			SpecularFalloffMult 60.00000000
+			SpecularFresnel 0.35000000
+		}
+		weapon_emissivestrong_alpha.sps
+		{
+			DiffuseSampler W_AT_Scope_GlassW_AT_Scope_Glass_A
+			UseTessellation 0.00000000
+			EmissiveMultiplier 16.00000000
+		}
+		weapon_normal_spec_alpha.sps
+		{
+			DiffuseSampler W_AT_Scope_GlassW_AT_Scope_Glass_A
+			BumpSampler W_AT_Scope_Glass_n
+			SpecSampler W_AT_Scope_Glass_s
+			UseTessellation 0.00000000
+			WetnessMultiplier 0.00000000
+			Bumpiness 1.00000000
+			SpecMapIntMask 0.00000000 0.00000000 0.00000000
+			SpecularIntensityMult 1.00000000
+			SpecularFalloffMult 40.00000000
+			SpecularFresnel 0.60000000
+		}
+		normal_spec_decal.sps
+		{
+			DiffuseSampler W_AT_WeaponDecalsW_AT_WeaponDecals_A
+			BumpSampler W_AT_WeaponDecals_N
+			SpecSampler W_AT_WeaponDecals
+			UseTessellation 0.00000000
+			WetnessMultiplier 0.00000000
+			Bumpiness 1.00000000
+			SpecMapIntMask 1.00000000 0.00000000 0.00000000
+			SpecularIntensityMult 1.00000000
+			SpecularFalloffMult 60.00000000
+			SpecularFresnel 0.80000000
+		}
+	}
+	Skeleton w_pi_heavypistol_hi\w_pi_heavypistol_hi.skel
+	LodGroup
+	{
+		Center -0.00088800 0.00015700 -0.00970300
+		Radius 0.13648500
+		AABBMin -0.11083800 -0.01769900 -0.08857000
+		AABBMax 0.10906300 0.01801400 0.06916500
+		High 9998.00000000
+		{
+			w_pi_heavypistol_hi\w_pi_heavypistol_hi_high.mesh 0
+		}
+		Med 9998.00000000
+		Low 9998.00000000
+		Vlow 9998.00000000
+	}
+	Joints null
+	Light null
+	Bound null
+}

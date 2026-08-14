@@ -80,6 +80,7 @@ import { MenuVehicleCustom } from '@public/nui/components/Menu/MenuVehicleCustom
 import { MenuVehicleDealership } from '@public/nui/components/Menu/MenuVehicleDealership';
 import { VehicleOrderMenu } from '@public/nui/components/Menu/MenuVehicleOrder';
 import { MenuWardrobe } from '@public/nui/components/Menu/MenuWardrobe';
+import { MenuTacticalWatch } from '@public/nui/components/Menu/MenuTacticalWatch';
 import { MenuWatch } from '@public/nui/components/Menu/MenuWatch';
 import { PetJobKennelMenu } from '@public/nui/components/Pet/PetJobKennelMenu';
 import { FinesMenu } from '@public/nui/components/Police/Fines';
@@ -349,6 +350,7 @@ const MenuRouter: FunctionComponent = () => {
             <Route path={`/${MenuType.GangMenu}/*`} element={<MenuGang />} />
             <Route path={`/${MenuType.GangVehiculeMenu}/*`} element={<MenuGangVehicule />} />
             <Route path={`/${MenuType.WatchMenu}/*`} element={<MenuWatch data={menuData} />} />
+            <Route path={`/${MenuType.TacticalWatchMenu}/*`} element={<MenuTacticalWatch data={menuData} />} />
             <Route path={`/${MenuType.HalloweenVampire}/*`} element={<MenuHalloweenVampire />} />
             <Route
                 path={`/${MenuType.SmugglingBlackMarketOwners}/*`}

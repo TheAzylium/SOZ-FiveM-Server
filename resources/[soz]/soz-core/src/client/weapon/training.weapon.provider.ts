@@ -1,9 +1,10 @@
-import { OnEvent, OnGameEvent } from '@core/decorators/event';
+import { OnGameEvent } from '@core/decorators/event';
 import { Inject } from '@core/decorators/injectable';
 import { Provider } from '@core/decorators/provider';
 import { Tick, TickInterval } from '@core/decorators/tick';
 
-import { ClientEvent, GameEvent, ServerEvent } from '../../shared/event';
+import { GameEvent, ServerEvent } from '../../shared/event';
+import { Vector3 } from '../../shared/polyzone/vector';
 import { TrainingWeapons } from '../../shared/weapons/weapon';
 import { PlayerService } from '../player/player.service';
 
@@ -50,6 +51,19 @@ export class TrainingWeaponProvider {
         const healthLost = Math.max(0, this.lastKnownHealth - healthAfter);
         const armourLost = Math.max(0, this.lastKnownArmour - armourAfter);
 
+        // A hit whose real damage would zero out (or the engine already flags as fatal) starts the
+        // real death sequence natively before this handler even runs — restoring health alone isn't
+        // enough to undo that. Resurrect in place first (same trick as the real LSMC death/coma
+        // recovery, client/job/lsmc/lsmc.death.provider.ts), then reapply the exact pre-hit
+        // health/armour below so the player ends up exactly where they were, not healed to full.
+        if (isFatal || healthAfter <= 0) {
+            const coords = GetEntityCoords(playerPed, false) as Vector3;
+            const heading = GetEntityHeading(playerPed);
+            NetworkResurrectLocalPlayer(coords[0], coords[1], coords[2], heading, 1, false);
+            ClearPedTasksImmediately(playerPed);
+            console.log('[TrainingWeapon][client] fatal hit detected, resurrected in place before reverting');
+        }
+
         if (healthAfter !== this.lastKnownHealth) {
             SetEntityHealth(playerPed, this.lastKnownHealth);
         }
@@ -58,7 +72,13 @@ export class TrainingWeaponProvider {
         }
 
         let damage = healthLost + armourLost;
+
+        console.log(
+            `[TrainingWeapon][client] hit captured — healthBefore=${this.lastKnownHealth} healthAfter=${healthAfter} healthLost=${healthLost} | armourBefore=${this.lastKnownArmour} armourAfter=${armourAfter} armourLost=${armourLost} | rawDamage=${damage} nbArmorPlates=${this.playerService.getState().nbArmorPlates}`
+        );
+
         if (damage <= 0) {
+            console.log('[TrainingWeapon][client] damage <= 0, not reporting to server');
             return;
         }
 
@@ -67,14 +87,10 @@ export class TrainingWeaponProvider {
         // captured value would otherwise be 10x too low while real plates are still equipped.
         if (this.playerService.getState().nbArmorPlates > 0) {
             damage *= 10;
+            console.log(`[TrainingWeapon][client] real plates equipped, compensated damage x10 -> ${damage}`);
         }
 
-        TriggerServerEvent(ServerEvent.TRAINING_WEAPON_HIT, damage);
-    }
-
-    @OnEvent(ClientEvent.TRAINING_WEAPON_DOWN)
-    public onTrainingWeaponDown(durationMs: number) {
-        const playerPed = PlayerPedId();
-        SetPedToRagdoll(playerPed, durationMs, durationMs, 0, false, false, false);
+        console.log(`[TrainingWeapon][client] reporting damage=${damage} to server`);
+        TriggerServerEvent(ServerEvent.TRAINING_WEAPON_HIT, damage, weaponHash);
     }
 }

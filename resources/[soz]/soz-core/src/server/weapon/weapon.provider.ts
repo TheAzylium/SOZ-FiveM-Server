@@ -18,6 +18,7 @@ import {
     excludeExplosionAlert,
     ExplosionType,
     GlobalWeaponConfig,
+    TrainingWeapons,
     WeaponConfig,
     WeaponName,
     Weapons,
@@ -29,6 +30,11 @@ import { PlayerService } from '../player/player.service';
 import { PlayerStateService } from '../player/player.state.service';
 import { Store } from '../store/store';
 import { VehicleConditionProvider } from '../vehicle/vehicle.condition.provider';
+
+// Training weapons never leave real evidence (blood clues, bullet casings, gunshot residue) — they
+// don't inflict any real damage, so there's nothing for the police scientist system to find.
+const trainingWeaponHashes = TrainingWeapons.map(name => joaat(name));
+const trainingWeaponNames = TrainingWeapons.map(name => name.toLowerCase());
 
 @Provider()
 export class WeaponProvider {
@@ -86,7 +92,8 @@ export class WeaponProvider {
             !targetData ||
             targetData.metadata.armor.current > 0 ||
             data.weaponType == joaat('weapon_snowball') ||
-            data.weaponType == joaat('weapon_snowlauncher')
+            data.weaponType == joaat('weapon_snowlauncher') ||
+            trainingWeaponHashes.includes(data.weaponType)
         ) {
             return;
         }
@@ -165,7 +172,8 @@ export class WeaponProvider {
             weaponGroup == GetHashKey('GROUP_STUNGUN') ||
             weapon.name == 'weapon_snowball' ||
             weapon.name == 'weapon_snowlauncher' ||
-            weapon.name == 'weapon_ammo'
+            weapon.name == 'weapon_ammo' ||
+            trainingWeaponNames.includes(weapon.name)
         ) {
             return;
         }
@@ -419,7 +427,13 @@ export class WeaponProvider {
         this.item.setItemUseCallback('ammo_17', this.useAmmo.bind(this));
         this.item.setItemUseCallback('ammo_18', this.useAmmo.bind(this));
         this.item.setItemUseCallback('ammo_19', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_01', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_02', this.useAmmo.bind(this));
         this.item.setItemUseCallback('ammo_training_04', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_06', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_07', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_08', this.useAmmo.bind(this));
+        this.item.setItemUseCallback('ammo_training_16', this.useAmmo.bind(this));
     }
 
     private getWeaponConfig(weaponName: string): WeaponConfig | null {
