@@ -6,6 +6,7 @@ import { PhoneAppPhotosProvider } from './apps/phone.app.photos.provider';
 import { PhoneAppSnakeProvider } from './apps/phone.app.snake.provider';
 import { PhoneAppSocietyProvider } from './apps/phone.app.society.provider';
 import { PhoneAppTetrisProvider } from './apps/phone.app.tetris.provider';
+import { PhoneAppZchecsProvider } from './apps/phone.app.zchecs.provider';
 import { PhoneProvider } from './phone.provider';
 import { PhoneSimCard } from './phone.simcard';
 import { PhoneSimCardCalls } from './phone.simcard.calls';
@@ -27,6 +28,7 @@ import { PhoneSimCardMessages } from './phone.simcard.messages';
         PhoneAppPhotosProvider,
         PhoneAppTetrisProvider,
         PhoneAppSnakeProvider,
+        PhoneAppZchecsProvider,
     ],
 })
 export class PhoneModule {}

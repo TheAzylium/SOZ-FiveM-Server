@@ -311,6 +311,7 @@ export const fr = {
         APPS_DARKWEB: '????',
         APPS_TETRIS: 'Zetris',
         APPS_SNAKE: 'Snake',
+        APPS_ZCHECS: 'ZChecs',
         APPS_TAX: 'Taxes',
         GENERIC_CLICK_TO_REVEAL: 'Cliquer pour révéler',
         GENERIC_LOADING: 'Chargement...',

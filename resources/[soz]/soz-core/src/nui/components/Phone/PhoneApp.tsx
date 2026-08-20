@@ -18,6 +18,7 @@ import { useAppNotesStateHandlers } from './apps/notes/notes.atom';
 import { useAppPhotosStateHandlers } from './apps/photos/photos.atom';
 import { useSocietyMessagesStateHandlers } from './apps/society-messages/messages.atom';
 import { useAppWeatherStateHandlers } from './apps/weather/weather.atom';
+import { useAppZchecsStateHandlers } from './apps/zchecs/zchecs.atom';
 import { useKeyboard } from './hooks/useKeyboard';
 import { ActionSheet } from './system/action-sheet/components/ActionSheet';
 import { Alerts } from './system/alerts/components/Alerts';
@@ -119,6 +120,7 @@ const PhoneAppHooks: FunctionComponent = () => {
     useAppNewsStateHandlers();
     useAppNotesStateHandlers();
     useAppWeatherStateHandlers();
+    useAppZchecsStateHandlers();
     useSocietyMessagesStateHandlers();
 
     return null;

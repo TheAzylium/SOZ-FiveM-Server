@@ -36,6 +36,9 @@ import TetrisIcon from '../../../apps/tetris/icon';
 import { TetrisApp } from '../../../apps/tetris/TetrisApp';
 import WeatherIcon from '../../../apps/weather/icon';
 import { WeatherApp } from '../../../apps/weather/WeatherApp';
+import ZchecsIcon from '../../../apps/zchecs/icon';
+import { useZchecsBadgeCount } from '../../../apps/zchecs/zchecs.atom';
+import { ZchecsApp } from '../../../apps/zchecs/ZchecsApp';
 import ZutomIcon from '../../../apps/zutom/icon';
 import { ZutomApp } from '../../../apps/zutom/ZutomApp';
 import { useSocietySimCard } from '../../sim-card/hooks/useSocietySimCard';
@@ -49,6 +52,7 @@ export const useApps = () => {
     // badges
     const societyMessagesBadge = useUnTakenMessagesCount();
     const unreadConversationsBadge = useUnreadConversationsCount();
+    const zchecsBadge = useZchecsBadgeCount();
 
     const APPS: Array<IAppConfig> = [
         /* System apps */
@@ -197,6 +201,15 @@ export const useApps = () => {
             position: 11,
         },
         {
+            id: 'zchecs',
+            nameLocale: 'APPS_ZCHECS',
+            path: '/zchecs',
+            icon: ZchecsIcon,
+            component: <ZchecsApp />,
+            position: 12,
+            badge: zchecsBadge,
+        },
+        {
             id: 'zutom',
             nameLocale: 'APPS_ZUTOM',
             path: '/zutom',
@@ -211,5 +224,12 @@ export const useApps = () => {
             if (app.condition) return app.condition();
             return true;
         });
-    }, [player?.job?.onduty, societyNumber, darkWebAppEnabled, societyMessagesBadge, unreadConversationsBadge]);
+    }, [
+        player?.job?.onduty,
+        societyNumber,
+        darkWebAppEnabled,
+        societyMessagesBadge,
+        unreadConversationsBadge,
+        zchecsBadge,
+    ]);
 };

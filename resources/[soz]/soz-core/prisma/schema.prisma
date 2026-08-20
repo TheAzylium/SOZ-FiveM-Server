@@ -176,42 +176,42 @@ model apartment_fourniture {
 }
 
 model pet {
-    id           Int         @id @default(autoincrement())
-    owner_id     String      @unique @db.VarChar(255)
-    owner        player      @relation(fields: [owner_id], references: [citizenid], name: "pet")
-    model        String
-    name         String?     @db.VarChar(32)
-    trait_up     String      @db.VarChar(64)
-    trait_down   String      @db.VarChar(64)
-    dead         Boolean     @default(false)
-    hunger       Float       @default(100.00) @db.Float
-    thirst       Float       @default(100.00) @db.Float
-    energy       Float       @default(10.00)  @db.Float
-    affection    Float       @default(50.00)  @db.Float
-    training     Float       @default(5.00)   @db.Float
-    perDays      String      @db.Text
-    components   String      @db.Text
-    created_at   DateTime    @default(now()) @db.Timestamp(0)
+    id         Int      @id @default(autoincrement())
+    owner_id   String   @unique @db.VarChar(255)
+    owner      player   @relation(fields: [owner_id], references: [citizenid], name: "pet")
+    model      String
+    name       String?  @db.VarChar(32)
+    trait_up   String   @db.VarChar(64)
+    trait_down String   @db.VarChar(64)
+    dead       Boolean  @default(false)
+    hunger     Float    @default(100.00) @db.Float
+    thirst     Float    @default(100.00) @db.Float
+    energy     Float    @default(10.00) @db.Float
+    affection  Float    @default(50.00) @db.Float
+    training   Float    @default(5.00) @db.Float
+    perDays    String   @db.Text
+    components String   @db.Text
+    created_at DateTime @default(now()) @db.Timestamp(0)
 }
 
 model job_pet {
-    id           Int         @id @default(autoincrement())
-    job          String      @db.VarChar(16)
-    owner_id     String?     @unique @db.VarChar(255)
-    owner        player?     @relation(fields: [owner_id], references: [citizenid], name: "job_pet")
-    model        String
-    name         String?     @db.VarChar(32)
-    trait_up     String      @db.VarChar(64)
-    trait_down   String      @db.VarChar(64)
-    dead         Boolean     @default(false)
-    hunger       Float       @default(100.00) @db.Float
-    thirst       Float       @default(100.00) @db.Float
-    energy       Float       @default(10.00)  @db.Float
-    affection    Float       @default(50.00)  @db.Float
-    training     Float       @default(5.00)   @db.Float
-    perDays      String      @db.Text
-    components   String      @db.Text
-    created_at   DateTime    @default(now()) @db.Timestamp(0)
+    id         Int      @id @default(autoincrement())
+    job        String   @db.VarChar(16)
+    owner_id   String?  @unique @db.VarChar(255)
+    owner      player?  @relation(fields: [owner_id], references: [citizenid], name: "job_pet")
+    model      String
+    name       String?  @db.VarChar(32)
+    trait_up   String   @db.VarChar(64)
+    trait_down String   @db.VarChar(64)
+    dead       Boolean  @default(false)
+    hunger     Float    @default(100.00) @db.Float
+    thirst     Float    @default(100.00) @db.Float
+    energy     Float    @default(10.00) @db.Float
+    affection  Float    @default(50.00) @db.Float
+    training   Float    @default(5.00) @db.Float
+    perDays    String   @db.Text
+    components String   @db.Text
+    created_at DateTime @default(now()) @db.Timestamp(0)
 }
 
 model invoices {
@@ -446,6 +446,44 @@ model phone_twitch_news {
     @@index([type], map: "type")
 }
 
+model phone_zchecs_game {
+    id              Int      @id @default(autoincrement())
+    white_id        String   @db.VarChar(48)
+    black_id        String   @db.VarChar(48)
+    creator_id      String   @db.VarChar(48)
+    white_number    String   @db.VarChar(10)
+    black_number    String   @db.VarChar(10)
+    ranked          Boolean  @default(false)
+    status          String   @default("PENDING") @db.VarChar(16)
+    result          String?  @db.VarChar(16)
+    end_reason      String?  @db.VarChar(24)
+    fen             String   @db.VarChar(100)
+    pgn             String   @db.LongText
+    draw_offer_by   String?  @db.VarChar(48)
+    white_elo_delta Int?
+    black_elo_delta Int?
+    createdAt       DateTime @default(now()) @db.Timestamp(0)
+    updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+    @@index([white_id], map: "white_id")
+    @@index([black_id], map: "black_id")
+    @@index([status], map: "status")
+}
+
+model phone_zchecs_elo {
+    identifier String @id @db.VarChar(48)
+    elo        Int    @default(1000)
+    wins       Int    @default(0)
+    losses     Int    @default(0)
+    draws      Int    @default(0)
+}
+
+model phone_zchecs_queue {
+    identifier String   @id @db.VarChar(48)
+    number     String   @db.VarChar(10)
+    createdAt  DateTime @default(now()) @db.Timestamp(0)
+}
+
 model player {
     id                      Int                      @default(autoincrement())
     citizenid               String                   @id @db.VarChar(50)
@@ -617,32 +655,32 @@ model field {
 }
 
 model investigation_category {
-    id            Int             @id @default(autoincrement())
-    label         String          @db.VarChar(255)
-    service       String?         @db.VarChar(50)
+    id      Int     @id @default(autoincrement())
+    label   String  @db.VarChar(255)
+    service String? @db.VarChar(50)
 
     investigation investigation[]
 }
 
 model investigation {
-    id                     Int                      @id @unique(map: "investigation_id_uindex") @default(autoincrement())
-    citizenid              String                   @db.VarChar(255)
-    service                String                   @db.VarChar(255)
-    title                  String                   @db.VarChar(128)
+    id                     Int       @id @unique(map: "investigation_id_uindex") @default(autoincrement())
+    citizenid              String    @db.VarChar(255)
+    service                String    @db.VarChar(255)
+    title                  String    @db.VarChar(128)
     category_id            Int
-    isTemplate             Boolean?                 @default(false)
-    closed                 Boolean?                 @default(false)
-    granted                String?                  @db.LongText
-    granted_services       String?                  @db.LongText
-    granted_jobgrade       String?                  @db.LongText
-    granted_certifications String?                  @db.LongText
-    supervisors            String?                  @db.LongText
-    concerned_people       String?                  @db.LongText
-    in_charge              String?                  @db.LongText
-    created_at             DateTime?                @default(now()) @db.Timestamp(0)
-    updated_at             DateTime?                @default(now()) @db.Timestamp(0)
+    isTemplate             Boolean?  @default(false)
+    closed                 Boolean?  @default(false)
+    granted                String?   @db.LongText
+    granted_services       String?   @db.LongText
+    granted_jobgrade       String?   @db.LongText
+    granted_certifications String?   @db.LongText
+    supervisors            String?   @db.LongText
+    concerned_people       String?   @db.LongText
+    in_charge              String?   @db.LongText
+    created_at             DateTime? @default(now()) @db.Timestamp(0)
+    updated_at             DateTime? @default(now()) @db.Timestamp(0)
 
-    category               investigation_category @relation(fields: [category_id], references: [id])
+    category               investigation_category   @relation(fields: [category_id], references: [id])
     investigation_revision investigation_revision[]
     investigation_favori   investigation_favori[]
 
