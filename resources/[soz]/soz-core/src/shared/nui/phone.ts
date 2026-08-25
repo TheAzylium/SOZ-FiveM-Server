@@ -6,7 +6,7 @@ import { NewsMessage } from '@public/shared/phone/apps/news';
 import { NoteItem } from '@public/shared/phone/apps/notes';
 import { PhotoItem } from '@public/shared/phone/apps/photos';
 import { SocietyMessage } from '@public/shared/phone/apps/society';
-import { ZchecsGame, ZchecsProfile, ZchecsUpdatePayload } from '@public/shared/phone/apps/zchecs';
+import { ZchecsEloPoint, ZchecsGame, ZchecsProfile, ZchecsUpdatePayload } from '@public/shared/phone/apps/zchecs';
 import { ActiveCall, CallHistory, Contact, Message, MessageConversation } from '@public/shared/phone/simcard';
 import { ForecastWithTemperature } from '@public/shared/weather';
 
@@ -68,4 +68,5 @@ export interface NuiPhoneMap {
     AppZchecsUpdateGame: ZchecsUpdatePayload;
     AppZchecsSetLeaderboard: LeaderboardInterface[];
     AppZchecsSetProfile: ZchecsProfile;
+    AppZchecsSetHistory: ZchecsEloPoint[];
 }

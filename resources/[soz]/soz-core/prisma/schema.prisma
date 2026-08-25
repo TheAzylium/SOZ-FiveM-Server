@@ -460,8 +460,22 @@ model phone_zchecs_game {
     fen             String   @db.VarChar(100)
     pgn             String   @db.LongText
     draw_offer_by   String?  @db.VarChar(48)
+    draw_offer_at   DateTime? @db.Timestamp(0)
+    last_move_at    DateTime @default(now()) @db.Timestamp(0)
+    time_control    String   @default("CORRESPONDENCE") @db.VarChar(16)
+    white_time_ms   Int?
+    black_time_ms   Int?
+    increment_ms    Int      @default(0)
+    clock_since     DateTime? @db.Timestamp(0)
+    variant         String   @default("STANDARD") @db.VarChar(20)
+    white_checks    Int      @default(0)
+    black_checks    Int      @default(0)
+    hidden_by_white Boolean  @default(false)
+    hidden_by_black Boolean  @default(false)
     white_elo_delta Int?
     black_elo_delta Int?
+    white_elo_after Int?
+    black_elo_after Int?
     createdAt       DateTime @default(now()) @db.Timestamp(0)
     updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp(0)
 
@@ -471,8 +485,9 @@ model phone_zchecs_game {
 }
 
 model phone_zchecs_elo {
-    identifier String @id @db.VarChar(48)
-    elo        Int    @default(1000)
+    identifier String  @id @db.VarChar(48)
+    pseudo     String? @db.VarChar(20)
+    elo        Int     @default(1000)
     wins       Int    @default(0)
     losses     Int    @default(0)
     draws      Int    @default(0)

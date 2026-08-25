@@ -368,6 +368,9 @@ export enum RpcServerEvent {
     PHONE_APP_ZCHECS_OFFER_DRAW = 'soz-core:server:phone:app:zchecs:offer-draw',
     PHONE_APP_ZCHECS_ANSWER_DRAW = 'soz-core:server:phone:app:zchecs:answer-draw',
     PHONE_APP_ZCHECS_CLAIM_TIMEOUT = 'soz-core:server:phone:app:zchecs:claim-timeout',
+    PHONE_APP_ZCHECS_GET_HISTORY = 'soz-core:server:phone:app:zchecs:get-history',
+    PHONE_APP_ZCHECS_HIDE = 'soz-core:server:phone:app:zchecs:hide',
+    PHONE_APP_ZCHECS_SET_PSEUDO = 'soz-core:server:phone:app:zchecs:set-pseudo',
 
     LASER_GAME_GET_INFO_AS_STAFF = 'soz-core:server:phone:app:laser-game:get-info-as-staff',
     LASER_GAME_CREATE = 'soz-core:server:phone:app:laser-game:create',

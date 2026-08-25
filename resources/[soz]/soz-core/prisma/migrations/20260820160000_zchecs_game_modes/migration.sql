@@ -1,0 +1,10 @@
+-- AlterTable
+ALTER TABLE `phone_zchecs_game`
+    ADD COLUMN `time_control` VARCHAR(16) NOT NULL DEFAULT 'CORRESPONDENCE',
+    ADD COLUMN `white_time_ms` INTEGER NULL,
+    ADD COLUMN `black_time_ms` INTEGER NULL,
+    ADD COLUMN `increment_ms` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `clock_since` TIMESTAMP(0) NULL,
+    ADD COLUMN `variant` VARCHAR(20) NOT NULL DEFAULT 'STANDARD',
+    ADD COLUMN `white_checks` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `black_checks` INTEGER NOT NULL DEFAULT 0;

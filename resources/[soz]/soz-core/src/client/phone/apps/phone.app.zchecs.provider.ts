@@ -7,8 +7,10 @@ import { emitRpc } from '../../../core/rpc';
 import { ClientEvent } from '../../../shared/event/client';
 import { NuiEvent } from '../../../shared/event/nui';
 import {
+    ZchecsEloPoint,
     ZchecsGame,
     ZchecsMovePayload,
+    ZchecsNewGameOptions,
     ZchecsProfile,
     ZchecsUpdatePayload,
 } from '../../../shared/phone/apps/zchecs';
@@ -38,8 +40,8 @@ export class PhoneAppZchecsProvider {
     }
 
     @OnNuiEvent(NuiEvent.PhoneAppZchecsCreate)
-    async onCreate(number: string): Promise<Result<ZchecsGame, string>> {
-        const result = await emitRpc<Result<ZchecsGame, string>>(RpcServerEvent.PHONE_APP_ZCHECS_CREATE, number);
+    async onCreate(options: ZchecsNewGameOptions): Promise<Result<ZchecsGame, string>> {
+        const result = await emitRpc<Result<ZchecsGame, string>>(RpcServerEvent.PHONE_APP_ZCHECS_CREATE, options);
         await this.refresh();
 
         return result;
@@ -98,6 +100,27 @@ export class PhoneAppZchecsProvider {
     async onGetLeaderboard() {
         const leaderboard = await emitRpc<LeaderboardInterface[]>(RpcServerEvent.PHONE_APP_ZCHECS_GET_LEADERBOARD);
         this.nuiDispatch.dispatch('phone', 'AppZchecsSetLeaderboard', leaderboard || []);
+    }
+
+    @OnNuiEvent(NuiEvent.PhoneAppZchecsGetHistory)
+    async onGetHistory() {
+        const history = await emitRpc<ZchecsEloPoint[]>(RpcServerEvent.PHONE_APP_ZCHECS_GET_HISTORY);
+        this.nuiDispatch.dispatch('phone', 'AppZchecsSetHistory', history || []);
+    }
+
+    @OnNuiEvent(NuiEvent.PhoneAppZchecsSetPseudo)
+    async onSetPseudo(pseudo: string): Promise<Result<string, string>> {
+        const result = await emitRpc<Result<string, string>>(RpcServerEvent.PHONE_APP_ZCHECS_SET_PSEUDO, pseudo);
+        // Le pseudo apparait sur toutes les parties: on recharge tout.
+        await this.refresh();
+
+        return result;
+    }
+
+    @OnNuiEvent(NuiEvent.PhoneAppZchecsHide)
+    async onHide(id: number) {
+        await emitRpc(RpcServerEvent.PHONE_APP_ZCHECS_HIDE, id);
+        await this.refresh();
     }
 
     private async mutate(event: RpcServerEvent, ...args: any[]): Promise<Result<ZchecsGame, string>> {

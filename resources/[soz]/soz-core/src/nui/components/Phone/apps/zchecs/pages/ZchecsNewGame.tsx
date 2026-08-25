@@ -1,7 +1,14 @@
 import clsx from 'clsx';
 import React, { FunctionComponent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import {
+    ZCHECS_TIME_CONTROLS,
+    ZCHECS_VARIANT_LABELS,
+    ZchecsTimeControl,
+    ZchecsVariant,
+} from '../../../../../../shared/phone/apps/zchecs';
 import { AppContent } from '../../../components/system/AppContent';
 import { AppTitle } from '../../../components/system/AppTitle';
 import { AppWrapper } from '../../../components/system/AppWrapper';
@@ -13,6 +20,7 @@ import { useZchecsProfile } from '../zchecs.atom';
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '<'];
 
 export const ZchecsNewGame: FunctionComponent = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const theme = useThemeConfig();
 
@@ -20,6 +28,8 @@ export const ZchecsNewGame: FunctionComponent = () => {
     const { createGame, joinQueue, leaveQueue, refresh } = useZchecsAPI();
 
     const [digits, setDigits] = useState('');
+    const [timeControl, setTimeControl] = useState<ZchecsTimeControl>('CORRESPONDENCE');
+    const [variant, setVariant] = useState<ZchecsVariant>('STANDARD');
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
 
@@ -43,11 +53,11 @@ export const ZchecsNewGame: FunctionComponent = () => {
         }
 
         setBusy(true);
-        const result = await createGame(`555-${digits}`);
+        const result = await createGame({ number: `555-${digits}`, timeControl, variant });
         setBusy(false);
 
         if (!result.ok) {
-            setError(result.error ?? 'Impossible de créer la partie');
+            setError(result.error ?? t('ZCHECS.CREATE_FAILED'));
 
             return;
         }
@@ -75,7 +85,7 @@ export const ZchecsNewGame: FunctionComponent = () => {
         setBusy(false);
 
         if (!result.ok) {
-            setError(result.error ?? 'Impossible de rejoindre la file');
+            setError(result.error ?? t('ZCHECS.QUEUE_FAILED'));
 
             return;
         }
@@ -92,9 +102,9 @@ export const ZchecsNewGame: FunctionComponent = () => {
 
     return (
         <AppWrapper scrollable>
-            <AppTitle title="Nouvelle partie" />
+            <AppTitle title={t('ZCHECS.NEW_GAME')} />
             <AppContent>
-                <p className="text-xs text-gray-500 mb-2">Partie amicale — sans impact sur l&apos;ELO</p>
+                <p className="text-xs text-gray-500 mb-2">{t('ZCHECS.CASUAL_HINT')}</p>
 
                 <div
                     className={clsx('rounded-xl px-4 py-4 mb-3 text-center shadow', {
@@ -104,6 +114,22 @@ export const ZchecsNewGame: FunctionComponent = () => {
                 >
                     <span className="text-3xl font-light tracking-widest">555-{digits.padEnd(4, '·')}</span>
                 </div>
+
+                <ModeSelector<ZchecsTimeControl>
+                    label={t('ZCHECS.TIME_CONTROL')}
+                    value={timeControl}
+                    options={Object.keys(ZCHECS_TIME_CONTROLS) as ZchecsTimeControl[]}
+                    render={key => ZCHECS_TIME_CONTROLS[key].label}
+                    onChange={setTimeControl}
+                />
+
+                <ModeSelector<ZchecsVariant>
+                    label={t('ZCHECS.VARIANT')}
+                    value={variant}
+                    options={Object.keys(ZCHECS_VARIANT_LABELS) as ZchecsVariant[]}
+                    render={key => ZCHECS_VARIANT_LABELS[key]}
+                    onChange={setVariant}
+                />
 
                 <div className="grid grid-cols-3 gap-2 mb-3">
                     {KEYS.map((key, index) =>
@@ -134,12 +160,12 @@ export const ZchecsNewGame: FunctionComponent = () => {
                         'bg-gray-500/40 cursor-not-allowed': digits.length !== 4 || busy,
                     })}
                 >
-                    Envoyer le défi
+                    {t('ZCHECS.SEND_CHALLENGE')}
                 </button>
 
                 <div className="h-px bg-gray-500/30 my-5" />
 
-                <p className="text-xs text-gray-500 mb-2">Partie classée — adversaire aléatoire, ELO en jeu</p>
+                <p className="text-xs text-gray-500 mb-2">{t('ZCHECS.RANKED_HINT')}</p>
 
                 <button
                     type="button"
@@ -150,11 +176,11 @@ export const ZchecsNewGame: FunctionComponent = () => {
                         'bg-[#347DD9] text-white': !profile.inQueue,
                     })}
                 >
-                    {profile.inQueue ? 'Annuler la recherche' : 'Chercher un adversaire'}
+                    {t(profile.inQueue ? 'ZCHECS.QUEUE_CANCEL' : 'ZCHECS.QUEUE_SEARCH')}
                 </button>
 
                 <p className="text-[11px] text-gray-500 mt-2">
-                    Tu restes dans la file même hors ligne : la partie démarre dès qu&apos;un autre joueur cherche.
+                    {t('ZCHECS.QUEUE_HINT')}
                 </p>
 
                 {error && <p className="text-sm text-red-400 mt-4 text-center">{error}</p>}
@@ -164,3 +190,42 @@ export const ZchecsNewGame: FunctionComponent = () => {
         </AppWrapper>
     );
 };
+
+/** Sélecteur compact en pilules, réservé aux parties amicales. */
+function ModeSelector<T extends string>({
+    label,
+    value,
+    options,
+    render,
+    onChange,
+}: {
+    label: string;
+    value: T;
+    options: T[];
+    render: (option: T) => string;
+    onChange: (option: T) => void;
+}) {
+    const theme = useThemeConfig();
+
+    return (
+        <div className="mb-3">
+            <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-1">{label}</p>
+            <div className="flex flex-wrap gap-1.5">
+                {options.map(option => (
+                    <button
+                        key={option}
+                        type="button"
+                        onClick={() => onChange(option)}
+                        className={clsx('rounded-lg px-2.5 py-1 text-xs', {
+                            'bg-[#347DD9] text-white': option === value,
+                            'bg-ios-700 text-gray-300': option !== value && theme === 'dark',
+                            'bg-white text-gray-700': option !== value && theme === 'light',
+                        })}
+                    >
+                        {render(option)}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+}

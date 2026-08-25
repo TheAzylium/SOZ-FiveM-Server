@@ -6,6 +6,7 @@ import { ZchecsGamePage } from './pages/ZchecsGamePage';
 import { ZchecsHome } from './pages/ZchecsHome';
 import { ZchecsLeaderboard } from './pages/ZchecsLeaderboard';
 import { ZchecsNewGame } from './pages/ZchecsNewGame';
+import { ZchecsStats } from './pages/ZchecsStats';
 
 export const ZchecsApp: FunctionComponent = () => {
     return (
@@ -15,6 +16,7 @@ export const ZchecsApp: FunctionComponent = () => {
                 <Route path="new" element={<ZchecsNewGame />} />
                 <Route path="game/:id" element={<ZchecsGamePage />} />
                 <Route path="leaderboard" element={<ZchecsLeaderboard />} />
+                <Route path="stats" element={<ZchecsStats />} />
             </Routes>
         </AppContainer>
     );

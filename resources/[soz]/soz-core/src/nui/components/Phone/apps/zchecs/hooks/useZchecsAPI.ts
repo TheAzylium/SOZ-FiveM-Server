@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 
 import { NuiEvent } from '../../../../../../shared/event/nui';
-import { ZchecsGame, ZchecsMovePayload } from '../../../../../../shared/phone/apps/zchecs';
+import { ZchecsGame, ZchecsMovePayload, ZchecsNewGameOptions } from '../../../../../../shared/phone/apps/zchecs';
 import { isErr, Result } from '../../../../../../shared/result';
 import { fetchNui } from '../../../../../fetch';
-import { useDynamicIsland } from '../../../system/dynamic-island/hooks/useDynamicIsland';
 
 type MutationResult = { ok: boolean; error?: string; game?: ZchecsGame };
 
@@ -24,46 +23,60 @@ const unwrap = <T>(result: Result<T, string> | null): { ok: boolean; error?: str
     return { ok: true, value: result.ok };
 };
 
+/**
+ * Aucune de ces actions ne declenche la DynamicIsland de validation: sur un jeu,
+ * le retour visuel c'est le plateau qui bouge, le son et le bandeau d'etat.
+ * Les erreurs sont remontees a l'appelant, qui les affiche en inline.
+ */
 export const useZchecsAPI = () => {
-    const { sendIsland } = useDynamicIsland();
+    const call = useCallback(async <I>(event: NuiEvent, input?: I): Promise<MutationResult> => {
+        try {
+            const raw = await fetchNui<I, Result<ZchecsGame, string>>(event, input);
+            const { ok, error, value } = unwrap(raw);
 
-    const call = useCallback(
-        async <I>(event: NuiEvent, input?: I): Promise<MutationResult> => {
-            try {
-                const raw = await fetchNui<I, Result<ZchecsGame, string>>(event, input);
-                const { ok, error, value } = unwrap(raw);
-
-                sendIsland(ok ? 'success' : 'error');
-
-                return { ok, error, game: value };
-            } catch (e) {
-                sendIsland('error');
-
-                return { ok: false, error: 'Erreur de communication' };
-            }
-        },
-        [sendIsland]
-    );
+            return { ok, error, game: value };
+        } catch (e) {
+            return { ok: false, error: 'Erreur de communication' };
+        }
+    }, []);
 
     const refresh = useCallback(() => fetchNui(NuiEvent.PhoneAppZchecsRefresh), []);
     const fetchLeaderboard = useCallback(() => fetchNui(NuiEvent.PhoneAppZchecsGetLeaderboard), []);
+    const fetchHistory = useCallback(() => fetchNui(NuiEvent.PhoneAppZchecsGetHistory), []);
 
-    const createGame = useCallback((number: string) => call(NuiEvent.PhoneAppZchecsCreate, number), [call]);
+    const hideGame = useCallback(async (id: number) => {
+        await fetchNui(NuiEvent.PhoneAppZchecsHide, id);
+    }, []);
+
+    const setPseudo = useCallback(async (pseudo: string): Promise<{ ok: boolean; error?: string }> => {
+        try {
+            const raw = await fetchNui<string, Result<string, string>>(NuiEvent.PhoneAppZchecsSetPseudo, pseudo);
+
+            if (!raw) {
+                return { ok: true };
+            }
+
+            return isErr(raw) ? { ok: false, error: raw.err } : { ok: true };
+        } catch (e) {
+            return { ok: false, error: 'Erreur de communication' };
+        }
+    }, []);
+
+    const createGame = useCallback(
+        (options: ZchecsNewGameOptions) => call(NuiEvent.PhoneAppZchecsCreate, options),
+        [call]
+    );
 
     const joinQueue = useCallback(async (): Promise<MutationResult> => {
         try {
             const raw = await fetchNui<never, Result<ZchecsGame | null, string>>(NuiEvent.PhoneAppZchecsQueueJoin);
             const { ok, error, value } = unwrap(raw);
 
-            sendIsland(ok ? 'success' : 'error');
-
             return { ok, error, game: value ?? undefined };
         } catch (e) {
-            sendIsland('error');
-
             return { ok: false, error: 'Erreur de communication' };
         }
-    }, [sendIsland]);
+    }, []);
 
     const leaveQueue = useCallback(async () => {
         await fetchNui(NuiEvent.PhoneAppZchecsQueueLeave);
@@ -85,6 +98,9 @@ export const useZchecsAPI = () => {
     return {
         refresh,
         fetchLeaderboard,
+        fetchHistory,
+        hideGame,
+        setPseudo,
         createGame,
         joinQueue,
         leaveQueue,

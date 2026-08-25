@@ -775,6 +775,9 @@ export enum NuiEvent {
     PhoneAppZchecsAnswerDraw = 'soz-core:nui:phone:app-zchecs-answer-draw',
     PhoneAppZchecsClaimTimeout = 'soz-core:nui:phone:app-zchecs-claim-timeout',
     PhoneAppZchecsGetLeaderboard = 'soz-core:nui:phone:app-zchecs-get-leaderboard',
+    PhoneAppZchecsGetHistory = 'soz-core:nui:phone:app-zchecs-get-history',
+    PhoneAppZchecsHide = 'soz-core:nui:phone:app-zchecs-hide',
+    PhoneAppZchecsSetPseudo = 'soz-core:nui:phone:app-zchecs-set-pseudo',
 
     GetPlayerPosition = 'soz-core:nui:get-player-position',
     GetStreetName = 'soz-core:nui:get-street-name',

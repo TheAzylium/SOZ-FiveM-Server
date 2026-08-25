@@ -1,11 +1,24 @@
 import clsx from 'clsx';
 import React, { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { ZchecsGame } from '../../../../../../shared/phone/apps/zchecs';
+import {
+    ZCHECS_TIME_CONTROLS,
+    ZCHECS_VARIANT_LABELS,
+    ZchecsGame,
+    zchecsIsUrgent,
+} from '../../../../../../shared/phone/apps/zchecs';
 import { useThemeConfig } from '../../../system/config/config.atom';
 import { useContact } from '../../../system/sim-card/hooks/useContact';
-import { didIWin, eloDeltaLabel, gameStatusLabel, relativeTime } from '../zchecs.labels';
+import {
+    didIWin,
+    eloDeltaLabel,
+    frenchSan,
+    gameStatusLabel,
+    relativeTime,
+    remainingTime,
+} from '../zchecs.labels';
 
 interface ZchecsGameRowProps {
     game: ZchecsGame;
@@ -14,19 +27,23 @@ interface ZchecsGameRowProps {
 }
 
 export const ZchecsGameRow: FunctionComponent<ZchecsGameRowProps> = ({ game, onAccept, onDecline }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const theme = useThemeConfig();
     const contact = useContact(game.opponentNumber);
 
-    const name = contact?.display || game.opponentName || game.opponentNumber;
+    // Pseudo ZChecs d'abord, puis le repertoire, puis le numero brut.
+    const name = game.opponentName || contact?.display || game.opponentNumber;
     const delta = eloDeltaLabel(game.myEloDelta);
     const isInvitation = Boolean(onAccept && onDecline);
+    const urgent = zchecsIsUrgent(game);
 
     return (
         <div
             className={clsx('w-full rounded-xl shadow mb-2 px-3 py-2.5', {
                 'bg-ios-700 text-white': theme === 'dark',
                 'bg-white text-black': theme === 'light',
+                'ring-1 ring-red-500/70': urgent,
             })}
         >
             <button
@@ -55,17 +72,34 @@ export const ZchecsGameRow: FunctionComponent<ZchecsGameRowProps> = ({ game, onA
                                 'bg-gray-500/40': !game.ranked,
                             })}
                         >
-                            {game.ranked ? 'Classée' : 'Amicale'}
+                            {t(game.ranked ? 'ZCHECS.RANKED' : 'ZCHECS.CASUAL')}
                         </span>
+                        {game.variant !== 'STANDARD' && (
+                            <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-600 text-white">
+                                {ZCHECS_VARIANT_LABELS[game.variant]}
+                            </span>
+                        )}
+                        {game.timeControl !== 'CORRESPONDENCE' && (
+                            <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-600 text-white">
+                                {ZCHECS_TIME_CONTROLS[game.timeControl].label}
+                            </span>
+                        )}
+                        {urgent && (
+                            <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-red-600 text-white">
+                                {t('ZCHECS.URGENT')}
+                            </span>
+                        )}
                     </span>
 
                     <span
                         className={clsx('text-xs truncate', {
-                            'text-[#347DD9]': game.status === 'ACTIVE' && game.isMyTurn,
+                            'text-[#347DD9]': game.status === 'ACTIVE' && game.isMyTurn && !urgent,
+                            'text-red-400': urgent,
                             'text-gray-400': !(game.status === 'ACTIVE' && game.isMyTurn),
                         })}
                     >
-                        {gameStatusLabel(game)}
+                        {gameStatusLabel(t, game)}
+                        {game.lastMove ? ` · ${frenchSan(game.lastMove.san)}` : ''}
                     </span>
                 </span>
 
@@ -84,7 +118,9 @@ export const ZchecsGameRow: FunctionComponent<ZchecsGameRowProps> = ({ game, onA
                     {game.status === 'FINISHED' && !delta && (
                         <span className="text-gray-400">{game.result === null ? '—' : didIWin(game) ? 'V' : 'D'}</span>
                     )}
-                    <span className="text-gray-500">{relativeTime(game.lastMoveAt)}</span>
+                    <span className={clsx(urgent ? 'text-red-400' : 'text-gray-500')}>
+                        {urgent && game.deadlineAt ? remainingTime(game.deadlineAt) : relativeTime(game.lastMoveAt)}
+                    </span>
                 </span>
             </button>
 
@@ -95,14 +131,14 @@ export const ZchecsGameRow: FunctionComponent<ZchecsGameRowProps> = ({ game, onA
                         className="grow rounded-lg bg-[#347DD9] text-white text-sm py-1.5"
                         onClick={() => onAccept(game.id)}
                     >
-                        Accepter
+                        {t('ZCHECS.ACCEPT')}
                     </button>
                     <button
                         type="button"
                         className="grow rounded-lg bg-gray-500/40 text-sm py-1.5"
                         onClick={() => onDecline(game.id)}
                     >
-                        Refuser
+                        {t('ZCHECS.DECLINE')}
                     </button>
                 </div>
             )}
