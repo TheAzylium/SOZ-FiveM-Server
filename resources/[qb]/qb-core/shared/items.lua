@@ -9217,6 +9217,16 @@ QBShared.Items = {
         ["combinable"] = nil,
         ["description"] = "L'arme idéale contre les chauffards. ",
     },
+    ["training_zone_flag"] = {
+        ["name"] = "training_zone_flag",
+        ["label"] = "Drapeau de zone d'entraînement",
+        ["weight"] = 1000,
+        ["type"] = "item",
+        ["unique"] = false,
+        ["useable"] = true,
+        ["combinable"] = nil,
+        ["description"] = "À planter pour délimiter une zone d'entraînement où les coups de feu ne remontent pas au répondeur.",
+    },
     ["radar"] = {
         ["name"] = "radar",
         ["label"] = "Radar",

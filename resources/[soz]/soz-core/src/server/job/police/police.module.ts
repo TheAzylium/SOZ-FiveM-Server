@@ -8,6 +8,7 @@ import { PoliceSecretProvider } from './police.secret.provider';
 import { PoliceSirenProvider } from './police.siren.provider';
 import { PoliceSpeedZoneProvider } from './police.speedzone.provider';
 import { PoliceSpikeProvider } from './police.spike.provider';
+import { PoliceTrainingZoneProvider } from './police.training-zone.provider';
 import { PoliceVehicleProvider } from './police.vehicle.provider';
 import { PoliceWantedProvider } from './police.wanted.provider';
 
@@ -24,6 +25,7 @@ import { PoliceWantedProvider } from './police.wanted.provider';
         PoliceSpeedZoneProvider,
         PoliceSearchWarrantProvider,
         PoliceSecretProvider,
+        PoliceTrainingZoneProvider,
     ],
 })
 export class PoliceModule {}

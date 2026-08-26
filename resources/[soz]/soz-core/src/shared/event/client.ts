@@ -312,6 +312,8 @@ export enum ClientEvent {
     POLICE_GET_CUFFED = 'soz-core:client:police:get-cuffed',
     POLICE_REQUEST_ADD_SPIKE = 'soz-core:client:police:request-add-spike',
     POLICE_SYNC_SPIKE = 'soz-core:client:police:sync-spikes',
+    POLICE_TRAINING_ZONE_START_PLACEMENT = 'soz-core:client:police:training-zone-start-placement',
+    POLICE_TRAINING_ZONE_SYNC = 'soz-core:client:police:training-zone-sync',
     POLICE_REQUEST_ADD_SPEEDZONE = 'soz-core:client:police:request-add-speedzone',
     POLICE_SYNC_SPEEDZONE = 'soz-core:client:police:sync-speedzone',
     POLICE_IDENTIFIED_CLUE = 'soz-core:client:police:identified-clue',

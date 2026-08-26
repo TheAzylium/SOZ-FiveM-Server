@@ -28,6 +28,7 @@ import {
 import { ClothingService } from '../clothing/clothing.service';
 import { FeatureProvider } from '../feature/feature.provider';
 import { InventoryManager } from '../inventory/inventory.manager';
+import { PoliceTrainingZoneProvider } from '../job/police/police.training-zone.provider';
 import { AudioService } from '../nui/audio.service';
 import { NuiDispatch } from '../nui/nui.dispatch';
 import { PhoneService } from '../phone/phone.service';
@@ -112,6 +113,9 @@ export class WeaponProvider {
 
     @Inject(VehicleRepository)
     private vehicleRepository: VehicleRepository;
+
+    @Inject(PoliceTrainingZoneProvider)
+    private policeTrainingZoneProvider: PoliceTrainingZoneProvider;
 
     private lastPoliceCall = 0;
 
@@ -329,7 +333,7 @@ export class WeaponProvider {
                 return true;
             });
 
-            if (!zone) {
+            if (!zone && !this.policeTrainingZoneProvider.isInTrainingZone(coords)) {
                 this.lastPoliceCall = Date.now();
                 this.sendShootingAlert();
             }

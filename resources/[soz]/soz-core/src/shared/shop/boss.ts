@@ -268,6 +268,7 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
             { id: 'weapon_smokegrenade', type: 'weapon', metadata: { ammo: 1 }, price: 50 },
             { id: 'weapon_stungun', type: 'weapon', price: 45 },
             { id: 'mobile_radar', type: 'item', price: 40 },
+            { id: 'training_zone_flag', type: 'item', price: 200 },
             {
                 id: 'utilitary_certificate',
                 type: 'item',
@@ -351,6 +352,7 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
             { id: 'weapon_smokegrenade', type: 'weapon', metadata: { ammo: 1 }, price: 50 },
             { id: 'weapon_stungun', type: 'weapon', price: 45 },
             { id: 'mobile_radar', type: 'item', price: 40 },
+            { id: 'training_zone_flag', type: 'item', price: 200 },
             {
                 id: 'utilitary_certificate',
                 type: 'item',
@@ -435,6 +437,7 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
             { id: 'weapon_smokegrenade', type: 'weapon', metadata: { ammo: 1 }, price: 50 },
             { id: 'weapon_stungun', type: 'weapon', price: 45 },
             { id: 'mobile_radar', type: 'item', price: 40 },
+            { id: 'training_zone_flag', type: 'item', price: 200 },
             {
                 id: 'utilitary_certificate',
                 type: 'item',
@@ -565,6 +568,7 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
             { id: 'weapon_uvflashlight', type: 'item', price: 50 },
             { id: 'weapon_stungun', type: 'weapon', price: 45 },
             { id: 'mobile_radar', type: 'item', price: 40 },
+            { id: 'training_zone_flag', type: 'item', price: 200 },
             {
                 id: 'utilitary_certificate',
                 type: 'item',
@@ -620,6 +624,7 @@ export const BossShop: (ShopConfig & { job: JobType })[] = [
             { id: 'weapon_uvflashlight', type: 'item', price: 50 },
             { id: 'weapon_stungun', type: 'weapon', price: 45 },
             { id: 'mobile_radar', type: 'item', price: 40 },
+            { id: 'training_zone_flag', type: 'item', price: 200 },
             {
                 id: 'utilitary_certificate',
                 type: 'item',
