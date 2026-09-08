@@ -10,6 +10,7 @@ import { ClientEvent } from '../../shared/event';
 import {
     DrawPositions,
     DrawPositionsWithShield,
+    POLICE_SHIELD_AS_WEAPONS,
     WeaponConfig,
     WeaponName,
     Weapons,
@@ -23,6 +24,8 @@ export class WeaponDrawingProvider {
     private shouldDrawWeapon = true;
     private shouldAdminDrawWeapon = true;
     private weaponsToDraw: WeaponsType[] = [];
+    private weaponItemsToDraw: Partial<Record<WeaponsType, InventoryItem>> = {};
+    private weaponDrawSignature = '';
     private weaponAttached: Record<string, number> = {};
 
     @Inject(AttachedObjectService)
@@ -37,18 +40,28 @@ export class WeaponDrawingProvider {
     currentDrawPosition: string = null;
 
     private async updateWeaponDrawList(playerItem: Record<number, InventoryItem>) {
-        const weaponToDraw: WeaponName[] = Object.values(playerItem)
-            .filter(
-                item =>
-                    (item.type === 'weapon' || item.name === POLICE_SHIELD_OBJECT) &&
-                    Weapons[item.name.toUpperCase()] &&
-                    Weapons[item.name.toUpperCase()].drawPositionInfo
-            )
-            .map(item => item.name.toUpperCase() as WeaponName);
+        const itemsToDraw = Object.values(playerItem).filter(
+            item =>
+                (item.type === 'weapon' || item.name === POLICE_SHIELD_OBJECT) &&
+                Weapons[item.name.toUpperCase()] &&
+                Weapons[item.name.toUpperCase()].drawPositionInfo
+        );
 
-        if (weaponToDraw.join('') !== this.weaponsToDraw.join('')) {
+        const weaponToDraw: WeaponName[] = itemsToDraw.map(item => item.name.toUpperCase() as WeaponName);
+        const signature = itemsToDraw
+            .map(
+                item =>
+                    `${item.name.toUpperCase()}:${item.metadata?.tint ?? ''}:${JSON.stringify(
+                        item.metadata?.attachments ?? {}
+                    )}`
+            )
+            .join('|');
+
+        if (signature !== this.weaponDrawSignature) {
             await this.undrawWeapon();
             this.weaponsToDraw = weaponToDraw;
+            this.weaponItemsToDraw = Object.fromEntries(itemsToDraw.map(item => [item.name.toUpperCase(), item]));
+            this.weaponDrawSignature = signature;
             await this.drawWeapon();
         }
     }
@@ -80,12 +93,24 @@ export class WeaponDrawingProvider {
             if (this.weaponAttached[config.drawPositionInfo.model]) continue;
             this.weaponAttached[config.drawPositionInfo.model] = -1;
 
+            const item = this.weaponItemsToDraw[weapon];
+            const isRealWeapon = weapon !== POLICE_SHIELD_AS_WEAPONS;
+            const weaponHash = isRealWeapon ? GetHashKey(weapon) : undefined;
+
             const object = await this.attachedObjectService.attachObjectToPlayer({
                 bone: 24816,
                 model: config.drawPositionInfo.model,
                 position: drawPosition[config.drawPositionInfo.type].position,
                 rotation: drawPosition[config.drawPositionInfo.type].rotation,
                 rotationOrder: 2,
+                weaponHash,
+                tint: isRealWeapon ? item?.metadata?.tint : undefined,
+                weaponComponents:
+                    isRealWeapon && item?.metadata?.attachments
+                        ? Object.values(item.metadata.attachments)
+                              .filter(attachment => !!attachment)
+                              .map(attachment => GetHashKey(attachment))
+                        : undefined,
             });
 
             this.weaponAttached[config.drawPositionInfo.model] = object;
@@ -109,6 +134,7 @@ export class WeaponDrawingProvider {
                         rotation: [0, 0, 0],
                         rotationOrder: 2,
                         entity: object,
+                        skipNetworking: true,
                     });
                     this.weaponAttached[config.drawPositionInfo.model + extra.model] = extraObject;
                 }

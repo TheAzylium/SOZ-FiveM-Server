@@ -139,6 +139,7 @@ export enum RpcServerEvent {
     WEAPON_REPAIR = 'soz-core:server:weapon:repair',
     WEAPON_SET_TINT = 'soz-core:server:weapon:setTint',
     WEAPON_SET_ATTACHMENTS = 'soz-core:server:weapon:setAttachments',
+    WEAPON_GET_BACK_DRAW = 'soz-core:server:weapon:getBackDraw',
 
     VANDALISM_LOAD = 'soz-core:server:vandalism:load',
     VANDALISM_CHECK = 'soz-core:server:vandalism:check',

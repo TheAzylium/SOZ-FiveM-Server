@@ -11,6 +11,11 @@ export type AttachedObject = {
     rotation: Vector3;
     rotationOrder?: number;
     entity?: number;
+    ped?: number;
+    weaponHash?: number;
+    tint?: number;
+    weaponComponents?: number[];
+    skipNetworking?: boolean;
 };
 
 @Injectable()
@@ -20,32 +25,64 @@ export class AttachedObjectService {
 
     private objects = new Map<number, AttachedObject>();
 
+    private isNetworked(attached: AttachedObject): boolean {
+        return attached.weaponHash === undefined && !attached.skipNetworking;
+    }
+
     public async attachObjectToPlayer(attached: AttachedObject): Promise<number> {
-        const position = GetEntityCoords(PlayerPedId()) as Vector3;
+        const targetPed = attached.ped ?? PlayerPedId();
+        const position = GetEntityCoords(targetPed) as Vector3;
+        const isWeaponObject = attached.weaponHash !== undefined;
 
         if (!(await this.resourceLoader.loadModel(attached.model))) {
             return;
         }
 
-        const object = CreateObject(
-            GetHashKey(attached.model),
-            position[0],
-            position[1],
-            position[2] - 1.0,
-            true,
-            true,
-            true
-        );
+        if (isWeaponObject) {
+            await this.resourceLoader.loadWeaponAsset(attached.weaponHash, 31);
+        }
+
+        let object: number;
+        if (isWeaponObject) {
+            object = CreateWeaponObject(
+                attached.weaponHash,
+                0,
+                position[0],
+                position[1],
+                position[2] - 1.0,
+                true,
+                0,
+                0
+            );
+            if (attached.tint !== undefined) {
+                SetWeaponObjectTintIndex(object, attached.tint);
+            }
+            for (const component of attached.weaponComponents ?? []) {
+                GiveWeaponComponentToWeaponObject(object, component);
+            }
+        } else {
+            object = CreateObject(
+                GetHashKey(attached.model),
+                position[0],
+                position[1],
+                position[2] - 1.0,
+                true,
+                true,
+                true
+            );
+        }
         SetEntityAsMissionEntity(object, true, true);
-        const netId = ObjToNet(object);
-        SetNetworkIdCanMigrate(netId, false);
         SetEntityCollision(object, false, true);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
+        if (this.isNetworked(attached)) {
+            const netId = ObjToNet(object);
+            SetNetworkIdCanMigrate(netId, false);
+            TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_REGISTER, netId);
+        }
 
         AttachEntityToEntity(
             object,
-            attached.entity ? attached.entity : PlayerPedId(),
-            attached.entity ? attached.bone : GetPedBoneIndex(PlayerPedId(), attached.bone),
+            attached.entity ? attached.entity : targetPed,
+            attached.entity ? attached.bone : GetPedBoneIndex(targetPed, attached.bone),
             attached.position[0],
             attached.position[1],
             attached.position[2],
@@ -62,18 +99,24 @@ export class AttachedObjectService {
 
         this.objects.set(object, attached);
         this.resourceLoader.unloadModel(attached.model);
+        if (isWeaponObject) {
+            this.resourceLoader.unloadWeaponAsset(attached.weaponHash);
+        }
 
         return object;
     }
 
     public detachObjectToPlayer(entity: number) {
-        if (!this.objects.has(entity)) {
+        const attached = this.objects.get(entity);
+        if (!attached) {
             return;
         }
 
         SetEntityAsMissionEntity(entity, true, true);
         DetachEntity(entity, false, false);
-        TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(entity));
+        if (this.isNetworked(attached)) {
+            TriggerServerEvent(ServerEvent.OBJECT_ATTACHED_UNREGISTER, ObjToNet(entity));
+        }
         DeleteEntity(entity);
         this.objects.delete(entity);
     }

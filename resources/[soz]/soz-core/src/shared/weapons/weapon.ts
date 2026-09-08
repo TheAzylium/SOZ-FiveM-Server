@@ -62,6 +62,17 @@ export type ExtraWeaponDrawPosition = {
     bone: string;
 };
 
+export type BackWeaponSync = {
+    name: WeaponsType;
+    tint?: number;
+    components?: string[];
+};
+
+export type PlayerBackWeapons = {
+    swat: boolean;
+    weapons: BackWeaponSync[];
+};
+
 export type WeaponConfig = {
     recoil?: number;
     ammo?:

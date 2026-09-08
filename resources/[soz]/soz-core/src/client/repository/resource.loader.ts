@@ -169,9 +169,9 @@ export class ResourceLoader {
         }
     }
 
-    async loadWeaponAsset(name: number): Promise<void> {
+    async loadWeaponAsset(name: number, extraComponentFlags = 0): Promise<void> {
         if (!HasWeaponAssetLoaded(name)) {
-            RequestWeaponAsset(name, 31, 0);
+            RequestWeaponAsset(name, 31, extraComponentFlags);
 
             while (!HasWeaponAssetLoaded(name)) {
                 await wait(0);
